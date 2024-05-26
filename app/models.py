@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, Text, Date, ARRAY, Boolean, ForeignKey
+from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from .database import Base
 
@@ -19,6 +20,6 @@ class Resource(Base):
     description = Column(Text)
     link = Column(String, unique=True, index=True)
     tags = Column(ARRAY(String))
-    date = Column(Date)
+    date = Column(Date, default=func.current_date())
     user_id = Column(Integer, ForeignKey('users.id'))
     owner = relationship("User", back_populates="resources")

@@ -28,12 +28,18 @@ class ResourceCreate(ResourceBase):
     asset_name: str
     link: str
 
+
 class Resource(ResourceBase):
     id: int
     user_id: int
-
+    date: date
+    
     class Config:
         orm_mode = True
 
 class UrlBase(BaseModel):
     url: str
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str

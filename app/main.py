@@ -5,10 +5,11 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 import requests
 from bs4 import BeautifulSoup
-from datetime import date
+from datetime import date, datetime, timedelta
 from typing import List
 from .database import engine
 from .models import Base
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 app = FastAPI()
 router = APIRouter()
@@ -38,9 +39,40 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(dependencies.get
     db.refresh(db_user)
     return db_user
 
+@app.post("/token", response_model=schemas.Token)
+def login_for_access_token(db: Session = Depends(dependencies.get_db), form_data: OAuth2PasswordRequestForm = Depends()):
+    user = auth.authenticate_user(db, form_data.username, form_data.password)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    access_token_expires = timedelta(days=auth.ACCESS_TOKEN_EXPIRE_DAYS)
+    access_token = auth.create_access_token(
+        data={"sub": user.username}, expires_delta=access_token_expires
+    )
+    return {"access_token": access_token, "token_type": "bearer"}
+
+
+
+
 @app.get("/resources/", response_model=List[schemas.Resource])
 def read_resources(skip: int = 0, limit: int = 100, db: Session = Depends(dependencies.get_db), current_user: schemas.User = Depends(dependencies.get_current_user)):
     return crud.get_user_resources(db, user_id=current_user.id, skip=skip, limit=limit)
+
+@app.post("/resources/", response_model=schemas.Resource)
+def create_resource(resource_data: schemas.ResourceCreate, db: Session = Depends(dependencies.get_db), current_user: models.User = Depends(dependencies.get_current_user)):
+    try:
+        resource_data = resource_data.dict()
+        print(resource_data)
+        resource_data.pop('date', None)
+        print(resource_data)
+        resource = crud.create_resource(db, resource_data, user_id=current_user.id)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"An error occurred while creating the resource: {str(e)}")
+    return resource
+
 
 @app.post("/scrape/", response_model=schemas.ResourceBase)
 def scrape(url_data: schemas.UrlBase, db: Session = Depends(dependencies.get_db)):
