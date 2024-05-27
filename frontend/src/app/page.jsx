@@ -3,84 +3,12 @@ import Image from "next/image";
 import Card from "./card";
 import { useRouter } from "next/navigation";
 import { Box, Button, Modal, Typography } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Form from "./form";
+import axios from 'axios';
+// import {data} from './data';
 
-const data = [
-  {
-    id:1,
-    asset_name: "UI & UX Design Tips by Jim Raptis.",
-    category: "Visuals",
-    description:
-      "Learn UI & UX Design with practical byte-sized tips and in-depth articles from Jim Raptis.",
-    link: "https://www.uidesign.tips/",
-    tags: ["UI", "UX", "Design"],
-    date: '23232'
-  },
-  {
-    id:2,
-    asset_name: "UI & UX Design Tips by Jim Raptis.",
-    category: "Visuals",
-    description:
-      "Learn UI & UX Design with practical byte-sized tips and in-depth articles from Jim Raptis.",
-    link: "https://www.uidesign.tips/",
-    tags: ["UI", "UX", "Design"],
-  },
-  {
-    id:3,
-    asset_name: "UI & UX Design Tips by Jim Raptis.",
-    category: "Visuals",
-    description:
-      "Learn UI & UX Design with practical byte-sized tips and in-depth articles from Jim Raptis.",
-    link: "https://www.uidesign.tips/",
-    tags: ["UI", "UX", "Design"],
-  },
-  {
-    id:4,
-    asset_name: "UI & UX Design Tips by Jim Raptis.",
-    category: "Visuals",
-    description:
-      "Learn UI & UX Design with practical byte-sized tips and in-depth articles from Jim Raptis.",
-    link: "https://www.uidesign.tips/",
-    tags: ["UI", "UX", "Design"],
-  },
-  {
-    id:5,
-    asset_name: "UI & UX Design Tips by Jim Raptis.",
-    category: "Visuals",
-    description:
-      "Learn UI & UX Design with practical byte-sized tips and in-depth articles from Jim Raptis.",
-    link: "https://www.uidesign.tips/",
-    tags: ["UI", "UX", "Design"],
-  },
-  {
-    id:6,
-    asset_name: "UI & UX Design Tips by Jim Raptis.",
-    category: "Visuals",
-    description:
-      "Learn UI & UX Design with practical byte-sized tips and in-depth articles from Jim Raptis.",
-    link: "https://www.uidesign.tips/",
-    tags: ["UI", "UX", "Design"],
-  },
-  {
-    id:7,
-    asset_name: "UI & UX Design Tips by Jim Raptis.",
-    category: "Visuals",
-    description:
-      "Learn UI & UX Design with practical byte-sized tips and in-depth articles from Jim Raptis.",
-    link: "https://www.uidesign.tips/",
-    tags: ["UI", "UX", "Design"],
-  },
-  {
-    id:8,
-    asset_name: "UI & UX Design Tips by Jim Raptis.",
-    category: "Visuals",
-    description:
-      "Learn UI & UX Design with practical byte-sized tips and in-depth articles from Jim Raptis.",
-    link: "https://www.uidesign.tips/",
-    tags: ["UI", "UX", "Design"],
-  },
-];
+
 const style = {
   position: 'absolute',
   top: '50%',
@@ -99,6 +27,23 @@ export default function Home() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const [data,setData] = useState([]);
+  
+  const dataFetcher = async () => {
+    try {
+      const response = await axios.get('https://localhost.com/data');
+      const data = response.data;
+      
+      setData(data);
+
+    } catch (error) {
+      console.error('Axios error:', error);
+    }
+  };
+
+  useEffect(()=>{
+    dataFetcher();
+  },[])
 
   return (
     <main className="min-h-screen">

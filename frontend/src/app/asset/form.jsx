@@ -13,8 +13,9 @@ import {
 } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useTheme } from "@mui/material/styles";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
+//Update the tags to be shown here
 const allTags = ["UI", "UX", "Design", "Coding"];
 
 const ITEM_HEIGHT = 48;
@@ -41,14 +42,31 @@ function form() {
   const router = useRouter();
   const theme = useTheme();
 
-  const [asset, setAsset] = useState("sefsfe");
-  const [description, setDescription] = useState("sscdssd");
-  const [link, setLink] = useState("sdsdd");
+  const [asset, setAsset] = useState("");
+  const [description, setDescription] = useState("");
+  const [link, setLink] = useState("");
   const [category, setCategory] = useState("");
   const [tags, setTags] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const isValid = asset && description && link && category && tags.length > 0;
+  
+  const dataFetcher = async () => {
+    try {
+      const response = await axios.get('https://localhost.com/data');
+      const data = response.data;
+      
+      setAsset(data.asset_name);
+      setDescription(data.description);
+      setLink(data.link);
+    } catch (error) {
+      console.error('Axios error:', error);
+    }
+  };
+
+  useEffect(()=>{
+    dataFetcher();
+  },[])
 
   const handleTagChange = (event) => {
     const {
@@ -60,9 +78,25 @@ function form() {
     setCategory(event.target.value);
   };
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
     setLoading(true);
+
+    try {
+      const response = await axios.post('https://localhost.com/data', {
+        asset_name: asset,
+        description: description,
+        link: link,
+        category: category,
+        tags: tags,
+      });
+      console.log(response);
+      setLoading(false);
+      router.push('../asset');
+    } catch (error) {
+      console.error('Axios error:', error);
+    } 
+
     router.push("../");
   };
 

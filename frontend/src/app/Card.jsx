@@ -11,6 +11,10 @@ function Card(props) {
             <p className='text-sm'>{props.asset_name}</p>
         </div>
         <div className='px-3 py-1.5'>
+            <h5 className={style}>OWNER</h5>
+            <p className='inline bg-pink-300 px-2 py-1 rounded-2xl'>{props.owner}</p>
+        </div>
+        <div className='px-3 py-1.5'>
             <h5 className={style}>CATEGORY</h5>
             <p className='inline bg-pink-300 px-2 py-1 rounded-2xl'>{props.category}</p>
         </div>

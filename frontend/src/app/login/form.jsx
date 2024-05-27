@@ -1,18 +1,13 @@
 "use client";
 import { TextField, Button,CircularProgress } from "@mui/material";
-import LockIcon from "@mui/icons-material/Lock";
-import { pink } from "@mui/material/colors";
-import { toast } from "react-hot-toast";
-
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-
-import { signIn } from "../utils/signIn";
 
 const Form = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const router = useRouter();
 
   const isValid = email && password;
@@ -20,26 +15,30 @@ const Form = () => {
   const formHandler = async(e) => {
     e.preventDefault();
     setLoading(true);
-    const result = await signIn(email, password);
-    console.log(result,'result')
+    try {
+      const response = await axios.post('https://localhost.com/data', {
+        email,
+        password,
+      });
 
-    if(result?.error){
-      toast.error(result.error.message);
+      if(response.status !== 200) {
+        setLoading(false);
+        return setError('Invalid credentials');
+      }
+
       setLoading(false);
-      return;
-    }
-    
-    toast.success("Signin successful");
-    return router.push("/admin/site-survey-forms");
+      router.push('../');
+    } catch (error) {
+      console.error('Axios error:', error);
+    } 
   }
    
   return (
     <div className="bg-white p-8 rounded shadow-lg w-96">
       <div className="text-center pb-4">
-        <LockIcon sx={{ color: pink[500] }}>x</LockIcon>
         <h2 className="text-2xl font-bold pt-2"> Signin</h2>
       </div>
-
+      {error && <p className="text-red-500">{error}</p>}
       <form onSubmit={formHandler} className="text-center">
         <TextField
           label="Enter your email"
