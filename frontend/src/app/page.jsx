@@ -47,7 +47,13 @@ export default function Home() {
 
   return (
     <main className="min-h-screen">
-      <div className="m-2">
+      <div>
+      <div className="flex flex-row bg-purple-700 p-3">
+        <h3 className="font-bold text-2xl  text-white bg-none">Vizdale Resources</h3>
+        <div className="ml-auto">
+          <h4 className="text-2xl text-white">User Name</h4>
+        </div>
+      </div>
         <div className="flex flex-row p-5 w-full">
       <Modal
         open={open}
@@ -59,7 +65,7 @@ export default function Home() {
          <Form />
         </Box>
       </Modal>
-          <h1 className="font-bold text-3xl float-left">Gallery</h1>  
+          <h1 className="font-bold text-3xl float-left">Resources</h1>  
           <div className="ml-auto">
             <button className="p-2 m-auto mr-4 rounded-lg border shadow-lg bg-white text-center">
               ...
