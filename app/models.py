@@ -16,10 +16,14 @@ class Resource(Base):
     __tablename__ = "resources"
     id = Column(Integer, primary_key=True, index=True)
     asset_name = Column(String, index=True)
+    team = Column(String, index=True)
     category = Column(String, index=True)
+    type = Column(String, index=True)
     description = Column(Text)
     link = Column(String, unique=True, index=True)
     tags = Column(ARRAY(String))
+    addedBy = Column(String, index=True)
     date = Column(Date, default=func.current_date())
     user_id = Column(Integer, ForeignKey('users.id'))
     owner = relationship("User", back_populates="resources")
+

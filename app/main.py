@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from . import models, schemas, crud, auth, database, dependencies
 from fastapi import APIRouter, Depends, HTTPException
@@ -10,6 +10,8 @@ from typing import List
 from .database import engine
 from .models import Base
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+
+
 
 app = FastAPI()
 router = APIRouter()
@@ -72,6 +74,22 @@ def create_resource(resource_data: schemas.ResourceCreate, db: Session = Depends
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"An error occurred while creating the resource: {str(e)}")
     return resource
+
+
+@app.get("/resources/categories/", response_model=List[schemas.Resource])
+def read_resources_by_categories(categories: List[str] = Query(None), db: Session = Depends(database.get_db)):
+    resources = crud.get_resources_by_categories(db, categories=categories)
+    return resources
+
+@app.get("/resources/types/", response_model=List[schemas.Resource])
+def read_resources_by_types(types: List[str] = Query(None), db: Session = Depends(database.get_db)):
+    resources = crud.get_resources_by_types(db, types=types)
+    return resources
+
+@app.get("/resources/tags/", response_model=List[schemas.Resource])
+def read_resources_by_tags(tags: List[str] = Query(None), db: Session = Depends(database.get_db)):
+    resources = crud.get_resources_by_tags(db, tags=tags)
+    return resources
 
 
 @app.post("/scrape/", response_model=schemas.ResourceBase)

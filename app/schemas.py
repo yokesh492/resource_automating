@@ -18,10 +18,12 @@ class User(UserBase):
 
 class ResourceBase(BaseModel):
     asset_name: Optional[str] = None
+    team: Optional[str] = None
     category: Optional[str] = None
     description: Optional[str] = None
-    link: Optional[str] = None
+    link: str
     tags: Optional[List[str]] = None
+    addedBy: Optional[str] = None
     date: Optional[date] = None
 
 class ResourceCreate(ResourceBase):
@@ -33,6 +35,7 @@ class Resource(ResourceBase):
     id: int
     user_id: int
     date: date
+    
     
     class Config:
         orm_mode = True

@@ -22,4 +22,16 @@ def create_resource(db: Session, resource: ResourceCreate, user_id: int):
     return db_resource
 
 def get_user_resources(db: Session, user_id: int, skip: int = 0, limit: int = 100):
-    return db.query(Resource).filter(Resource.user_id == user_id).offset(skip).limit(limit).all()
+    return db.query(Resource).offset(skip).limit(limit).all()
+
+def get_resources_by_team(db: Session, team_name: str):
+    return db.query(Resource).filter(Resource.team == team_name).all()
+
+def get_resources_by_categories(db: Session, categories: list):
+    return db.query(Resource).filter(Resource.category.in_(categories)).all()
+
+def get_resources_by_types(db: Session, types: list):
+    return db.query(Resource).filter(Resource.type.in_(types)).all()
+
+def get_resources_by_tags(db: Session, tags: list):
+    return db.query(Resource).filter(Resource.tags.any(tags)).all()
