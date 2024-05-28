@@ -1,16 +1,13 @@
 'use client';
 import Image from "next/image";
-import Card from "./card";
-import { useRouter } from "next/navigation";
-import { Box, Button, FormControl, InputLabel, MenuItem, Modal, Select, Typography } from "@mui/material";
+import Card from "./components/Card";
+import { Box, FormControl, InputLabel, MenuItem, Modal, Select } from "@mui/material";
 import { useEffect, useState } from "react";
 import Form from "./form";
 import axios from 'axios';
-import TagHandler from "../components/tagComponent";
-import CategoryComponent from "../components/categoryComponent";
-import UserName from "../components/username";
-// import {data} from './data';
-
+import TagHandler from "./components/tagComponent";
+import CategoryComponent from "./components/categoryComponent";
+import UserName from "./components/username";
 
 const style = {
   position: 'absolute',
@@ -25,8 +22,6 @@ const style = {
 };
 
 export default function Home() {
-  const router = useRouter();
-
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -41,10 +36,8 @@ export default function Home() {
     try {
       const response = await axios.get('https://localhost.com/data');
       const data = response.data;
-
-      
-      
       setData(data);
+      setName(response.name);
 
     } catch (error) {
       console.error('Axios error:', error);

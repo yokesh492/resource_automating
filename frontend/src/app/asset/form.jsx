@@ -1,20 +1,14 @@
 "use client";
 import {
-  Box,
   Button,
-  Chip,
   CircularProgress,
   FormControl,
-  InputLabel,
-  MenuItem,
-  OutlinedInput,
-  Select,
   TextField,
 } from "@mui/material";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import TagHandler from "../../components/tagComponent";
-import CategoryComponent from "../../components/categoryComponent";
+import TagHandler from "../components/tagComponent";
+import CategoryComponent from "../components/categoryComponent";
 
 function form() {
   const router = useRouter();

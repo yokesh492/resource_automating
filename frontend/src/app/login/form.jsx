@@ -41,11 +41,11 @@ const Form = () => {
       {error && <p className="text-red-500">{error}</p>}
       <form onSubmit={formHandler} className="text-center">
         <TextField
-          label="Enter your email"
+          label="Enter your email / username"
           variant="outlined"
           required
           fullWidth
-          type="email string"
+          type="string"
           className="mb-4"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
