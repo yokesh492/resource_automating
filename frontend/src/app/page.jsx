@@ -2,10 +2,13 @@
 import Image from "next/image";
 import Card from "./card";
 import { useRouter } from "next/navigation";
-import { Box, Button, Modal, Typography } from "@mui/material";
+import { Box, Button, FormControl, InputLabel, MenuItem, Modal, Select, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import Form from "./form";
 import axios from 'axios';
+import TagHandler from "../components/tagComponent";
+import CategoryComponent from "../components/categoryComponent";
+import UserName from "../components/username";
 // import {data} from './data';
 
 
@@ -28,11 +31,18 @@ export default function Home() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [data,setData] = useState([]);
+  const [name,setName] = useState('');
+  const [type,setType] = useState('');
+  const [tags,setTags] = useState([]);
+  const [category,setCategory] = useState('');
+
   
   const dataFetcher = async () => {
     try {
       const response = await axios.get('https://localhost.com/data');
       const data = response.data;
+
+      
       
       setData(data);
 
@@ -45,13 +55,17 @@ export default function Home() {
     dataFetcher();
   },[])
 
+  const handleTypeChange = (event) => {
+    setType(event.target.value);
+  };
+  
   return (
     <main className="min-h-screen">
       <div>
       <div className="flex flex-row bg-purple-700 p-3">
         <h3 className="font-bold text-2xl  text-white bg-none">Vizdale Resources</h3>
         <div className="ml-auto">
-          <h4 className="text-2xl text-white">User Name</h4>
+          <h4 className="text-2xl text-white"><UserName name={'UserName'}/></h4>
         </div>
       </div>
         <div className="flex flex-row p-5 w-full">
@@ -76,27 +90,26 @@ export default function Home() {
           </div>
         </div>
         <div className="flex flex-row">
+
           <div className="px-5">
-            <select
-              name="Category"
-              id="cat"
-              className="p-2 rounded-lg shadow-md text-gray-600 font-semibold mr-4"
-            >
-              <option value="Category">Category</option>
-              <option value="Event">Event</option>
-              <option value="Wedding">Wedding</option>
-              <option value="Birthday">Birthday</option>
-            </select>
-            <select
-              name="Tags"
-              id="tag"
-              className="p-2 rounded-lg shadow-md text-gray-600 font-semibold"
-            >
-              <option value="Category">Tag</option>
-              <option value="Event">Event</option>
-              <option value="Wedding">Wedding</option>
-              <option value="Birthday">Birthday</option>
-            </select>
+            <FormControl sx={{ m: 1, minWidth: 90 }}>
+              <InputLabel  id="demo-simple-select-label">Type</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={type}
+                label="Type"
+                onChange={handleTypeChange}
+              >
+                <MenuItem value={1}>Tools</MenuItem>
+                <MenuItem value={2}>Inspiration</MenuItem>
+                <MenuItem value={3}>Games</MenuItem>
+                <MenuItem value={4}>Tutorial</MenuItem>
+                <MenuItem value={5}>Blog</MenuItem>
+              </Select>
+        </FormControl>
+           <CategoryComponent category={category} setCategory={setCategory} style={{m:1 , minWidth:90}}/>
+           <TagHandler tags={tags} setTags={setTags} style={{ m: 1, minWidth: 90} }/>
           </div>
           <div className="ml-auto">
             <button className="p-4 m-auto">Filter</button>

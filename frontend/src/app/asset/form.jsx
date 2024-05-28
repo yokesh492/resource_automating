@@ -12,35 +12,12 @@ import {
   TextField,
 } from "@mui/material";
 import { useRouter } from "next/navigation";
-import { useTheme } from "@mui/material/styles";
 import React, { useEffect, useState } from "react";
-
-//Update the tags to be shown here
-const allTags = ["UI", "UX", "Design", "Coding"];
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
-
-function getStyles(name, personName, theme) {
-  return {
-    fontWeight:
-      personName.indexOf(name) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  };
-}
+import TagHandler from "../../components/tagComponent";
+import CategoryComponent from "../../components/categoryComponent";
 
 function form() {
   const router = useRouter();
-  const theme = useTheme();
 
   const [asset, setAsset] = useState("");
   const [description, setDescription] = useState("");
@@ -67,16 +44,6 @@ function form() {
   useEffect(()=>{
     dataFetcher();
   },[])
-
-  const handleTagChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setTags(typeof value === "string" ? value.split(",") : value);
-  };
-  const handleCategoryChange = (event) => {
-    setCategory(event.target.value);
-  };
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -128,51 +95,9 @@ function form() {
           onChange={(e) => setDescription(e.target.value)}
         />
 
-        <FormControl className="mb-4">
-          <InputLabel id="demo-simple-select-label">Category</InputLabel>
-
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={category}
-            label="category"
-            onChange={handleCategoryChange}
-          >
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
-          </Select>
-        </FormControl>
-
-        <FormControl className="mb-4"   >
-          <InputLabel id="demo-multiple-chip-label">Tags</InputLabel>
-          <Select
-            labelId="demo-multiple-chip-label"
-            id="demo-multiple-chip"
-            multiple
-            value={tags}
-            onChange={handleTagChange}
-            input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-            renderValue={(selected) => (
-              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                {selected.map((value) => (
-                  <Chip key={value} label={value} />
-                ))}
-              </Box>
-            )}
-            MenuProps={MenuProps}
-          >
-            {allTags.map((name) => (
-              <MenuItem
-                key={name}
-                value={name}
-                style={getStyles(tags, allTags, theme)}
-              >
-                {name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <CategoryComponent category={category} setCategory={setCategory}/>
+        <p className="py-2"></p>
+        <TagHandler tags={tags} setTags={setTags} />
 
         <TextField
           label="Link"

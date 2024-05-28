@@ -45,7 +45,7 @@ const Form = () => {
           variant="outlined"
           required
           fullWidth
-          type="email"
+          type="email string"
           className="mb-4"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
