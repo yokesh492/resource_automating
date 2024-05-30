@@ -2,16 +2,15 @@
 import { TextField, Button,CircularProgress } from "@mui/material";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import axios from "axios";
 
 const Form = () => {
-  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
 
-  const isValid = email && password;
+  const isValid = name && password;
 
   const formHandler = async() => {
     setLoading(true);
@@ -45,8 +44,8 @@ const Form = () => {
           fullWidth
           type="string"
           className="mb-4"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
         />
         <TextField
           label="Enter your password"
