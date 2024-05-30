@@ -15,7 +15,9 @@ def create_user(db: Session, user):
     return db_user
 
 def create_resource(db: Session, resource: ResourceCreate, user_id: int):
-    db_resource = Resource(**resource, user_id=user_id)
+    user = db.query(User).filter(User.id == user_id).one()
+    added_by_username = user.username
+    db_resource = Resource(**resource, user_id=user_id, addedBy=added_by_username)
     db.add(db_resource)
     db.commit()
     db.refresh(db_resource)

@@ -10,10 +10,21 @@ from typing import List
 from .database import engine
 from .models import Base
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.middleware.cors import CORSMiddleware
+
+origins =['*']
 
 
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_methods=["*"],
+    allow_credentials=True,
+    allow_headers=["*"]
+)
 router = APIRouter()
 
 def scrape_metadata(url: str):
@@ -41,7 +52,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(dependencies.get
     db.refresh(db_user)
     return db_user
 
-@app.post("/token", response_model=schemas.Token)
+@app.post("/login", response_model=schemas.Token)
 def login_for_access_token(db: Session = Depends(dependencies.get_db), form_data: OAuth2PasswordRequestForm = Depends()):
     user = auth.authenticate_user(db, form_data.username, form_data.password)
     if not user:
@@ -77,17 +88,17 @@ def create_resource(resource_data: schemas.ResourceCreate, db: Session = Depends
 
 
 @app.get("/resources/categories/", response_model=List[schemas.Resource])
-def read_resources_by_categories(categories: List[str] = Query(None), db: Session = Depends(database.get_db)):
+def read_resources_by_categories(categories: List[str] = Query(None), db: Session = Depends(dependencies.get_db)):
     resources = crud.get_resources_by_categories(db, categories=categories)
     return resources
 
 @app.get("/resources/types/", response_model=List[schemas.Resource])
-def read_resources_by_types(types: List[str] = Query(None), db: Session = Depends(database.get_db)):
+def read_resources_by_types(types: List[str] = Query(None), db: Session = Depends(dependencies.get_db)):
     resources = crud.get_resources_by_types(db, types=types)
     return resources
 
 @app.get("/resources/tags/", response_model=List[schemas.Resource])
-def read_resources_by_tags(tags: List[str] = Query(None), db: Session = Depends(database.get_db)):
+def read_resources_by_tags(tags: List[str] = Query(None), db: Session = Depends(dependencies.get_db)):
     resources = crud.get_resources_by_tags(db, tags=tags)
     return resources
 
