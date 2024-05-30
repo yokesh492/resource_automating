@@ -8,6 +8,7 @@ import axios from 'axios';
 import TagHandler from "./components/tagComponent";
 import CategoryComponent from "./components/categoryComponent";
 import UserName from "./components/username";
+import {allData} from './data/data'
 
 const style = {
   position: 'absolute',
@@ -25,28 +26,48 @@ export default function Home() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [data,setData] = useState([]);
+  // const [data,setData] = useState([]);
+  const [data,setData] = useState(allData);
   const [name,setName] = useState('');
   const [type,setType] = useState('');
   const [tags,setTags] = useState([]);
   const [category,setCategory] = useState('');
 
   
-  const dataFetcher = async () => {
-    try {
-      const response = await axios.get('https://localhost.com/data');
-      const data = response.data;
-      setData(data);
-      setName(response.name);
+  // const dataFetcher = async () => {
+  //   try {
+  //     const response = await axios.get('https://localhost.com/data');
+  //     const data = response.data;
+  //     setData(data);
+  //     setName(response.name);
 
-    } catch (error) {
-      console.error('Axios error:', error);
-    }
-  };
+  //   } catch (error) {
+  //     console.error('Axios error:', error);
+  //   }
+  // };
 
-  useEffect(()=>{
-    dataFetcher();
-  },[])
+    // const filterDataFetcher = async () => {
+    //   try{
+    //     const response = await axios.post('https://localhost.com/data', {
+    //       category,
+    //       tags,
+    //       type
+    //     });
+    //     const data = response.data;
+    //     setData(data);
+  
+    //   }catch(error){
+    //     console.error('Axios error:', error);
+    //   }
+    // };
+
+  // useEffect(()=>{
+  //   dataFetcher();
+  // },[])
+
+  // useEffect(()=>{
+  //   filterDataFetcher()
+  // },[category,tags,type])
 
   const handleTypeChange = (event) => {
     setType(event.target.value);

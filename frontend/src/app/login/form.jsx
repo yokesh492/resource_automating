@@ -2,6 +2,7 @@
 import { TextField, Button,CircularProgress } from "@mui/material";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 const Form = () => {
   const [email, setEmail] = useState("");
@@ -12,34 +13,31 @@ const Form = () => {
 
   const isValid = email && password;
 
-  const formHandler = async(e) => {
-    e.preventDefault();
+  const formHandler = async() => {
     setLoading(true);
-    try {
-      const response = await axios.post('https://localhost.com/data', {
-        email,
-        password,
-      });
+    const {response,error} = await authenticate(); 
+    setLoading(false);
 
-      if(response.status !== 200) {
-        setLoading(false);
-        return setError('Invalid credentials');
-      }
+    if(error){
+      setError(error);
+    }
+    if(response){
+      console.log(response);
+      router.push('/');
+    }
 
-      setLoading(false);
-      router.push('../');
-    } catch (error) {
-      console.error('Axios error:', error);
-    } 
+
   }
    
   return (
-    <div className="bg-white p-8 rounded shadow-lg w-96">
+    <div className="bg-white rounded p-2 shadow-lg w-96">
+        <h2 className="text-blue-600 text-3xl font-bold pt-2 text-center"> Vizdale</h2>
+        <div className="p-6 pt-3">
       <div className="text-center pb-4">
-        <h2 className="text-2xl font-bold pt-2"> Signin</h2>
+        <h2 className="text-black text-2xl font-bold pt-2"> Signin</h2>
       </div>
       {error && <p className="text-red-500">{error}</p>}
-      <form onSubmit={formHandler} className="text-center">
+      <form action={formHandler} className="text-center">
         <TextField
           label="Enter your email / username"
           variant="outlined"
@@ -71,6 +69,8 @@ const Form = () => {
         </Button>
       </form>
     </div>
+          
+        </div>
   );
 };
 
