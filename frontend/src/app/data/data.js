@@ -1,5 +1,5 @@
 
-export const data = [
+export const allData = [
     {
       id:1,
       asset_name: "UI & UX Design Tips by Jim Raptis.",
