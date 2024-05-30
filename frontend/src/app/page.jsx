@@ -8,8 +8,9 @@ import axios from 'axios';
 import TagHandler from "./components/tagComponent";
 import CategoryComponent from "./components/categoryComponent";
 import UserName from "./components/username";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 // import {allData} from './data/data'
+import dataFetcher from "./components/dataFetcher";
 
 const style = {
   position: 'absolute',
@@ -33,19 +34,10 @@ export default function Home() {
   const [type,setType] = useState('');
   const [tags,setTags] = useState([]);
   const [category,setCategory] = useState('');
+  const [userId,setUserId ]= useState('');
 
-  
-  const dataFetcher = async () => {
-    try {
-      const response = await axios.get('http://localhost:8000/resources');
-      const data = response.data;
-      setData(data);
-      setName(response.name);
+  const router = useRouter();
 
-    } catch (error) {
-      console.error('Axios error:', error);
-    }
-  };
 
     const filterCategoryFetcher = async () => {
       try{
@@ -61,8 +53,20 @@ export default function Home() {
     };
 
   useEffect(()=>{
-
-    dataFetcher();
+    const {data,error,userInfo}=dataFetcher();
+    console.log(data,error,userInfo);
+    
+    if(error === undefined || error !== null){
+      console.log('User not logged in');
+      router.push('/login');
+    }
+    else{
+      console.log(error)
+      console.log('this is wes')
+      setData(data);
+      setName(userInfo?.name);
+      setUserId(userInfo?.id);
+    }
   },[])
 
   useEffect(()=>{
@@ -116,7 +120,7 @@ export default function Home() {
       <div className="flex flex-row bg-purple-700 p-3">
         <h3 className="font-bold text-2xl  text-white bg-none">Vizdale Resources</h3>
         <div className="ml-auto">
-          <h4 className="text-2xl text-white"><UserName name={'UserName'}/></h4>
+          <h4 className="text-2xl text-white"><UserName name={name || '  '}/></h4>
         </div>
       </div>
         <div className="flex flex-row p-5 w-full">
@@ -127,8 +131,9 @@ export default function Home() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-         <Form />
+         <Form id={userId}/>
         </Box>
+
       </Modal>
           <h1 className="font-bold text-3xl float-left">Resources</h1>  
           <div className="ml-auto">

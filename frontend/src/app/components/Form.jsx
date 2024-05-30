@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { CircularProgress } from '@mui/material';
 
-function Form() {
+function Form(props) {
     const router = useRouter();
     const [loading,setLoading] = useState(false);
    
@@ -15,7 +15,7 @@ function Form() {
         console.log(link);
 
         try {
-          const response = await axios.post('https://localhost.com/data', {
+          const response = await axios.post('http://localhost:8000/scrape', {
             link: link,
           });
           console.log(response);

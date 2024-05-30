@@ -30,7 +30,7 @@ export const authenticate = async (formData) => {
     try {
         const response = await axios.post('http://localhost:8000/login', data);
 
-        console.log(response.status)
+        const userinfo = response.data;
 
         const expires = new Date(Date.now() + 60 * 60 * 24 * 3 * 1000);
         const session = await encrypt({ data, expires });
@@ -41,7 +41,12 @@ export const authenticate = async (formData) => {
                 maxAge: 60 * 60 * 24 * 3, 
                 path: '/',
             })
-            return {response,error:null}
+            cookies().set('userinfo',data,{
+                httpOnly: true,
+                maxAge: 60 * 60 * 24 * 3, 
+                path: '/',
+            })
+            return {response:'s',error:null}
         }
         else{
             return {response: null, error: 'Invalid Credentials'};
