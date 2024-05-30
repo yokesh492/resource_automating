@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  postgres-db-fastapi:
+    image: postgres:13
+    restart: always
+    environment:
+      - POSTGRES_USER= postgres
+      - POSTGRES_PASSWORD= postgres
+      - POSTGRES_DB= Vizdale
+    volumes:
+      - ./data:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
+    networks:
+      - postgres-database
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    ports:
+      - "7777:80"
+    depends_on:
+      - postgres-db-fastapi
+    networks:
+      - postgres-database
+
+  fastapi:
+    build: .
+    ports:
+      - "80:80"
+    depends_on:
+      - postgres-db-fastapi
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres-db-fastapi/Vizdale
