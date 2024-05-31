@@ -1,8 +1,8 @@
 'use client';
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
 import { CircularProgress } from '@mui/material';
+import postFormData from './postFormData';
 
 function Form(props) {
     const router = useRouter();
@@ -14,16 +14,13 @@ function Form(props) {
         const link = e.target.link.value;
         console.log(link);
 
-        try {
-          const response = await axios.post('http://localhost:8000/scrape', {
-            link: link,
-          });
-          console.log(response);
-          setLoading(false);
-          router.push('../asset');
-        } catch (error) {
-          console.error('Axios error:', error);
-        } 
+        const {response,error} = await postFormData(link);
+        if(response === 'succuss'){
+            router.push('/asset');
+        }
+        else{
+            console.log(error)
+        }
       }
     
 return (

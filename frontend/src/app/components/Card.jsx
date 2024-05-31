@@ -24,10 +24,10 @@ return (
         </div>
         <div className='px-3 py-1.5'>
             <h5 className={style}>LINK</h5>
-            <p>{props.link}</p>
+            <a href={link} target='_blank' className='hover:text-blue-500 hover:underline'>{props.link}</a>
         </div>
         <div className='px-3 py-1.5'>
-            <h5 className={style}>tags</h5>
+            <h5 className={style}>TAGS</h5>
             <div className='flex flex-row gap-3 items-center'>
                 {props.tags.map((tag, index) => {
                     return <p key={index} className='inline px-4 py-1 rounded-2xl bg-green-200'>{tag}</p>

@@ -1,6 +1,8 @@
 'use server';
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import axios from "axios";
+
 
 const fetchData = async () => {
   const userInfo = JSON.parse(cookies().get('userinfo')?.value);
@@ -9,15 +11,6 @@ const fetchData = async () => {
       return redirect('/login');
   }
 
-    try {
-        const response = await axios.get('http://localhost:8000/scrape');
-        const data = response.data;
-
-        return {data:data,error: null,id:userInfo.userid}
-        
-      } catch (error) {
-        console.error('Axios error:', error);
-        return {data:null,error:error,id:null}
-      }
+   const data = JSON.parse()
 }
 export default fetchData;
