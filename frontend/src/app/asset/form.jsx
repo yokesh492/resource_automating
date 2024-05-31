@@ -3,6 +3,9 @@ import {
   Button,
   CircularProgress,
   FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
   TextField,
 } from "@mui/material";
 import { useRouter } from "next/navigation";
@@ -19,6 +22,7 @@ function AssetForm(props) {
   const [description, setDescription] = useState("");
   const [link, setLink] = useState("");
   const [category, setCategory] = useState("");
+  const [teams, setTeams] = useState("");
   const [tags, setTags] = useState([]);
   const [loading, setLoading] = useState(false);
   const [userId,setUserId ]= useState('');
@@ -59,10 +63,17 @@ function AssetForm(props) {
         link: link,
         category: category,
         tags: tags,
+        team:teams,
+        date:null
       });
       console.log(response);
       setLoading(false);
-      router.push('../asset');
+      if(response.status === 200){
+        console.log('Asset added successfully');
+      }
+      else{
+        console.log('Asset not added');
+      }
     } catch (error) {
       console.error('Axios error:', error);
     } 
@@ -97,6 +108,22 @@ function AssetForm(props) {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
+        <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Type</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={teams}
+                label="Type"
+                onChange={(e) => setTeams(e.target.value)}
+              >
+                <MenuItem value="Design">Design</MenuItem>
+                <MenuItem value="Technology">Technology</MenuItem>
+                <MenuItem value="Business">Business</MenuItem>
+              </Select>
+            </FormControl>
+        <p className="py-2"></p>
+            
 
         <CategoryComponent category={category} setCategory={setCategory}/>
         <p className="py-2"></p>
