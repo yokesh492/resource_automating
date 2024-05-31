@@ -22,18 +22,20 @@ export default function Home() {
   const [category, setCategory] = useState("");
 
   useEffect(() => {
-    const { data, error, userInfo } = dataFetcher();
-    console.log(data, error, userInfo);
+    dataFetcher().then((res)=>{
+      const {data,error,userInfo} = res;
+      if (error === undefined || error !== null) {
+        console.log("User not logged in");
+      } else {
+        console.log(error);
+        console.log("this is wes");
+        setData(data);
+        setName(userInfo?.username);
+        setUserId(userInfo?.userid);
+      }
+    }).catch((error)=>console.log(error));
 
-    if (error === undefined || error !== null) {
-      console.log("User not logged in");
-    } else {
-      console.log(error);
-      console.log("this is wes");
-      setData(data);
-      setName(userInfo?.username);
-      setUserId(userInfo?.userid);
-    }
+
   }, []);
 
   const filterCategoryFetcher = async (val) => {
