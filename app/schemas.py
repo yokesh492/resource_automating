@@ -45,7 +45,7 @@ class Resource(ResourceBase):
         orm_mode = True
 
 class UrlBase(BaseModel):
-    url: str
+    link: str
 
 class Token(BaseModel):
     access_token: str

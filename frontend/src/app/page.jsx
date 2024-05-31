@@ -22,35 +22,18 @@ export default function Home() {
   const [category, setCategory] = useState("");
 
   useEffect(() => {
-    dataFetcher()
-      .then((res) => {
-        const { data, error, userInfo } = res;
-        console.log(data, error, userInfo);
+    const { data, error, userInfo } = dataFetcher();
+    console.log(data, error, userInfo);
 
-        if (error === undefined || error !== null) {
-          console.log("User not logged in");
-        } else {
-          console.log(error, "error in data fetching");
-          setData(data);
-          setName(userInfo?.username);
-        }
-      })
-      .catch((error) => {
-        console.log("Error fetching data:", error);
-      });
-
-    // const { data, error, userInfo } = dataFetcher();
-    // console.log(data, error, userInfo);
-
-    // if (error === undefined || error !== null) {
-    //   console.log("User not logged in");
-    // } else {
-    //   console.log(error);
-    //   console.log("this is wes");
-    //   setData(data);
-    //   setName(userInfo?.username);
-    //   setUserId(userInfo?.userid);
-    // }
+    if (error === undefined || error !== null) {
+      console.log("User not logged in");
+    } else {
+      console.log(error);
+      console.log("this is wes");
+      setData(data);
+      setName(userInfo?.username);
+      setUserId(userInfo?.userid);
+    }
   }, []);
 
   const filterCategoryFetcher = async (val) => {
