@@ -24,6 +24,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_credentials=True,
     allow_headers=["*"]
+
 )
 router = APIRouter()
 
@@ -52,7 +53,13 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(dependencies.get
     db.refresh(db_user)
     return db_user
 
-@app.post("/login", response_model=schemas.Token)
+@app.post("/login")
+def login(user: schemas.UserIn, db: Session = Depends(dependencies.get_db)):
+    user = auth.authenticate_user(db, user.username, user.password)
+    return user
+
+
+@app.post("/token", response_model=schemas.Token)
 def login_for_access_token(db: Session = Depends(dependencies.get_db), form_data: OAuth2PasswordRequestForm = Depends()):
     user = auth.authenticate_user(db, form_data.username, form_data.password)
     if not user:
@@ -71,17 +78,17 @@ def login_for_access_token(db: Session = Depends(dependencies.get_db), form_data
 
 
 @app.get("/resources/", response_model=List[schemas.Resource])
-def read_resources(skip: int = 0, limit: int = 100, db: Session = Depends(dependencies.get_db), current_user: schemas.User = Depends(dependencies.get_current_user)):
-    return crud.get_user_resources(db, user_id=current_user.id, skip=skip, limit=limit)
+def read_resources(skip: int = 0, limit: int = 100, db: Session = Depends(dependencies.get_db)):
+    return crud.get_resources(db,skip=skip, limit=limit)
 
 @app.post("/resources/", response_model=schemas.Resource)
-def create_resource(resource_data: schemas.ResourceCreate, db: Session = Depends(dependencies.get_db), current_user: models.User = Depends(dependencies.get_current_user)):
+def create_resource(resource_data: schemas.ResourceCreate, user_id: int, db: Session = Depends(dependencies.get_db)):
     try:
         resource_data = resource_data.dict()
         print(resource_data)
         resource_data.pop('date', None)
         print(resource_data)
-        resource = crud.create_resource(db, resource_data, user_id=current_user.id)
+        resource = crud.create_resource(db, resource_data, user_id=user_id)
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"An error occurred while creating the resource: {str(e)}")
     return resource

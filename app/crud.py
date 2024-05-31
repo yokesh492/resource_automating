@@ -23,17 +23,41 @@ def create_resource(db: Session, resource: ResourceCreate, user_id: int):
     db.refresh(db_resource)
     return db_resource
 
-def get_user_resources(db: Session, user_id: int, skip: int = 0, limit: int = 100):
+def get_resources(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Resource).offset(skip).limit(limit).all()
 
 def get_resources_by_team(db: Session, team_name: str):
-    return db.query(Resource).filter(Resource.team == team_name).all()
+    try:
+        resources = db.query(Resource).filter(Resource.team == team_name).all()
+        if not resources:
+            raise Exception("No resources")
+        return resources
+    except Exception as e:
+        return "NO resource"
 
 def get_resources_by_categories(db: Session, categories: list):
-    return db.query(Resource).filter(Resource.category.in_(categories)).all()
+    try:
+        resources =db.query(Resource).filter(Resource.category.in_(categories)).all()
+        if not resources:
+            raise Exception("No resources")
+        return resources
+    except Exception as e:
+        return "NO resource"
 
 def get_resources_by_types(db: Session, types: list):
-    return db.query(Resource).filter(Resource.type.in_(types)).all()
+    try:
+        resources = db.query(Resource).filter(Resource.type.in_(types)).all()
+        if not resources:
+            raise Exception("No resources")
+        return resources
+    except Exception as e:
+        return "NO resource"
 
 def get_resources_by_tags(db: Session, tags: list):
-    return db.query(Resource).filter(Resource.tags.any(tags)).all()
+    try:
+        resources = db.query(Resource).filter(Resource.tags.any(tags)).all()
+        if not resources:
+            raise Exception("No resources")
+        return resources
+    except Exception as e:
+        return "NO resource"
