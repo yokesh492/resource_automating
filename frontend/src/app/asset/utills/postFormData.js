@@ -1,6 +1,5 @@
 "use server";
 import axios from "axios";
-import { cookies } from "next/headers";
 
 export default async function postFormData() {
   try {
@@ -8,14 +7,9 @@ export default async function postFormData() {
       link: link,
     });
     console.log(response);
-    if (response.status === 200 && response.data) {
-      cookies().set("data", JSON.stringify(response.data), {
-        path: "/",
-        httpOnly: true,
-        maxAge: 15,
-      });
 
-      return { response: "succuss", error: null };
+    if (response.status === 200 && response.data) {
+      return { response: response.data, error: null };
     }
     else{
         return {response: null, error: 'Invalid Link'};

@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Button,
   CircularProgress,
@@ -10,9 +11,9 @@ import React, { useEffect, useState } from "react";
 import TagHandler from "../components/tagComponent";
 import CategoryComponent from "../components/categoryComponent";
 import axios from "axios";
-import fetchData from "./fetchData";
+import fetchData from "./utills/fetchData";
 
-function form() {
+function AssetForm(props) {
   const router = useRouter();
 
   const [asset, setAsset] = useState("");
@@ -25,19 +26,18 @@ function form() {
 
   const isValid = asset && description && link && category && tags.length > 0;
   
-  const dataFetcher = async () => {
+  const dataFetcher = async (props) => {
     try {
-      const {data,error,id}= await fetchData();
+      const {error,id}= await fetchData();
 
       if(error === undefined || error !== null){
         console.log('User not logged in');
-        return;
       }
       else{
         setUserId(id);
-        setAsset(data.asset_name);
-        setDescription(data.description);
-        setLink(data.link);
+        setAsset(props.data.asset_name);
+        setDescription(props.data.description);
+        setLink(props.data.link);
       }
 
     } catch (error) {
@@ -46,7 +46,7 @@ function form() {
   };
 
   useEffect(()=>{
-    dataFetcher();
+    dataFetcher(props);
   },[])
 
   const submitHandler = async (e) => {
@@ -128,4 +128,4 @@ function form() {
   );
 }
 
-export default form;
+export default AssetForm;

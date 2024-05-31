@@ -1,7 +1,6 @@
 'use server';
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import axios from "axios";
 
 
 const fetchData = async () => {
@@ -10,7 +9,7 @@ const fetchData = async () => {
       console.log('User not logged in');
       return redirect('/login');
   }
-
-   const data = JSON.parse()
+  return {error:null,id: userInfo.userid};
+   
 }
 export default fetchData;

@@ -1,63 +1,43 @@
 "use client";
 import Image from "next/image";
 import Card from "./components/Card";
-import {
-  Box,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Modal,
-  Select,
-} from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { useEffect, useState } from "react";
-import Form from "./components/form";
 import axios from "axios";
 import TagHandler from "./components/tagComponent";
 import CategoryComponent from "./components/categoryComponent";
 import UserName from "./components/username";
 // import {allData} from './data/data'
 import dataFetcher from "./components/dataFetcher";
-
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const router = useRouter();
+  const routeHandler = () => router.push("./asset");
   const [data, setData] = useState([]);
   // const [data,setData] = useState(allData);
   const [name, setName] = useState("");
-  const [types, setTypes] = useState('');
+  const [types, setTypes] = useState("");
   const [tags, setTags] = useState([]);
-  const [category, setCategory] = useState('');
-  const [userId, setUserId] = useState("");
+  const [category, setCategory] = useState("");
 
   useEffect(() => {
-    dataFetcher().then((res) => {
-    const { data, error, userInfo } = res;
-    console.log(data, error, userInfo);
+    dataFetcher()
+      .then((res) => {
+        const { data, error, userInfo } = res;
+        console.log(data, error, userInfo);
 
-    if (error === undefined || error !== null) {
-      console.log("User not logged in");
-    } else {
-      console.log(error,'error in data fetching');
-      setData(data);
-      setName(userInfo?.username);
-      setUserId(userInfo?.userid);
-    }
-    }).catch((error) => {
-      console.log('Error fetching data:', error);
-    });
+        if (error === undefined || error !== null) {
+          console.log("User not logged in");
+        } else {
+          console.log(error, "error in data fetching");
+          setData(data);
+          setName(userInfo?.username);
+        }
+      })
+      .catch((error) => {
+        console.log("Error fetching data:", error);
+      });
 
     // const { data, error, userInfo } = dataFetcher();
     // console.log(data, error, userInfo);
@@ -74,18 +54,18 @@ export default function Home() {
   }, []);
 
   const filterCategoryFetcher = async (val) => {
-    setCategory(val);
+    setCategory((prevValue) => (prevValue === val ? "" : val));
     const queryString = `category=${encodeURIComponent(val)}`;
     try {
       const url = `http://localhost:8000/resources/category/?${queryString}`;
       console.log("Fetching data from:", url);
       const response = await axios.get(url);
       if (response.status === 200) {
-          const data = await response.json();
-          console.log('Received data:', data);
-          setData(data);
+        const data = await response.json();
+        console.log("Received data:", data);
+        setData(data);
       } else {
-          console.error('Error fetching data:', response.statusText);
+        console.error("Error fetching data:", response.statusText);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -94,38 +74,44 @@ export default function Home() {
 
   const filterTagsFetcher = async (val) => {
     setTags(val);
-    const queryString =val.map(tag => `tags=${encodeURIComponent(tag)}`).join('&');
+    const queryString = val
+      .map((tag) => `tags=${encodeURIComponent(tag)}`)
+      .join("&");
     try {
       const url = `http://localhost:8000/resources/tags/?${queryString}`;
       console.log("Fetching data from:", url);
 
       const response = await axios.get(url);
       if (response.status === 200) {
-          const data = await response.json();
-          console.log('Received data:', data);
-          setData(data);
+        const data = await response.json();
+        console.log("Received data:", data);
+        setData(data);
       } else {
-          console.error('Error fetching data:', response.statusText);
+        console.error("Error fetching data:", response.statusText);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
-
   const handleTypeChange = async (event) => {
-    setTypes(event.target.value);
+    console.log(event.target.value, "in tag");
+
+    setTypes((prevValue) =>
+      prevValue == event.target.value ? "" : event.target.value
+    );
+
     const queryString = `types=${encodeURIComponent(event.target.value)}`;
     try {
       const url = `http://localhost:8000/resources/types/?${queryString}`;
       console.log("Fetching data from:", url);
       const response = await axios.get(url);
       if (response.status === 200) {
-          const data = await response.json();
-          console.log('Received data:', data);
-          setData(data);
+        const data = await response.json();
+        console.log("Received data:", data);
+        setData(data);
       } else {
-          console.error('Error fetching data:', response.statusText);
+        console.error("Error fetching data:", response.statusText);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -146,16 +132,6 @@ export default function Home() {
           </div>
         </div>
         <div className="flex flex-row p-5 w-full">
-          <Modal
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
-            <Box sx={style}>
-              <Form id={userId} />
-            </Box>
-          </Modal>
           <h1 className="font-bold text-3xl float-left">Resources</h1>
           <div className="ml-auto">
             <button className="p-2 m-auto mr-4 rounded-lg border shadow-lg bg-white text-center">
@@ -163,7 +139,7 @@ export default function Home() {
             </button>
             <button
               className="font-bold text-white bg-black m-auto p-2 text-center rounded-lg shadow-lg"
-              onClick={handleOpen}
+              onClick={routeHandler}
             >
               Add Asset
             </button>
@@ -180,6 +156,9 @@ export default function Home() {
                 label="Type"
                 onChange={handleTypeChange}
               >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
                 <MenuItem value="Tools">Tools</MenuItem>
                 <MenuItem value="Inspiration">Inspiration</MenuItem>
                 <MenuItem value="Games">Games</MenuItem>

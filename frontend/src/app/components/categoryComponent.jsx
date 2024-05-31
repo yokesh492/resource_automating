@@ -1,4 +1,4 @@
-import { FormControl, InputLabel, Select } from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import React from "react";
 
 const CategoryComponent = (props) => {
@@ -13,7 +13,7 @@ const CategoryComponent = (props) => {
         value={props.category}
         onChange={(e) => props.setCategory(e.target.value)}
       >
-        <option aria-label="None" value="" />
+        <option aria-label="None" value="" ></option>
         <optgroup label="Design Fundamentals">
           <option value="Heirarchy">Heirarchy</option>
           <option value="Color">Color</option>
