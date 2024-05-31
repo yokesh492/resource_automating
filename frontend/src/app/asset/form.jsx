@@ -24,6 +24,7 @@ function AssetForm(props) {
   const [category, setCategory] = useState("");
   const [teams, setTeams] = useState("");
   const [tags, setTags] = useState([]);
+  const [types, setTypes] = useState('');
   const [loading, setLoading] = useState(false);
   const [userId,setUserId ]= useState('');
 
@@ -64,6 +65,7 @@ function AssetForm(props) {
         category: category,
         tags: tags,
         team:teams,
+        type:types,
         date:null
       });
       console.log(response);
@@ -109,7 +111,7 @@ function AssetForm(props) {
           onChange={(e) => setDescription(e.target.value)}
         />
         <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Type</InputLabel>
+              <InputLabel id="demo-simple-select-label">Teams</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
@@ -120,6 +122,23 @@ function AssetForm(props) {
                 <MenuItem value="Design">Design</MenuItem>
                 <MenuItem value="Technology">Technology</MenuItem>
                 <MenuItem value="Business">Business</MenuItem>
+              </Select>
+            </FormControl>
+        <p className="py-2"></p>
+        <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Type</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={types}
+                label="Type"
+                onChange={(e) => setTypes(e.target.value)}
+              >
+                <MenuItem value="Tools">Tools</MenuItem>
+                <MenuItem value="Inspiration">Inspiration</MenuItem>
+                <MenuItem value="Games">Games</MenuItem>
+                <MenuItem value="Tutorial">Tutorial</MenuItem>
+                <MenuItem value="Blog">Blog</MenuItem>
               </Select>
             </FormControl>
         <p className="py-2"></p>
