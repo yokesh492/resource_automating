@@ -33,17 +33,17 @@ const Form = () => {
     <div className="bg-white rounded p-2 shadow-lg w-96">
         <h2 className="text-blue-600 text-3xl font-bold pt-2 text-center"> Vizdale</h2>
         <div className="p-6 pt-3">
-      <div className="text-center pb-4">
+      <div className={`text-center ${error ? 'pb-2' : 'pb-4'}`}>
         <h2 className="text-black text-2xl font-bold pt-2"> Signin</h2>
       </div>
-      {error && <p className="text-red-500">{error}</p>}
+      {error && <p className="text-red-500 text-center font-bold p-1 pb-2">{error}</p>}
       <form action={formHandler} className="text-center">
         <TextField
           label="Enter your email / username"
           variant="outlined"
           required
           fullWidth
-          type="string"
+          type="text"
           name="name"
           className="mb-4"
           value={name}

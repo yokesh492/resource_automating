@@ -9,6 +9,9 @@ class UserCreate(UserBase):
     email: EmailStr
     password: str
 
+class UserIn(UserBase):
+    password: str
+
 class User(UserBase):
     id: int
     is_active: bool

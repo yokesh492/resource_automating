@@ -53,7 +53,7 @@ function form() {
     setLoading(true);
 
     try {
-      const response = await axios.post(`http://localhost:8000/scrape/${userId}`, {
+      const response = await axios.post(`http://localhost:8000/resources/${userId}`, {
         asset_name: asset,
         description: description,
         link: link,

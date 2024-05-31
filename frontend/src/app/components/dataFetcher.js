@@ -5,23 +5,25 @@ import { redirect } from "next/navigation";
 
 
 const dataFetcher = async () => {
-  const userInfo = cookies().get('userinfo')?.value;
-  
+  const userInfo = JSON.parse(cookies().get('userinfo')?.value);
   if(userInfo === undefined ){
       console.log('User not logged in');
       return redirect('/login');
   }
-
-    // const userInfo = cookies().get('userinfo')?.value;
     console.log(userInfo)
     if(userInfo === undefined ){
-        console.log('User not logged in');
       return {data:null,error:'User not logged in',userInfo:null}
     }
     try {
-      const response = await axios.get(`http://localhost:8000/resources/${userInfo.id}`);
+      const response = await axios.get(`http://localhost:8000/resources`);//${userInfo.userid}
       const data = response.data;
-      return {data:data,error: null,userInfo:userInfo}
+      if(data){
+        return {data:data,error: null,userInfo:userInfo}
+      }
+      //made a change here to check for error
+      else{
+        return {data:null,error:response.error,userInfo:null}
+      }
 
     } catch (error) {
       console.error('Axios error:', error);
