@@ -27,7 +27,9 @@ function form() {
   
   const dataFetcher = async () => {
     try {
-      const {data,error,id}=fetchData();
+      const {data,error,id}= await fetchData();
+      console.log("hello")
+      console.log(data,error,id)
       if(error === undefined || error !== null){
         console.log('User not logged in');
         return;

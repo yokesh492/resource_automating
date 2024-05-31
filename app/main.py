@@ -94,7 +94,7 @@ def create_resource(resource_data: schemas.ResourceCreate, userid: int, db: Sess
     return resource
 
 
-@app.get("/resources/categories/", response_model=List[schemas.Resource])
+@app.get("/resources/category/", response_model=List[schemas.Resource])
 def read_resources_by_categories(categories: List[str] = Query(None), db: Session = Depends(dependencies.get_db)):
     resources = crud.get_resources_by_categories(db, categories=categories)
     return resources
@@ -112,7 +112,7 @@ def read_resources_by_tags(tags: List[str] = Query(None), db: Session = Depends(
 
 @app.post("/scrape/", response_model=schemas.ResourceBase)
 def scrape(url_data: schemas.UrlBase, db: Session = Depends(dependencies.get_db)):
-    url = url_data.url
+    url = url_data.link
     name, description = scrape_metadata(url)
     if not name and not description:
         raise HTTPException(status_code=404, detail="Failed to retrieve data from the URL.")

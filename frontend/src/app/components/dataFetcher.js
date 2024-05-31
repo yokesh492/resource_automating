@@ -12,12 +12,15 @@ const dataFetcher = async () => {
   }
     console.log(userInfo)
     if(userInfo === undefined ){
+      console.log('User not loggin');
       return {data:null,error:'User not logged in',userInfo:null}
     }
     try {
-      const response = await axios.get(`http://localhost:8000/resources`);//${userInfo.userid}
+      const response = await axios.get(`http://localhost:8000/resources`); //${userInfo.userid}
       const data = response.data;
+      
       if(data){
+        console.log(data);
         return {data:data,error: null,userInfo:userInfo}
       }
       //made a change here to check for error

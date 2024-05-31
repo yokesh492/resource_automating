@@ -23,7 +23,7 @@ export async function decrypt(input) {
 
 export const authenticate = async (formData) => {
     const data = {
-        name: formData.get('name'),
+        username: formData.get('name'),
         password:formData.get('password'),
       };
     try {
