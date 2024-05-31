@@ -10,6 +10,7 @@ import React, { useEffect, useState } from "react";
 import TagHandler from "../components/tagComponent";
 import CategoryComponent from "../components/categoryComponent";
 import axios from "axios";
+import fetchData from "./fetchData";
 
 function form() {
   const router = useRouter();
@@ -20,17 +21,24 @@ function form() {
   const [category, setCategory] = useState("");
   const [tags, setTags] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [userId,setUserId ]= useState('');
 
   const isValid = asset && description && link && category && tags.length > 0;
   
   const dataFetcher = async () => {
     try {
-      const response = await axios.get('https://localhost.com/data');
-      const data = response.data;
-      
-      setAsset(data.asset_name);
-      setDescription(data.description);
-      setLink(data.link);
+      const {data,error,userInfo}=fetchData();
+      if(error === undefined || error !== null){
+        console.log('User not logged in');
+        return;
+      }
+      else{
+        setUserId(userInfo.id);
+        setAsset(data.asset_name);
+        setDescription(data.description);
+        setLink(data.link);
+      }
+
     } catch (error) {
       console.error('Axios error:', error);
     }
@@ -45,7 +53,7 @@ function form() {
     setLoading(true);
 
     try {
-      const response = await axios.post('https://localhost.com/data', {
+      const response = await axios.post(`http://localhost:8000/scrape/${userId}`, {
         asset_name: asset,
         description: description,
         link: link,

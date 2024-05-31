@@ -3,12 +3,14 @@ import Image from "next/image";
 import Card from "./components/Card";
 import { Box, FormControl, InputLabel, MenuItem, Modal, Select } from "@mui/material";
 import { useEffect, useState } from "react";
-import Form from "./form";
+import Form from "./components/form";
 import axios from 'axios';
 import TagHandler from "./components/tagComponent";
 import CategoryComponent from "./components/categoryComponent";
 import UserName from "./components/username";
-import {allData} from './data/data'
+import { redirect, useRouter } from "next/navigation";
+// import {allData} from './data/data'
+import dataFetcher from "./components/dataFetcher";
 
 const style = {
   position: 'absolute',
@@ -26,52 +28,91 @@ export default function Home() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  // const [data,setData] = useState([]);
-  const [data,setData] = useState(allData);
+  const [data,setData] = useState([]);
+  // const [data,setData] = useState(allData);
   const [name,setName] = useState('');
   const [type,setType] = useState('');
   const [tags,setTags] = useState([]);
   const [category,setCategory] = useState('');
+  const [userId,setUserId ]= useState('');
 
+  const router = useRouter();
+
+
+    const filterCategoryFetcher = async () => {
+      try{
+        const response = await axios.post('http://localhost:8000/resources/category', {
+          category,
+        });
+        const data = response.data;
+        setData(data);
   
-  // const dataFetcher = async () => {
-  //   try {
-  //     const response = await axios.get('https://localhost.com/data');
-  //     const data = response.data;
-  //     setData(data);
-  //     setName(response.name);
+      }catch(error){
+        console.error('Axios error:', error);
+      }
+    };
 
-  //   } catch (error) {
-  //     console.error('Axios error:', error);
-  //   }
-  // };
+  useEffect(()=>{
+    const {data,error,userInfo}=dataFetcher();
+    console.log(data,error,userInfo);
+    
+    if(error === undefined || error !== null){
+      console.log('User not logged in');
+      router.push('/login');
+    }
+    else{
+      console.log(error)
+      console.log('this is wes')
+      setData(data);
+      setName(userInfo?.name);
+      setUserId(userInfo?.id);
+    }
+  },[])
 
-    // const filterDataFetcher = async () => {
-    //   try{
-    //     const response = await axios.post('https://localhost.com/data', {
-    //       category,
-    //       tags,
-    //       type
-    //     });
-    //     const data = response.data;
-    //     setData(data);
+  useEffect(()=>{
+    filterCategoryFetcher()
+  },[category])
+
+
+    const filterTagsFetcher = async () => {
+      try{
+        const response = await axios.post('http://localhost:8000/resources/tags', {
+          tags,
+        });
+        const data = response.data;
+        setData(data);
   
-    //   }catch(error){
-    //     console.error('Axios error:', error);
-    //   }
-    // };
+      }catch(error){
+        console.error('Axios error:', error);
+      }
+    };
 
-  // useEffect(()=>{
-  //   dataFetcher();
-  // },[])
+  useEffect(()=>{
+    filterTagsFetcher()
+  },[tags])
 
-  // useEffect(()=>{
-  //   filterDataFetcher()
-  // },[category,tags,type])
+    const filterTypeFetcher = async () => {
+      try{
+        const response = await axios.post('http://localhost:8000/resources/type', {
+          type,
+        });
+        const data = response.data;
+        setData(data);
+  
+      }catch(error){
+        console.error('Axios error:', error);
+      }
+    };
+
+  useEffect(()=>{
+    filterTypeFetcher()
+  },[type])
 
   const handleTypeChange = (event) => {
     setType(event.target.value);
   };
+
+
   
   return (
     <main className="min-h-screen">
@@ -79,7 +120,7 @@ export default function Home() {
       <div className="flex flex-row bg-purple-700 p-3">
         <h3 className="font-bold text-2xl  text-white bg-none">Vizdale Resources</h3>
         <div className="ml-auto">
-          <h4 className="text-2xl text-white"><UserName name={'UserName'}/></h4>
+          <h4 className="text-2xl text-white"><UserName name={name || '  '}/></h4>
         </div>
       </div>
         <div className="flex flex-row p-5 w-full">
@@ -90,8 +131,9 @@ export default function Home() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-         <Form />
+         <Form id={userId}/>
         </Box>
+
       </Modal>
           <h1 className="font-bold text-3xl float-left">Resources</h1>  
           <div className="ml-auto">

@@ -2,6 +2,7 @@
 import { TextField, Button,CircularProgress } from "@mui/material";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { authenticate } from "./authentication";
 
 const Form = () => {
   const [name, setName] = useState("");
@@ -12,9 +13,9 @@ const Form = () => {
 
   const isValid = name && password;
 
-  const formHandler = async() => {
+  const formHandler = async(formData) => {
     setLoading(true);
-    const {response,error} = await authenticate(); 
+    const {response,error} = await authenticate(formData); 
     setLoading(false);
 
     if(error){
@@ -43,6 +44,7 @@ const Form = () => {
           required
           fullWidth
           type="string"
+          name="name"
           className="mb-4"
           value={name}
           onChange={(e) => setName(e.target.value)}
@@ -54,6 +56,7 @@ const Form = () => {
           fullWidth
           type="password"
           className="mb-4"
+          name="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />

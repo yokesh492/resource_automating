@@ -1,6 +1,8 @@
 export function middleware(request) {
     const session = request.cookies.get('session')?.value
-   
+
+    console.log(session, request.nextUrl.pathname);
+      
     if (session && !request.nextUrl.pathname.startsWith('/')) {
       return Response.redirect(new URL('/', request.url))
     }
