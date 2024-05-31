@@ -91,25 +91,37 @@ export default function Home() {
     filterTagsFetcher()
   },[tags])
 
-    const filterTypeFetcher = async () => {
-      try{
-        const response = await axios.post('http://localhost:8000/resources/type', {
-          type,
-        });
-        const data = response.data;
-        setData(data);
+  //   const filterTypeFetcher = async () => {
+  //     try{
+  //       const response = await axios.post('http://localhost:8000/resources/type', {
+  //         type,
+  //       });
+  //       const data = response.data;
+  //       setData(data);
   
-      }catch(error){
-        console.error('Axios error:', error);
-      }
-    };
+  //     }catch(error){
+  //       console.error('Axios error:', error);
+  //     }
+  //   };
 
-  useEffect(()=>{
-    filterTypeFetcher()
-  },[type])
+  // useEffect(()=>{
+  //   filterTypeFetcher()
+  // },[type])
 
-  const handleTypeChange = (event) => {
+  const handleTypeChange = async (event) => {
     setType(event.target.value);
+
+    try{
+      const response = await axios.post('http://localhost:8000/resources/type', {
+        type,
+      });
+      const data = response.data;
+      setData(data);
+
+    }catch(error){
+      console.error('Axios error:', error);
+    }
+    
   };
 
 
@@ -166,6 +178,7 @@ export default function Home() {
         </FormControl>
            <CategoryComponent category={category} setCategory={setCategory} style={{m:1 , minWidth:90}}/>
            <TagHandler tags={tags} setTags={setTags} style={{ m: 1, minWidth: 90} }/>
+           
           </div>
           <div className="ml-auto">
             <button className="p-4 m-auto">Filter</button>

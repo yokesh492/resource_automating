@@ -1,10 +1,12 @@
 'use server';
 import { cookies } from "next/headers";
 import axios from 'axios';
+import { redirect } from "next/navigation";
 
 
 const dataFetcher = async () => {
   const userInfo = cookies().get('userinfo')?.value;
+  
   if(userInfo === undefined ){
       console.log('User not logged in');
       return redirect('/login');

@@ -40,8 +40,6 @@ const CategoryComponent = (props) => {
         <option value={22}>Web App Design</option>
 
       </optgroup>
-
-
     </Select>
   </FormControl>
   )

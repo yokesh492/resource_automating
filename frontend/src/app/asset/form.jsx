@@ -27,13 +27,13 @@ function form() {
   
   const dataFetcher = async () => {
     try {
-      const {data,error,userInfo}=fetchData();
+      const {data,error,id}=fetchData();
       if(error === undefined || error !== null){
         console.log('User not logged in');
         return;
       }
       else{
-        setUserId(userInfo.id);
+        setUserId(id);
         setAsset(data.asset_name);
         setDescription(data.description);
         setLink(data.link);

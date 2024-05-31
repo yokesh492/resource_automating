@@ -1,9 +1,9 @@
-'use server';
+"use server";
 import axios from "axios";
-import { cookies } from 'next/headers'
+import { cookies } from "next/headers";
 import { SignJWT, jwtVerify } from "jose";
 
-const secretKey = process.env.NEXT_SECRET_KEY ;
+const secretKey = process.env.NEXT_SECRET_KEY;
 const key = new TextEncoder().encode(secretKey);
 
 export async function encrypt(payload) {
@@ -21,70 +21,114 @@ export async function decrypt(input) {
   return payload;
 }
 
-
 export const authenticate = async (formData) => {
-    const data = {
-        name: formData.get('name'),
-        password:formData.get('password'),
-      };
-    try {
-        const response = await axios.post('http://localhost:8000/login', data);
+  // const data = {
+  //     name: formData.get('name'),
+  //     password:formData.get('password'),
+  //   };
+  const data = {
+    username: formData.get("name"),
+    password: formData.get("password"),
+  };
 
-        const userinfo = response.data;
+  try {
+    const response = await axios.post("http://localhost:8000/login", data);
+    const expires = new Date(Date.now() + 60 * 60 * 24 * 3 * 1000);
+    const session = await encrypt({ data, expires });
 
-        const expires = new Date(Date.now() + 60 * 60 * 24 * 3 * 1000);
-        const session = await encrypt({ data, expires });
+    if (response.status === 200 && !response.data.error) {
+      // Successful login
+      const { username, userid } = response.data;
+      console.log("Successful login", username);
 
-      if (response.status === 200) {
-            cookies().set('session',session,{
-                httpOnly: true,
-                maxAge: 60 * 60 * 24 * 3, 
-                path: '/',
-            })
-            cookies().set('userinfo',data,{
-                httpOnly: true,
-                maxAge: 60 * 60 * 24 * 3, 
-                path: '/',
-            })
-            return {response:'s',error:null}
-        }
-        else{
-            return {response: null, error: 'Invalid Credentials'};
-        }
-        
-      } catch (error) { 
-          console.error('Axios error:', error);
-          return {response: null, error: error.response?.data?.detail || 'Login failed'};
-      }
-    };
-      
-      export async function logout() {
-        cookies().set("session", "", { expires: new Date(0) });
-      }
-      
-      export async function getSession() {
-        const session = cookies().get("session")?.value;
-        if (!session) return null;
-        return await decrypt(session);
-      }
-
-
-
-
-    export async function updateSession(request) {
-        const session = request.cookies.get("session")?.value;
-        if (!session) return;
-      
-        // Refresh the session so it doesn't expire
-        const parsed = await decrypt(session);
-        parsed.expires = new Date(Date.now() + 60 * 60 * 24 * 3 * 1000);
-        const res = NextResponse.next();
-        res.cookies.set({
-          name: "session",
-          value: await encrypt(parsed),
+      const expires = new Date(Date.now() + 60 * 60 * 24 * 3 * 1000);
+      cookies().set(
+        "userInfo",
+        { username, userid },
+        {
           httpOnly: true,
-          expires: parsed.expires,
-        });
-        return res;
-      }
+          maxAge: 60 * 60 * 24 * 3,
+          path: "/",
+        }
+      );
 
+      cookies().set("session", session, {
+        httpOnly: true,
+        maxAge: 60 * 60 * 24 * 3,
+        path: "/",
+      });
+
+      return { response: "success", error: null };
+    } else {
+      console.log(response.data.error);
+      return {
+        response: null,
+        error: response.data.error || "Invalid Credentials",
+      };
+    }
+  } catch (error) {
+    console.error("Axios error:", error);
+    return {
+      response: null,
+      error: error.response?.data?.detail || "Login failed",
+    };
+  }
+};
+
+// // try {
+// //     const response = await axios.post('http://localhost:8000/login', data);
+
+// //     const userinfo = response.data;
+
+//     const expires = new Date(Date.now() + 60 * 60 * 24 * 3 * 1000);
+//     const session = await encrypt({ data, expires });
+
+//   // if (response.status === 200) {
+//         cookies().set('session',session,{
+//             httpOnly: true,
+//             maxAge: 60 * 60 * 24 * 3,
+//             path: '/',
+//         })
+//         cookies().set('userinfo',data,{
+//             httpOnly: true,
+//             maxAge: 60 * 60 * 24 * 3,
+//             path: '/',
+//         })
+//         return {response:'s',error:null}
+//   //   }
+//   //   else{
+//   //       return {response: null, error: 'Invalid Credentials'};
+//   //   }
+
+//   // } catch (error) {
+//   //     console.error('Axios error:', error);
+//   //     return {response: null, error: error.response?.data?.detail || 'Login failed'};
+//   // }
+// };
+
+export async function logout() {
+  cookies().set("session", "", { expires: new Date(0) });
+}
+
+export async function getSession() {
+  const session = cookies().get("session")?.value;
+  if (!session) return null;
+  return await decrypt(session);
+}
+
+export async function updateSession(request) {
+  const session = request.cookies.get("session")?.value;
+  if (!session) return;
+
+  // Refresh the session so it doesn't expire
+  const parsed = await decrypt(session);
+  parsed.expires = new Date(Date.now() + 60 * 60 * 24 * 3 * 1000);
+  const res = NextResponse.next();
+  res.cookies.set({
+    name: "session",
+    value: await encrypt(parsed),
+    httpOnly: true,
+    expires: parsed.expires,
+  });
+  return res;
+}
