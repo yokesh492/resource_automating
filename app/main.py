@@ -82,13 +82,13 @@ def read_resources(skip: int = 0, limit: int = 100, db: Session = Depends(depend
     return crud.get_resources(db,skip=skip, limit=limit)
 
 @app.post("/resources/", response_model=schemas.Resource)
-def create_resource(resource_data: schemas.ResourceCreate, user_id: int, db: Session = Depends(dependencies.get_db)):
+def create_resource(resource_data: schemas.ResourceCreate, userid: int, db: Session = Depends(dependencies.get_db)):
     try:
         resource_data = resource_data.dict()
         print(resource_data)
         resource_data.pop('date', None)
         print(resource_data)
-        resource = crud.create_resource(db, resource_data, user_id=user_id)
+        resource = crud.create_resource(db, resource_data, user_id=userid)
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"An error occurred while creating the resource: {str(e)}")
     return resource

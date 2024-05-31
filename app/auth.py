@@ -21,9 +21,9 @@ def verify_password(plain_password, hashed_password):
 def authenticate_user(db: Session, username: str, password: str):
     user = db.query(User).filter(User.username == username).first()
     if not user:
-        return "not user"
+        return {'error': 'User not found'}
     if not verify_password(password, user.hashed_password):
-        return "wrong password"
+        return {'error': 'Incorrect password'}
     return {'username': user.username, 'userid': user.id}
 
 def create_access_token(data: dict, expires_delta: timedelta = None):

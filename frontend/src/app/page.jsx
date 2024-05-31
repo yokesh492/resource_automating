@@ -64,14 +64,14 @@ export default function Home() {
       console.log(error)
       console.log('this is wes')
       setData(data);
-      setName(userInfo?.name);
-      setUserId(userInfo?.id);
+      setName(userInfo?.username);
+      setUserId(userInfo?.userid);
     }
   },[])
 
-  useEffect(()=>{
-    filterCategoryFetcher()
-  },[category])
+  // useEffect(()=>{
+  //   filterCategoryFetcher()
+  // },[category])
 
 
     const filterTagsFetcher = async () => {
@@ -87,9 +87,9 @@ export default function Home() {
       }
     };
 
-  useEffect(()=>{
-    filterTagsFetcher()
-  },[tags])
+  // useEffect(()=>{
+  //   filterTagsFetcher()
+  // },[tags])
 
     const filterTypeFetcher = async () => {
       try{
@@ -104,9 +104,9 @@ export default function Home() {
       }
     };
 
-  useEffect(()=>{
-    filterTypeFetcher()
-  },[type])
+  // useEffect(()=>{
+  //   filterTypeFetcher()
+  // },[type])
 
   const handleTypeChange = (event) => {
     setType(event.target.value);

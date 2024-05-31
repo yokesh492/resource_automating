@@ -5,6 +5,7 @@ import axios from 'axios';
 
 const dataFetcher = async () => {
   const userInfo = cookies().get('userinfo')?.value;
+  console.log(userInfo.userid)
   if(userInfo === undefined ){
       console.log('User not logged in');
       return redirect('/login');
@@ -17,7 +18,7 @@ const dataFetcher = async () => {
       return {data:null,error:'User not logged in',userInfo:null}
     }
     try {
-      const response = await axios.get(`http://localhost:8000/resources/${userInfo.id}`);
+      const response = await axios.get(`http://localhost:8000/resources`);//${userInfo.userid}
       const data = response.data;
       return {data:data,error: null,userInfo:userInfo}
 

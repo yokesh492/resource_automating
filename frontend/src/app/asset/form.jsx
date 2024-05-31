@@ -27,13 +27,13 @@ function form() {
   
   const dataFetcher = async () => {
     try {
-      const {data,error,userInfo}=fetchData();
+      const {data,error,id}=fetchData();
       if(error === undefined || error !== null){
         console.log('User not logged in');
         return;
       }
       else{
-        setUserId(userInfo.id);
+        setUserId(id);
         setAsset(data.asset_name);
         setDescription(data.description);
         setLink(data.link);
@@ -53,7 +53,7 @@ function form() {
     setLoading(true);
 
     try {
-      const response = await axios.post(`http://localhost:8000/scrape/${userId}`, {
+      const response = await axios.post(`http://localhost:8000/resources/${userId}`, {
         asset_name: asset,
         description: description,
         link: link,
