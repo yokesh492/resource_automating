@@ -12,7 +12,7 @@ return (
         </div>
         <div className='px-3 py-1.5'>
             <h5 className={style}>OWNER</h5>
-            <p className='inline bg-pink-300 px-4 py-1 rounded-2xl'>{props.owner}</p>
+            <p className='inline bg-pink-300 px-4 py-1 rounded-2xl'>{props.addedBy}</p>
         </div>
         <div className='px-3 py-1.5'>
             <h5 className={style}>CATEGORY</h5>

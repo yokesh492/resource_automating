@@ -58,7 +58,7 @@ function AssetForm(props) {
     setLoading(true);
 
     try {
-      const response = await axios.post(`http://localhost:8000/resources/${userId}`, {
+      const response = await axios.post(`http://localhost:8000/create_resources/?userid=${userId}`, {
         asset_name: asset,
         description: description,
         link: link,

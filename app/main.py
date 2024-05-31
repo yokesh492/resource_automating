@@ -81,7 +81,7 @@ def login_for_access_token(db: Session = Depends(dependencies.get_db), form_data
 def read_resources(skip: int = 0, limit: int = 100, db: Session = Depends(dependencies.get_db)):
     return crud.get_resources(db,skip=skip, limit=limit)
 
-@app.post("/resources/", response_model=schemas.Resource)
+@app.post("/create_resources/", response_model=schemas.Resource)
 def create_resource(resource_data: schemas.ResourceCreate, userid: int, db: Session = Depends(dependencies.get_db)):
     try:
         resource_data = resource_data.dict()
