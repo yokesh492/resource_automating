@@ -24,7 +24,7 @@ return (
         </div>
         <div className='px-3 py-1.5'>
             <h5 className={style}>LINK</h5>
-            <a href={link} target='_blank' className='hover:text-blue-500 hover:underline'>{props.link}</a>
+            <a href={props.link} target='_blank' className='hover:text-blue-500 hover:underline'>{props.link}</a>
         </div>
         <div className='px-3 py-1.5'>
             <h5 className={style}>TAGS</h5>

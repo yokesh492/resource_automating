@@ -3,8 +3,9 @@ import axios from "axios";
 
 export default async function postFormData(props) {
   try {
+    console.log(props);
     const response = await axios.post("http://localhost:8000/scrape", {
-      link: props.link,
+      link: props,
     });
     console.log(response);
 

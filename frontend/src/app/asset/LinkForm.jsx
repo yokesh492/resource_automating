@@ -17,6 +17,7 @@ function LinkForm(props) {
     console.log(link);
 
     const { response, error } = await postFormData(link);
+    console.log(response)
     setLoading(false);
     if (error) {
       console.log(error);
