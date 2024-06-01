@@ -36,7 +36,7 @@ const EditForm = (props) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.put(`http://localhost:8000/resources`, {
+      const res = await axios.put(`http://91.108.104.64:8001/resources`, {
         id:props.id,
         asset_name: asset,
         description: description,

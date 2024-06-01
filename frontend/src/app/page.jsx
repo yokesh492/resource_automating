@@ -88,7 +88,7 @@ export default function Home() {
     console.log(queryString);
 
     try {
-      const url = `http://localhost:8000/resources/filter/?${queryString}`;
+      const url = `http://91.108.104.64:8001/resources/filter/?${queryString}`;
       console.log("Fetching data from:", url);
       const response = await axios.get(url);
       if (response.status === 200) {
@@ -128,7 +128,7 @@ export default function Home() {
     console.log(queryString);
 
     try {
-      const url = `http://localhost:8000/resources/filter/?${queryString}`;
+      const url = `http://91.108.104.64:8001/resources/filter/?${queryString}`;
       console.log("Fetching data from:", url);
       const response = await axios.get(url);
       if (response.status === 200) {
@@ -160,7 +160,7 @@ export default function Home() {
     console.log(queryString);
 
     try {
-      const url = `http://localhost:8000/resources/filter/?${queryString}`;
+      const url = `http://91.108.104.64:8001/resources/filter/?${queryString}`;
       console.log("Fetching data from:", url);
 
       const response = await axios.get(url);
@@ -200,7 +200,7 @@ export default function Home() {
     console.log(queryString);
 
     try {
-      const url = `http://localhost:8000/resources/filter/?${queryString}`;
+      const url = `http://91.108.104.64:8001/resources/filter/?${queryString}`;
       console.log("Fetching data from:", url);
       const response = await axios.get(url);
       if (response.status === 200) {
@@ -230,7 +230,7 @@ export default function Home() {
 
     try {
       if (queryString === null) {
-        const url = `http://localhost:8000/resources/`;
+        const url = `http://91.108.104.64:8001/resources/`;
         console.log("Fetching data from:", url);
         const response = await axios.get(url);
         if (response.status === 200) {
@@ -241,7 +241,7 @@ export default function Home() {
           console.error("Error fetching data:", response.statusText);
         }
       } else {
-        const url = `http://localhost:8000/resources/sort/?${queryString}`;
+        const url = `http://91.108.104.64:8001/resources/sort/?${queryString}`;
         console.log("Fetching data from:", url);
         const response = await axios.get(url);
         console.log(response)
