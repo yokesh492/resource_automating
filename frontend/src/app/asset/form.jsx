@@ -83,7 +83,7 @@ function AssetForm(props) {
       setError(error);
     } 
 
-    router.push("../");
+    router.push("/");
   };
 
   return (
