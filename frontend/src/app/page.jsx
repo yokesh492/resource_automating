@@ -7,6 +7,7 @@ import {
   InputLabel,
   MenuItem,
   Modal,
+  NativeSelect,
   Select,
 } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -14,18 +15,19 @@ import axios from "axios";
 import TagHandler from "./components/tagComponent";
 import CategoryComponent from "./components/categoryComponent";
 import UserName from "./components/username";
-// import {allData} from './data/data'
-import dataFetcher from "./components/dataFetcher";
+import { allData } from "./data/data";
+import dataFetcher from "./components/utils/dataFetcher";
 import { useRouter } from "next/navigation";
+import EditForm from "./components/EditForm";
 
 const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
   width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
+  bgcolor: "background.paper",
+  border: "2px solid #000",
   boxShadow: 24,
   p: 4,
 };
@@ -33,38 +35,98 @@ const style = {
 export default function Home() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
   const routeHandler = () => router.push("./asset");
   const [data, setData] = useState([]);
   // const [data,setData] = useState(allData);
   const [name, setName] = useState("");
   const [types, setTypes] = useState("");
+  const [teams, setTeams] = useState("");
   const [tags, setTags] = useState([]);
   const [category, setCategory] = useState("");
+  const [selectedData, setSelectedData] = useState({});
+
+  const handleOpen = (props) => {
+    setSelectedData(props);
+    setOpen(true);
+  };
+  const handleClose = () => setOpen(false);
 
   useEffect(() => {
-    dataFetcher().then((res)=>{
-      const {data,error,userInfo} = res;
-      if (error === undefined || error !== null) {
-        console.log("User not logged in");
-      } else {
-        console.log(error);
-        console.log("this is wes");
-        setData(data);
-        setName(userInfo?.username);
-        setUserId(userInfo?.userid);
-      }
-    }).catch((error)=>console.log(error));
-
-
+    dataFetcher()
+      .then((res) => {
+        const { data, error, userInfo } = res;
+        if (error === undefined || error !== null) {
+          console.log("User not logged in");
+        } else {
+          console.log(error);
+          setData(data);
+          setName(userInfo?.username);
+          setUserId(userInfo?.userid);
+        }
+      })
+      .catch((error) => console.log(error));
   }, []);
+
+  const filterTeamFetcher = async (event) => {
+    setTeams((prevValue) => (prevValue === event.target.value ? "" : event.target.value));
+    // const queryString =
+    // (val ? `teams=${encodeURIComponent(val)}` : "") +
+    // (val && tags.length > 0 ? "&" : "") +
+    // tags.filter(tag => tag).map(tag => `tags=${encodeURIComponent(tag)}`).join("&") +
+    // (tags.length > 0 && category ? "&" : "") +
+    // (category ? `category=${encodeURIComponent(category)}` : "") +
+    // (category && types ? "&" : "") +
+    // (types ? `types=${encodeURIComponent(types)}` : "");
+
+    const queryString = [
+      tags.length ? tags.map((tag) => `tags=${encodeURIComponent(tag)}`).join("&") : null,
+      types ? `types=${encodeURIComponent(types)}` : null,
+      event.target.value ? `teams=${encodeURIComponent(event.target.value)}` : null,
+      category ? `category=${encodeURIComponent(category)}` : null
+    ].filter(Boolean).join("&");
+    
+    console.log(queryString);
+
+    
+
+    try {
+      const url = `http://localhost:8000/resources/?${queryString}`;
+      console.log("Fetching data from:", url);
+      const response = await axios.get(url);
+      if (response.status === 200) {
+        const data = await response.json();
+        console.log("Received data:", data);
+        setData(data);
+      } else {
+        console.error("Error fetching data:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   const filterCategoryFetcher = async (val) => {
     setCategory((prevValue) => (prevValue === val ? "" : val));
-    const queryString = `category=${encodeURIComponent(val)}`;
+    // const queryString =
+    //   `category=${encodeURIComponent(val)}` +
+    //   "&" +
+    //   (types ? `&types=${encodeURIComponent(types)}`: "") +
+    //   tags.map((tag) => `tags=${encodeURIComponent(tag)}`).join("&") 
+    //   // +
+    //   // (teams ? `&teams=${encodeURIComponent(teams)}`: "") 
+
+      const queryString = [
+        tags.length ? tags.map((tag) => `tags=${encodeURIComponent(tag)}`).join("&") : null,
+        types ? `types=${encodeURIComponent(types)}` : null,
+        teams ? `teams=${encodeURIComponent(teams)}` : null,
+        val ? `category=${encodeURIComponent(val)}` : null
+      ].filter(Boolean).join("&");
+      
+      console.log(queryString);
+
+      
     try {
-      const url = `http://localhost:8000/resources/category/?${queryString}`;
+      const url = `http://localhost:8000/resources/?${queryString}`;
       console.log("Fetching data from:", url);
       const response = await axios.get(url);
       if (response.status === 200) {
@@ -81,11 +143,17 @@ export default function Home() {
 
   const filterTagsFetcher = async (val) => {
     setTags(val);
-    const queryString = val
-      .map((tag) => `tags=${encodeURIComponent(tag)}`)
-      .join("&");
+    const queryString = [
+      val.length ? val.map((tag) => `tags=${encodeURIComponent(tag)}`).join("&") : null,
+      types ? `types=${encodeURIComponent(types)}` : null,
+      teams ? `teams=${encodeURIComponent(teams)}` : null,
+      category ? `category=${encodeURIComponent(category)}` : null
+    ].filter(Boolean).join("&");
+    
+    console.log(queryString);
+    
     try {
-      const url = `http://localhost:8000/resources/tags/?${queryString}`;
+      const url = `http://localhost:8000/resources/?${queryString}`;
       console.log("Fetching data from:", url);
 
       const response = await axios.get(url);
@@ -108,9 +176,17 @@ export default function Home() {
       prevValue == event.target.value ? "" : event.target.value
     );
 
-    const queryString = `types=${encodeURIComponent(event.target.value)}`;
+    const queryString = [
+      tags.length ? tags.map((tag) => `tags=${encodeURIComponent(tag)}`).join("&") : null,
+      event.target.value ? `types=${encodeURIComponent(event.target.value)}` : null,
+      teams ? `teams=${encodeURIComponent(teams)}` : null,
+      category ? `category=${encodeURIComponent(category)}` : null
+    ].filter(Boolean).join("&");
+    
+    console.log(queryString);
+    
     try {
-      const url = `http://localhost:8000/resources/types/?${queryString}`;
+      const url = `http://localhost:8000/resources/?${queryString}`;
       console.log("Fetching data from:", url);
       const response = await axios.get(url);
       if (response.status === 200) {
@@ -127,96 +203,122 @@ export default function Home() {
 
   return (
     <main className="min-h-screen">
-      <div>
-        <div className="flex flex-row bg-purple-700 p-3">
-          <h3 className="font-bold text-2xl  text-white bg-none">
-            Vizdale Resources
-          </h3>
-          <div className="ml-auto">
-            <h4 className="text-2xl text-white">
-              <UserName name={name || "  "} />
-            </h4>
-          </div>
+      <div className="flex flex-row bg-purple-700 p-3">
+        <h3 className="font-bold text-2xl  text-white bg-none">
+          Vizdale Resources
+        </h3>
+        <div className="ml-auto">
+          <h4 className="text-2xl text-white">
+            <UserName name={name || "  "} />
+          </h4>
         </div>
-        <div className="flex flex-row p-5 w-full">
-          <h1 className="font-bold text-3xl float-left">Resources</h1>
-          <Modal
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
-            <Box sx={style}>
-             {/* add elelements */}
-            </Box>
-          </Modal>
-
-          <div className="ml-auto">
-            <button className="p-2 m-auto mr-4 rounded-lg border shadow-lg bg-white text-center">
-              ...
-            </button>
-            <button
-              className="font-bold text-white bg-black m-auto p-2 text-center rounded-lg shadow-lg"
-              onClick={routeHandler}
-            >
-              Add Asset
-            </button>
-          </div>
-        </div>
-        <div className="flex flex-row">
-          <div className="px-5">
+      </div>
+      <div className="flex flex-row p-5 w-full">
+        <h1 className="font-bold text-3xl float-left">
+          <div>
             <FormControl sx={{ m: 1, minWidth: 90 }}>
-              <InputLabel id="demo-simple-select-label">Type</InputLabel>
-              <Select
+              <NativeSelect
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                value={types}
-                label="Type"
-                onChange={handleTypeChange}
+                value={teams}
+                label="Team"
+                onChange={filterTeamFetcher}
+                defaultValue="All"
+                className="p-2"
               >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                <MenuItem value="Tools">Tools</MenuItem>
-                <MenuItem value="Inspiration">Inspiration</MenuItem>
-                <MenuItem value="Games">Games</MenuItem>
-                <MenuItem value="Tutorial">Tutorial</MenuItem>
-                <MenuItem value="Blog">Blog</MenuItem>
-              </Select>
+                <option value="All" defaultValue={"resources"}>
+                  All Resources
+                </option>
+                <option value="Design">Design</option>
+                <option value="Development">Development</option>
+                <option value="Business">Business</option>
+              </NativeSelect>
             </FormControl>
+          </div>
+        </h1>
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <EditForm {...selectedData} />
+          </Box>
+        </Modal>
 
-            <CategoryComponent
-              category={category}
-              setCategory={filterCategoryFetcher}
-              style={{ m: 1, minWidth: 90 }}
-            />
-            <TagHandler
-              tags={tags}
-              setTags={filterTagsFetcher}
-              style={{ m: 1, minWidth: 90 }}
-            />
-          </div>
-          <div className="ml-auto">
-            <button className="p-4 m-auto">Filter</button>
-            <button className="p-4 m-auto">Sort</button>
-            <button className="border border-red-400">
-              {" "}
-              <Image
-                src={"/image.png"}
-                className="w-full h-full"
-                width={30}
-                height={30}
-                alt="Image"
-              />{" "}
-            </button>
-          </div>
+        <div className="ml-auto">
+          <button className="p-2 m-auto mr-4 rounded-lg border shadow-lg bg-white text-center">
+            ...
+          </button>
+          <button
+            className="font-bold text-white bg-black m-auto p-2 text-center rounded-lg shadow-lg"
+            onClick={routeHandler}
+          >
+            Add Asset
+          </button>
         </div>
-        <hr />
-        <div className="m-4 grid grid-cols-5 gap-4">
-          {data.map((item, index) => {
-            return <Card key={item.id} {...item} />;
-          })}
+      </div>
+      <div className="flex flex-row">
+        <div className="px-5">
+          <FormControl sx={{ m: 1, minWidth: 90 }}>
+            <InputLabel id="demo-simple-select-label">Type</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={types}
+              label="Type"
+              onChange={handleTypeChange}
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value="Tools">Tools</MenuItem>
+              <MenuItem value="Inspiration">Inspiration</MenuItem>
+              <MenuItem value="Games">Games</MenuItem>
+              <MenuItem value="Tutorial">Tutorial</MenuItem>
+              <MenuItem value="Blog">Blog</MenuItem>
+            </Select>
+          </FormControl>
+
+          <CategoryComponent
+            category={category}
+            setCategory={filterCategoryFetcher}
+            style={{ m: 1, minWidth: 90 }}
+          />
+          <TagHandler
+            tags={tags}
+            setTags={filterTagsFetcher}
+            style={{ m: 1, minWidth: 90 }}
+          />
         </div>
+        <div className="ml-auto">
+          <button className="p-4 m-auto">Filter</button>
+          <button className="p-4 m-auto">Sort</button>
+          <button className="border border-red-400">
+            {" "}
+            <Image
+              src={"/image.png"}
+              className="w-full h-full"
+              width={30}
+              height={30}
+              alt="Image"
+            />{" "}
+          </button>
+        </div>
+      </div>
+      <hr />
+      {data.length === 0 && (
+        <div className=" flex justify-center items-center p-10 text-2xl font-bold">
+          <p>No data available</p>
+        </div>
+      )}
+      <div className="m-4 grid grid-cols-5 gap-4">
+        {data.map((item) => {
+          return (
+            <Card key={item.id} onClick={(e) => handleOpen(item)} {...item} />
+          );
+        })}
       </div>
     </main>
   );

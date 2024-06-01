@@ -4,7 +4,7 @@ const style = 'text-gray-400 font-bold text-sm';
 
 function Card(props) {
 return (
-    <div className='rounded-xl p-4 shadow-md hover:shadow-xl hover:scale-105 transition duration-300'>
+    <div className='rounded-xl p-4 shadow-md hover:shadow-xl hover:scale-105 transition duration-300' onClick={props.onClick}>
         <h2 className='font-bold text-lg mb-1 p-2'>{props.asset_name}</h2>
         <div className='px-3 py-1.5'>
             <h5 className={style}>ASSET NAME</h5>

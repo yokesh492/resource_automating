@@ -27,8 +27,9 @@ function AssetForm(props) {
   const [types, setTypes] = useState('');
   const [loading, setLoading] = useState(false);
   const [userId,setUserId ]= useState('');
+  const [error,setError] = useState('');
 
-  const isValid = asset && description && link && category && tags.length > 0;
+  const isValid = asset && description && teams && types && category && tags.length > 0;
   
   const dataFetcher = async (props) => {
     try {
@@ -46,6 +47,7 @@ function AssetForm(props) {
 
     } catch (error) {
       console.error('Axios error:', error);
+      setError(error);
     }
   };
 
@@ -78,6 +80,7 @@ function AssetForm(props) {
       }
     } catch (error) {
       console.error('Axios error:', error);
+      setError(error);
     } 
 
     router.push("../");
@@ -89,6 +92,7 @@ function AssetForm(props) {
       <p className="text-start pb-3 text-xs">
         The information you put here will be added to the table
       </p>
+      {error && <p className="text-red-500 text-center font-bold p-1 pb-2">{error}</p>}
       <form  onSubmit={submitHandler}>
         <FormControl fullWidth>
         <TextField
@@ -147,17 +151,6 @@ function AssetForm(props) {
         <CategoryComponent category={category} setCategory={setCategory}/>
         <p className="py-2"></p>
         <TagHandler tags={tags} setTags={setTags} />
-
-        <TextField
-          label="Link"
-          variant="outlined"
-          fullWidth
-          type="text"
-          className="mb-4"
-          multiline
-          value={link}
-          onChange={(e) => setLink(e.target.value)}
-        />
         <Button
           variant="contained"
           className=""
