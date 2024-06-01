@@ -246,6 +246,7 @@ export default function Home() {
         const url = `http://localhost:8000/resources/sort/?${queryString}`;
         console.log("Fetching data from:", url);
         const response = await axios.get(url);
+        console.log(response)
         if (response.status === 200) {
           const data = await response.json();
           console.log("Received data:", data);

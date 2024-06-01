@@ -119,10 +119,10 @@ def read_resource_by_filter(
     db: Session = Depends(dependencies.get_db)
 ):
     if team == "All resources":
-        resource = crud.get_resources_by_filter(db, categories=categories, types=types, tags=tags)
+        resource = crud.read_resource_by_filter(db, categories=categories, types=types, tags=tags)
         return resource
     else:
-        resource = crud.get_resources_by_filter(db, categories=categories, types=types, tags=tags, team=team)
+        resource = crud.read_resource_by_filter(db, categories=categories, types=types, tags=tags, team=team)
         return resource
     
 @app.delete("/resources/")
@@ -145,11 +145,11 @@ def scrape(url_data: schemas.UrlBase, db: Session = Depends(dependencies.get_db)
 
 @app.get("/resources/sort/", response_model=List[schemas.Resource])
 def sort_resources(
-    sort_order: Optional[str] = Query("asc", description="Sort order: 'asc' or 'desc'"),
+    sort: Optional[str] = Query("asc", description="Sort order: 'asc' or 'desc'"),
     db: Session = Depends(dependencies.get_db)
 ):
     resources = crud.get_resources(db,skip=0, limit=100)
-    resources.sort(key=lambda r: r.asset_name, reverse=(sort_order.lower() == "desc"))
+    resources.sort(key=lambda r: r.asset_name, reverse=(sort.lower() == "desc"))
     return resources
 
 
