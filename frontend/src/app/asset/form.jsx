@@ -60,7 +60,7 @@ function AssetForm(props) {
     setLoading(true);
 
     try {
-      const response = await axios.post(`http://91.108.104.64:8001/create_resources/?userid=${userId}`, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_PRODUCTION}/create_resources/?userid=${userId}`, {
         asset_name: asset,
         description: description,
         link: link,
@@ -79,7 +79,7 @@ function AssetForm(props) {
         console.log('Asset not added');
       }
     } catch (error) {
-      console.error('Axios error:', error);
+      console.error('Axios error:', error.message);
       setError(error);
     } 
 

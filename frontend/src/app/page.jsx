@@ -34,7 +34,6 @@ const style = {
   p: 4,
 };
 
-
 export default function Home() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -47,36 +46,35 @@ export default function Home() {
   const [category, setCategory] = useState("");
   const [selectedData, setSelectedData] = useState({});
   const [sort, setSort] = useState("");
-  
+
   const handleOpen = (props) => {
     setSelectedData(props);
     setOpen(true);
   };
   const handleClose = () => setOpen(false);
-  
+
   useEffect(() => {
     getSession();
     const getData = () => {
-      
       dataFetcher()
-      .then((res) => {
-        const { data, error, userInfo } = res;
-        if (error === undefined || error !== null) {
+        .then((res) => {
+          const { data, error, userInfo } = res;
+          if (error === undefined || error !== null) {
             // console.log("User not logged in");
             console.log({ dataFetcherError: error });
           } else {
             setData(data);
             setName(userInfo?.username);
-            setUserId(userInfo?.userid);
+            // setUserId(userInfo?.userid);
           }
         })
         .catch((error) => console.log(error));
-      }
-    getData()
+    };
+    getData();
   }, []);
 
   const filterTeamFetcher = async (event) => {
-    console.log("Workssss")
+    console.log("Workssss");
     setTeams((prevValue) =>
       prevValue === event.target.value ? "" : event.target.value
     );
@@ -304,12 +302,21 @@ export default function Home() {
           aria-describedby="modal-modal-description"
         >
           <Box sx={style}>
-            <EditForm {...selectedData} handleClose= {handleClose} setData = {setData} />
+            <EditForm
+              {...selectedData}
+              handleClose={handleClose}
+              setData={setData}
+            />
           </Box>
         </Modal>
-            <Link href="/asset" className="flex justify-end items-center h-20  w-full">
-              <Button variant="contained" className="h-20">Add asset</Button>
-            </Link>
+        <Link
+          href="/asset"
+          className="flex justify-end items-center h-20  w-full"
+        >
+          <Button variant="contained" className="h-20">
+            Add asset
+          </Button>
+        </Link>
       </div>
       <div className="border"></div>
       <div className="flex flex-row">
