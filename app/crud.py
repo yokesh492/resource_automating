@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from .models import User, Resource
-from .schemas import ResourceCreate
+from .schemas import ResourceCreate, ResourceUpdate
 from .auth import get_password_hash
 
 def get_user_by_username(db: Session, username: str):
@@ -94,12 +94,12 @@ def edit_resource(db: Session,  updated_resource: ResourceUpdate):
     if resource:
         resource.asset_name = updated_resource.asset_name
         resource.category = updated_resource.category
-        resource.type = updated_resource.type
+        resource.type = updated_resource.types
         resource.tags = updated_resource.tags
-        resource.team = updated_resource.team
+        resource.team = updated_resource.teams
         resource.description = updated_resource.description
         db.commit()
-        db.refersh(resource)
+        db.refresh(resource)
         return resource
     
 
