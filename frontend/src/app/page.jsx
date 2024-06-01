@@ -64,7 +64,7 @@ export default function Home() {
     setCategory((prevValue) => (prevValue === val ? "" : val));
     const queryString = `category=${encodeURIComponent(val)}`;
     try {
-      const url = `http://91.108.104.64:8001/resources/category/?${queryString}`;
+      const url = `http://localhost:8000/resources/category/?${queryString}`;
       console.log("Fetching data from:", url);
       const response = await axios.get(url);
       if (response.status === 200) {
@@ -85,7 +85,7 @@ export default function Home() {
       .map((tag) => `tags=${encodeURIComponent(tag)}`)
       .join("&");
     try {
-      const url = `http://91.108.104.64:8001/resources/tags/?${queryString}`;
+      const url = `http://localhost:8000/resources/tags/?${queryString}`;
       console.log("Fetching data from:", url);
 
       const response = await axios.get(url);
@@ -110,7 +110,7 @@ export default function Home() {
 
     const queryString = `types=${encodeURIComponent(event.target.value)}`;
     try {
-      const url = `http://91.108.104.64:8001/resources/types/?${queryString}`;
+      const url = `http://localhost:8000/resources/types/?${queryString}`;
       console.log("Fetching data from:", url);
       const response = await axios.get(url);
       if (response.status === 200) {
