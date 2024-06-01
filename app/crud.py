@@ -63,7 +63,7 @@ def get_resources_by_tags(db: Session, tags: list):
         return "NO resource"
     
 def read_resource_by_filter(db: Session, tags: list, categories: str, types: str, team: str = None):
-    if team is not None:
+    if team is None:
         try:
             resource = db.query(Resource).filter(Resource.tags.any(tags), Resource.category == categories, Resource.type == types).all()
             if not resource:

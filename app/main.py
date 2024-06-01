@@ -143,7 +143,14 @@ def scrape(url_data: schemas.UrlBase, db: Session = Depends(dependencies.get_db)
         raise HTTPException(status_code=404, detail="Failed to retrieve data from the URL.")
     return schemas.ResourceBase(asset_name=name, description=description, link=url)
 
-
+@app.get("/resources/sort/", response_model=List[schemas.Resource])
+def sort_resources(
+    sort_order: Optional[str] = Query("asc", description="Sort order: 'asc' or 'desc'"),
+    db: Session = Depends(dependencies.get_db)
+):
+    resources = crud.get_resources(db,skip=0, limit=100)
+    resources.sort(key=lambda r: r.asset_name, reverse=(sort_order.lower() == "desc"))
+    return resources
 
 
 @app.on_event("startup")
