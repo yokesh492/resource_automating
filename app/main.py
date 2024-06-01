@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 import requests
 from bs4 import BeautifulSoup
 from datetime import date, datetime, timedelta
-from typing import List
+from typing import List, Optional
 from .database import engine
 from .models import Base
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -109,6 +109,31 @@ def read_resources_by_tags(tags: List[str] = Query(None), db: Session = Depends(
     resources = crud.get_resources_by_tags(db, tags=tags)
     return resources
 
+
+@app.get("/resources/filter/", response_model = List[schemas.Resource])
+def read_resource_by_filter(
+    categories: Optional[str] = Query(None),
+    types: Optional[str] = Query(None),
+    tags: List[str] = Query(None),
+    team: Optional[str] = Query(None),
+    db: Session = Depends(dependencies.get_db)
+):
+    if team == "All resources":
+        resource = crud.get_resources_by_filter(db, categories=categories, types=types, tags=tags)
+        return resource
+    else:
+        resource = crud.get_resources_by_filter(db, categories=categories, types=types, tags=tags, team=team)
+        return resource
+    
+@app.delete("/resources/")
+def delete_resource(id:int, db: Session = Depends(dependencies.get_db)):
+    response = crud.delete_resource(db, id)
+    return response
+
+@app.put("/resources/")
+def edit_resource(update_resource : schemas.ResourceUpdate, db: Session = Depends(dependencies.get_db)):
+    response = crud.edit_resource(db, update_resource)
+    return response
 
 @app.post("/scrape/", response_model=schemas.ResourceBase)
 def scrape(url_data: schemas.UrlBase, db: Session = Depends(dependencies.get_db)):
