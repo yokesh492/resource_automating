@@ -36,14 +36,15 @@ export default function Home() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const routeHandler = () => router.push("./asset");
-  const [data, setData] = useState([]);
-  // const [data,setData] = useState(allData);
+  // const [data, setData] = useState([]);
+  const [data, setData] = useState(allData);
   const [name, setName] = useState("");
   const [types, setTypes] = useState("");
   const [teams, setTeams] = useState("");
   const [tags, setTags] = useState([]);
   const [category, setCategory] = useState("");
   const [selectedData, setSelectedData] = useState({});
+  const [sort, setSort] = useState("");
 
   const handleOpen = (props) => {
     setSelectedData(props);
@@ -68,29 +69,28 @@ export default function Home() {
   }, []);
 
   const filterTeamFetcher = async (event) => {
-    setTeams((prevValue) => (prevValue === event.target.value ? "" : event.target.value));
-    // const queryString =
-    // (val ? `teams=${encodeURIComponent(val)}` : "") +
-    // (val && tags.length > 0 ? "&" : "") +
-    // tags.filter(tag => tag).map(tag => `tags=${encodeURIComponent(tag)}`).join("&") +
-    // (tags.length > 0 && category ? "&" : "") +
-    // (category ? `category=${encodeURIComponent(category)}` : "") +
-    // (category && types ? "&" : "") +
-    // (types ? `types=${encodeURIComponent(types)}` : "");
+    setTeams((prevValue) =>
+      prevValue === event.target.value ? "" : event.target.value
+    );
 
     const queryString = [
-      tags.length ? tags.map((tag) => `tags=${encodeURIComponent(tag)}`).join("&") : null,
+      tags.length
+        ? tags.map((tag) => `tags=${encodeURIComponent(tag)}`).join("&")
+        : null,
       types ? `types=${encodeURIComponent(types)}` : null,
-      event.target.value ? `teams=${encodeURIComponent(event.target.value)}` : null,
-      category ? `category=${encodeURIComponent(category)}` : null
-    ].filter(Boolean).join("&");
-    
+      event.target.value
+        ? `teams=${encodeURIComponent(event.target.value)}`
+        : null,
+      category ? `category=${encodeURIComponent(category)}` : null,
+      // sort ? `sort=${encodeURIComponent(sort)}` : null
+    ]
+      .filter(Boolean)
+      .join("&");
+
     console.log(queryString);
 
-    
-
     try {
-      const url = `http://localhost:8000/resources/?${queryString}`;
+      const url = `http://localhost:8000/resources/filter/?${queryString}`;
       console.log("Fetching data from:", url);
       const response = await axios.get(url);
       if (response.status === 200) {
@@ -111,22 +111,26 @@ export default function Home() {
     //   `category=${encodeURIComponent(val)}` +
     //   "&" +
     //   (types ? `&types=${encodeURIComponent(types)}`: "") +
-    //   tags.map((tag) => `tags=${encodeURIComponent(tag)}`).join("&") 
+    //   tags.map((tag) => `tags=${encodeURIComponent(tag)}`).join("&")
     //   // +
-    //   // (teams ? `&teams=${encodeURIComponent(teams)}`: "") 
+    //   // (teams ? `&teams=${encodeURIComponent(teams)}`: "")
 
-      const queryString = [
-        tags.length ? tags.map((tag) => `tags=${encodeURIComponent(tag)}`).join("&") : null,
-        types ? `types=${encodeURIComponent(types)}` : null,
-        teams ? `teams=${encodeURIComponent(teams)}` : null,
-        val ? `category=${encodeURIComponent(val)}` : null
-      ].filter(Boolean).join("&");
-      
-      console.log(queryString);
+    const queryString = [
+      tags.length
+        ? tags.map((tag) => `tags=${encodeURIComponent(tag)}`).join("&")
+        : null,
+      types ? `types=${encodeURIComponent(types)}` : null,
+      teams ? `teams=${encodeURIComponent(teams)}` : null,
+      val ? `category=${encodeURIComponent(val)}` : null,
+      // sort ? `sort=${encodeURIComponent(sort)}` : null
+    ]
+      .filter(Boolean)
+      .join("&");
 
-      
+    console.log(queryString);
+
     try {
-      const url = `http://localhost:8000/resources/?${queryString}`;
+      const url = `http://localhost:8000/resources/filter/?${queryString}`;
       console.log("Fetching data from:", url);
       const response = await axios.get(url);
       if (response.status === 200) {
@@ -144,16 +148,21 @@ export default function Home() {
   const filterTagsFetcher = async (val) => {
     setTags(val);
     const queryString = [
-      val.length ? val.map((tag) => `tags=${encodeURIComponent(tag)}`).join("&") : null,
+      val.length
+        ? val.map((tag) => `tags=${encodeURIComponent(tag)}`).join("&")
+        : null,
       types ? `types=${encodeURIComponent(types)}` : null,
       teams ? `teams=${encodeURIComponent(teams)}` : null,
-      category ? `category=${encodeURIComponent(category)}` : null
-    ].filter(Boolean).join("&");
-    
+      category ? `category=${encodeURIComponent(category)}` : null,
+      // sort ? `sort=${encodeURIComponent(sort)}` : null
+    ]
+      .filter(Boolean)
+      .join("&");
+
     console.log(queryString);
-    
+
     try {
-      const url = `http://localhost:8000/resources/?${queryString}`;
+      const url = `http://localhost:8000/resources/filter/?${queryString}`;
       console.log("Fetching data from:", url);
 
       const response = await axios.get(url);
@@ -177,16 +186,23 @@ export default function Home() {
     );
 
     const queryString = [
-      tags.length ? tags.map((tag) => `tags=${encodeURIComponent(tag)}`).join("&") : null,
-      event.target.value ? `types=${encodeURIComponent(event.target.value)}` : null,
+      tags.length
+        ? tags.map((tag) => `tags=${encodeURIComponent(tag)}`).join("&")
+        : null,
+      event.target.value
+        ? `types=${encodeURIComponent(event.target.value)}`
+        : null,
       teams ? `teams=${encodeURIComponent(teams)}` : null,
-      category ? `category=${encodeURIComponent(category)}` : null
-    ].filter(Boolean).join("&");
-    
+      category ? `category=${encodeURIComponent(category)}` : null,
+      // sort ? `sort=${encodeURIComponent(sort)}` : null
+    ]
+      .filter(Boolean)
+      .join("&");
+
     console.log(queryString);
-    
+
     try {
-      const url = `http://localhost:8000/resources/?${queryString}`;
+      const url = `http://localhost:8000/resources/filter/?${queryString}`;
       console.log("Fetching data from:", url);
       const response = await axios.get(url);
       if (response.status === 200) {
@@ -195,6 +211,48 @@ export default function Home() {
         setData(data);
       } else {
         console.error("Error fetching data:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const handleSortChange = async (event) => {
+    console.log(event.target.value, "in sort");
+
+    setSort((prevValue) =>
+      prevValue == event.target.value ? "" : event.target.value
+    );
+
+    const queryString = event.target.value
+      ? `sort=${encodeURIComponent(event.target.value)}`
+      : null;
+
+    console.log(queryString);
+
+    try {
+      if (queryString === null) {
+        const url = `http://localhost:8000/resources/`;
+        console.log("Fetching data from:", url);
+        const response = await axios.get(url);
+        if (response.status === 200) {
+          const data = await response.json();
+          console.log("Received data:", data);
+          setData(data);
+        } else {
+          console.error("Error fetching data:", response.statusText);
+        }
+      } else {
+        const url = `http://localhost:8000/resources/sort/?${queryString}`;
+        console.log("Fetching data from:", url);
+        const response = await axios.get(url);
+        if (response.status === 200) {
+          const data = await response.json();
+          console.log("Received data:", data);
+          setData(data);
+        } else {
+          console.error("Error fetching data:", response.statusText);
+        }
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -246,18 +304,6 @@ export default function Home() {
             <EditForm {...selectedData} />
           </Box>
         </Modal>
-
-        <div className="ml-auto">
-          <button className="p-2 m-auto mr-4 rounded-lg border shadow-lg bg-white text-center">
-            ...
-          </button>
-          <button
-            className="font-bold text-white bg-black m-auto p-2 text-center rounded-lg shadow-lg"
-            onClick={routeHandler}
-          >
-            Add Asset
-          </button>
-        </div>
       </div>
       <div className="flex flex-row">
         <div className="px-5">
@@ -292,19 +338,23 @@ export default function Home() {
             style={{ m: 1, minWidth: 90 }}
           />
         </div>
-        <div className="ml-auto">
-          <button className="p-4 m-auto">Filter</button>
-          <button className="p-4 m-auto">Sort</button>
-          <button className="border border-red-400">
-            {" "}
-            <Image
-              src={"/image.png"}
-              className="w-full h-full"
-              width={30}
-              height={30}
-              alt="Image"
-            />{" "}
-          </button>
+        <div className="ml-auto pr-4">
+          <FormControl sx={{ m: 1, minWidth: 90 }}>
+            <InputLabel id="demo-simple-select-label">Sort</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={sort}
+              label="Type"
+              onChange={handleSortChange}
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value="asc">A to Z</MenuItem>
+              <MenuItem value="dsc">Z to A</MenuItem>
+            </Select>
+          </FormControl>
         </div>
       </div>
       <hr />
@@ -313,7 +363,7 @@ export default function Home() {
           <p>No data available</p>
         </div>
       )}
-      <div className="m-4 grid grid-cols-5 gap-4">
+      <div className="m-4 grid lg:grid-cols-5 lg:gap-4 md:grid-cols-4 md:gap-4 grid-cols-3 gap-3">
         {data.map((item) => {
           return (
             <Card key={item.id} onClick={(e) => handleOpen(item)} {...item} />

@@ -7,7 +7,7 @@ export const allData = [
       description:
         "Learn UI & UX Design with practical byte-sized tips and in-depth articles from Jim Raptis.",
       link: "https://www.uidesign.tips/",
-      tags: ["UI", "UX", "Design"],
+      tags: ["UI", "UX", "Design", "UX", "Design", "UX", "Design", "UX", "Design", "UX", "Design", "UX", "Design"],
       date: '23232'
     },
     {
