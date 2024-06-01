@@ -33,6 +33,14 @@ class ResourceBase(BaseModel):
 class ResourceCreate(ResourceBase):
     pass
 
+class ResourceUpdate(BaseModel):
+        id: int 
+        asset_name: str
+        description: str
+        category: str
+        tags: List[str]
+        teams: str
+        types:str
 
 class Resource(ResourceBase):
     id: int

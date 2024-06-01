@@ -61,3 +61,45 @@ def get_resources_by_tags(db: Session, tags: list):
         return resources
     except Exception as e:
         return "NO resource"
+    
+def read_resource_by_filter(db: Session, tags: list, categories: str, types: str, team: str = None):
+    if team is not None:
+        try:
+            resource = db.query(Resource).filter(Resource.tags.any(tags), Resource.category == categories, Resource.type == types).all()
+            if not resource:
+                return "No resource"
+            return resource
+        except Exception as e:
+            return "No resource"
+    else:
+        try:
+            resource = db.query(Resource).filter(Resource.tags.any(tags), Resource.category == categories, Resource.type == types, Resource.team == team).all()
+            if not resource:
+                return "No resource"
+            return resource
+        except Exception as e:
+            return "No resource"
+        
+def delete_resource(db: Session, resource_id: int):
+    db_resource = db.query(Resource).filter(Resource.id == resource_id).one_or_none()
+    if db_resource:
+        db.delete(db_resource)
+        db.commit()
+        return True
+    else:
+        return False
+    
+def edit_resource(db: Session,  updated_resource: ResourceUpdate):
+    resource = db.query(Resource).filter(Resource.id == updated_resource.id).one_or_none()
+    if resource:
+        resource.asset_name = updated_resource.asset_name
+        resource.category = updated_resource.category
+        resource.type = updated_resource.type
+        resource.tags = updated_resource.tags
+        resource.team = updated_resource.team
+        resource.description = updated_resource.description
+        db.commit()
+        db.refersh(resource)
+        return resource
+    
+
