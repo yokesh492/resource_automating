@@ -62,23 +62,24 @@ def get_resources_by_tags(db: Session, tags: list):
     except Exception as e:
         return "NO resource"
     
-def read_resource_by_filter(db: Session, tags: list, categories: str, types: str, team: str = None):
-    if team is None:
-        try:
-            resource = db.query(Resource).filter(Resource.tags.any(tags), Resource.category == categories, Resource.type == types).all()
-            if not resource:
-                return []
-            return resource
-        except Exception as e:
-            return []
-    else:
-        try:
-            resource = db.query(Resource).filter(Resource.tags.any(tags), Resource.category == categories, Resource.type == types, Resource.team == team).all()
-            if not resource:
-                return []
-            return resource
-        except Exception as e:
-            return []
+def read_resource_by_filter(db: Session, tags: list = None, categories: str = None, types: str = None, team: str = None):
+    try:
+        query = db.query(Resource)
+        if categories:
+            query = query.filter(Resource.category == categories)
+        if types:
+            query = query.filter(Resource.type == types)
+        if tags:
+            query = query.filter(Resource.tags.op('&&')(tags))
+        if team:
+            query = query.filter(Resource.team == team)
+        
+        results = query.all()  
+        return results if results else []
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return [] 
+    
         
 def delete_resource(db: Session, resource_id: int):
     db_resource = db.query(Resource).filter(Resource.id == resource_id).one_or_none()

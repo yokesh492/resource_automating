@@ -112,17 +112,17 @@ def read_resources_by_tags(tags: List[str] = Query(None), db: Session = Depends(
 
 @app.get("/resources/filter/", response_model = List[schemas.Resource])
 def read_resource_by_filter(
-    categories: Optional[str] = Query(None),
+    category: Optional[str] = Query(None),
     types: Optional[str] = Query(None),
     tags: List[str] = Query(None),
-    team: Optional[str] = Query(None),
+    teams: Optional[str] = Query(None),
     db: Session = Depends(dependencies.get_db)
 ):
-    if team == "All resources":
-        resource = crud.read_resource_by_filter(db, categories=categories, types=types, tags=tags)
+    if teams == "All":
+        resource = crud.read_resource_by_filter(db, categories=category, types=types, tags=tags)
         return resource
     else:
-        resource = crud.read_resource_by_filter(db, categories=categories, types=types, tags=tags, team=team)
+        resource = crud.read_resource_by_filter(db, categories=category, types=types, tags=tags, team=teams)
         return resource
     
 @app.delete("/resources/")

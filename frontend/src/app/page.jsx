@@ -248,7 +248,7 @@ export default function Home() {
         if (response.status === 200) {
           const data = await response.data;
           console.log("Received data:", data);
-          setData(data.data);
+          setData(data);
         } else {
           console.error("Error fetching data:", response.statusText);
         }
@@ -351,7 +351,7 @@ export default function Home() {
                 <em>None</em>
               </MenuItem>
               <MenuItem value="asc">A to Z</MenuItem>
-              <MenuItem value="dsc">Z to A</MenuItem>
+              <MenuItem value="desc">Z to A</MenuItem>
             </Select>
           </FormControl>
         </div>
