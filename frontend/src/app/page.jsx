@@ -1,5 +1,4 @@
 "use client";
-import Image from "next/image";
 import Card from "./components/Card";
 import {
   Box,
@@ -35,9 +34,8 @@ const style = {
 export default function Home() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const routeHandler = () => router.push("./asset");
-  // const [data, setData] = useState([]);
-  const [data, setData] = useState(allData);
+  const [data, setData] = useState([]);
+  // const [data, setData] = useState(allData);
   const [name, setName] = useState("");
   const [types, setTypes] = useState("");
   const [teams, setTeams] = useState("");
@@ -94,7 +92,7 @@ export default function Home() {
       console.log("Fetching data from:", url);
       const response = await axios.get(url);
       if (response.status === 200) {
-        const data = await response.json();
+        const data = await response.data;
         console.log("Received data:", data);
         setData(data);
       } else {
@@ -134,7 +132,7 @@ export default function Home() {
       console.log("Fetching data from:", url);
       const response = await axios.get(url);
       if (response.status === 200) {
-        const data = await response.json();
+        const data = await response.data;
         console.log("Received data:", data);
         setData(data);
       } else {
@@ -167,7 +165,7 @@ export default function Home() {
 
       const response = await axios.get(url);
       if (response.status === 200) {
-        const data = await response.json();
+        const data = await response.data;
         console.log("Received data:", data);
         setData(data);
       } else {
@@ -206,7 +204,7 @@ export default function Home() {
       console.log("Fetching data from:", url);
       const response = await axios.get(url);
       if (response.status === 200) {
-        const data = await response.json();
+        const data = await response.data;
         console.log("Received data:", data);
         setData(data);
       } else {
@@ -236,7 +234,7 @@ export default function Home() {
         console.log("Fetching data from:", url);
         const response = await axios.get(url);
         if (response.status === 200) {
-          const data = await response.json();
+          const data = await response.data;
           console.log("Received data:", data);
           setData(data);
         } else {
@@ -247,9 +245,9 @@ export default function Home() {
         console.log("Fetching data from:", url);
         const response = await axios.get(url);
         if (response.status === 200) {
-          const data = await response.json();
+          const data = await response.data;
           console.log("Received data:", data);
-          setData(data);
+          setData(data.data);
         } else {
           console.error("Error fetching data:", response.statusText);
         }
