@@ -1,7 +1,14 @@
 "use client";
 import Image from "next/image";
 import Card from "./components/Card";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import {
+  Box,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Modal,
+  Select,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import TagHandler from "./components/tagComponent";
@@ -11,8 +18,23 @@ import UserName from "./components/username";
 import dataFetcher from "./components/dataFetcher";
 import { useRouter } from "next/navigation";
 
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
+
 export default function Home() {
   const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   const routeHandler = () => router.push("./asset");
   const [data, setData] = useState([]);
   // const [data,setData] = useState(allData);
@@ -42,7 +64,7 @@ export default function Home() {
     setCategory((prevValue) => (prevValue === val ? "" : val));
     const queryString = `category=${encodeURIComponent(val)}`;
     try {
-      const url = `http://localhost:8000/resources/category/?${queryString}`;
+      const url = `http://91.108.104.64:8001/resources/category/?${queryString}`;
       console.log("Fetching data from:", url);
       const response = await axios.get(url);
       if (response.status === 200) {
@@ -63,7 +85,7 @@ export default function Home() {
       .map((tag) => `tags=${encodeURIComponent(tag)}`)
       .join("&");
     try {
-      const url = `http://localhost:8000/resources/tags/?${queryString}`;
+      const url = `http://91.108.104.64:8001/resources/tags/?${queryString}`;
       console.log("Fetching data from:", url);
 
       const response = await axios.get(url);
@@ -88,7 +110,7 @@ export default function Home() {
 
     const queryString = `types=${encodeURIComponent(event.target.value)}`;
     try {
-      const url = `http://localhost:8000/resources/types/?${queryString}`;
+      const url = `http://91.108.104.64:8001/resources/types/?${queryString}`;
       console.log("Fetching data from:", url);
       const response = await axios.get(url);
       if (response.status === 200) {
@@ -118,6 +140,17 @@ export default function Home() {
         </div>
         <div className="flex flex-row p-5 w-full">
           <h1 className="font-bold text-3xl float-left">Resources</h1>
+          <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={style}>
+             {/* add elelements */}
+            </Box>
+          </Modal>
+
           <div className="ml-auto">
             <button className="p-2 m-auto mr-4 rounded-lg border shadow-lg bg-white text-center">
               ...

@@ -16,7 +16,7 @@ const dataFetcher = async () => {
       return {data:null,error:'User not logged in',userInfo:null}
     }
     try {
-      const response = await axios.get(`http://localhost:8000/resources`); //${userInfo.userid}
+      const response = await axios.get(`http://91.108.104.64:8001/resources`); //${userInfo.userid}
       const data = response.data;
       
       if(data){

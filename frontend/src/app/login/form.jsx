@@ -22,7 +22,7 @@ const Form = () => {
       setError(error);
     }
     if(response){
-      console.log(response);
+      console.log('check this',response);
       router.push('/');
     }
 
