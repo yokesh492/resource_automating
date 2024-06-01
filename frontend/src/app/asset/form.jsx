@@ -70,7 +70,7 @@ function AssetForm(props) {
         type:types,
         date:null
       });
-      console.log(response);
+      // console.log(response);
       setLoading(false);
       if(response.status === 200){
         console.log('Asset added successfully');

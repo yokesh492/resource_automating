@@ -4,7 +4,7 @@ import axios from "axios";
 export default async function postFormData(props) {
   try {
     console.log(props);
-    const response = await axios.post("http://localhost:8000/scrape", {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_PRODUCTION}/scrape`, {
       link: props,
     });
     console.log(response);
@@ -16,7 +16,7 @@ export default async function postFormData(props) {
         return {response: null, error: 'Invalid Link'};
     }
   } catch (error) {
-    console.error("Axios error:", error);
+    console.error("Axios error:", error.message);
     return { response: null, error: error.response?.data?.detail || "Failed to scrape" };
   }
 }

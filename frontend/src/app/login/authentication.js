@@ -29,20 +29,18 @@ export const authenticate = async (formData) => {
     try {
         const response = await axios.post('http://91.108.104.64:8001/login', data);
         const userInfo = response.data;
-        const serializedUserInfo = JSON.stringify(userInfo);
-
+        const serializedUserInfo = JSON.stringify(userInfo)
+        console.log({userInfo})
 
         const expires = new Date(Date.now() + 60 * 60 * 24 * 3 * 1000);
         const session = await encrypt({ data, expires });
 
       if (response.status === 200 && !response.data.error) {
             cookies().set('session',session,{
-                httpOnly: true,
                 maxAge: 60 * 60 * 24 * 3, 
                 path: '/',
             })
             cookies().set('userinfo',serializedUserInfo,{
-                httpOnly: true,
                 maxAge: 60 * 60 * 24 * 3, 
                 path: '/',
             })
@@ -79,7 +77,7 @@ export async function updateSession(request) {
   res.cookies.set({
     name: "session",
     value: await encrypt(parsed),
-    httpOnly: true,
+    // httpOnly: true,
     expires: parsed.expires,
   });
   return res;

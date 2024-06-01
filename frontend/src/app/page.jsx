@@ -2,6 +2,7 @@
 import Card from "./components/Card";
 import {
   Box,
+  Button,
   FormControl,
   InputLabel,
   MenuItem,
@@ -18,6 +19,8 @@ import { allData } from "./data/data";
 import dataFetcher from "./components/utils/dataFetcher";
 import { useRouter } from "next/navigation";
 import EditForm from "./components/EditForm";
+import { getSession } from "./utils/getSession";
+import Link from "next/link";
 
 const style = {
   position: "absolute",
@@ -30,6 +33,8 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
+
+getSession();
 
 export default function Home() {
   const router = useRouter();
@@ -55,9 +60,9 @@ export default function Home() {
       .then((res) => {
         const { data, error, userInfo } = res;
         if (error === undefined || error !== null) {
-          console.log("User not logged in");
+          // console.log("User not logged in");
+          console.log({ dataFetcherError: error });
         } else {
-          console.log(error);
           setData(data);
           setName(userInfo?.username);
           setUserId(userInfo?.userid);
@@ -67,6 +72,7 @@ export default function Home() {
   }, []);
 
   const filterTeamFetcher = async (event) => {
+    console.log("Workssss")
     setTeams((prevValue) =>
       prevValue === event.target.value ? "" : event.target.value
     );
@@ -88,30 +94,23 @@ export default function Home() {
     console.log(queryString);
 
     try {
-      const url = `http://91.108.104.64:8001/resources/filter/?${queryString}`;
-      console.log("Fetching data from:", url);
+      const url = `${process.env.NEXT_PUBLIC_PRODUCTION}/resources/filter/?${queryString}`;
+      // console.log("Fetching data from:", url);
       const response = await axios.get(url);
       if (response.status === 200) {
         const data = await response.data;
         console.log("Received data:", data);
         setData(data);
       } else {
-        console.error("Error fetching data:", response.statusText);
+        // console.error("Error fetching data:", response.statusText);
       }
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("Error fetching data:", error.message);
     }
   };
 
   const filterCategoryFetcher = async (val) => {
     setCategory((prevValue) => (prevValue === val ? "" : val));
-    // const queryString =
-    //   `category=${encodeURIComponent(val)}` +
-    //   "&" +
-    //   (types ? `&types=${encodeURIComponent(types)}`: "") +
-    //   tags.map((tag) => `tags=${encodeURIComponent(tag)}`).join("&")
-    //   // +
-    //   // (teams ? `&teams=${encodeURIComponent(teams)}`: "")
 
     const queryString = [
       tags.length
@@ -125,21 +124,21 @@ export default function Home() {
       .filter(Boolean)
       .join("&");
 
-    console.log(queryString);
+    // console.log(queryString);
 
     try {
       const url = `http://91.108.104.64:8001/resources/filter/?${queryString}`;
-      console.log("Fetching data from:", url);
+      // console.log("Fetching data from:", url);
       const response = await axios.get(url);
       if (response.status === 200) {
         const data = await response.data;
-        console.log("Received data:", data);
+        // console.log("Received data:", data);
         setData(data);
       } else {
-        console.error("Error fetching data:", response.statusText);
+        // console.error("Error fetching data:", response.statusText);
       }
     } catch (error) {
-      console.error("Error fetching data:", error);
+      // console.error("Error fetching data:", error);
     }
   };
 
@@ -157,27 +156,27 @@ export default function Home() {
       .filter(Boolean)
       .join("&");
 
-    console.log(queryString);
+    // console.log(queryString);
 
     try {
       const url = `http://91.108.104.64:8001/resources/filter/?${queryString}`;
-      console.log("Fetching data from:", url);
+      // console.log("Fetching data from:", url);
 
       const response = await axios.get(url);
       if (response.status === 200) {
         const data = await response.data;
-        console.log("Received data:", data);
+        // console.log("Received data:", data);
         setData(data);
       } else {
-        console.error("Error fetching data:", response.statusText);
+        // console.error("Error fetching data:", response.statusText);
       }
     } catch (error) {
-      console.error("Error fetching data:", error);
+      // console.error("Error fetching data:", error);
     }
   };
 
   const handleTypeChange = async (event) => {
-    console.log(event.target.value, "in tag");
+    // console.log(event.target.value, "in tag");
 
     setTypes((prevValue) =>
       prevValue == event.target.value ? "" : event.target.value
@@ -197,26 +196,26 @@ export default function Home() {
       .filter(Boolean)
       .join("&");
 
-    console.log(queryString);
+    // console.log(queryString);
 
     try {
       const url = `http://91.108.104.64:8001/resources/filter/?${queryString}`;
-      console.log("Fetching data from:", url);
+      // console.log("Fetching data from:", url);
       const response = await axios.get(url);
       if (response.status === 200) {
         const data = await response.data;
-        console.log("Received data:", data);
+        // console.log("Received data:", data);
         setData(data);
       } else {
-        console.error("Error fetching data:", response.statusText);
+        // console.error("Error fetching data:", response.statusText);
       }
     } catch (error) {
-      console.error("Error fetching data:", error);
+      // console.error("Error fetching data:", error);
     }
   };
 
   const handleSortChange = async (event) => {
-    console.log(event.target.value, "in sort");
+    // console.log(event.target.value, "in sort");
 
     setSort((prevValue) =>
       prevValue == event.target.value ? "" : event.target.value
@@ -226,35 +225,35 @@ export default function Home() {
       ? `sort=${encodeURIComponent(event.target.value)}`
       : null;
 
-    console.log(queryString);
+    // console.log(queryString);
 
     try {
       if (queryString === null) {
         const url = `http://91.108.104.64:8001/resources/`;
-        console.log("Fetching data from:", url);
+        // console.log("Fetching data from:", url);
         const response = await axios.get(url);
         if (response.status === 200) {
           const data = await response.data;
-          console.log("Received data:", data);
+          // console.log("Received data:", data);
           setData(data);
         } else {
-          console.error("Error fetching data:", response.statusText);
+          // console.error("Error fetching data:", response.statusText);
         }
       } else {
         const url = `http://91.108.104.64:8001/resources/sort/?${queryString}`;
-        console.log("Fetching data from:", url);
+        // console.log("Fetching data from:", url);
         const response = await axios.get(url);
-        console.log(response)
+        // console.log(response)
         if (response.status === 200) {
           const data = await response.data;
-          console.log("Received data:", data);
+          // console.log("Received data:", data);
           setData(data);
         } else {
-          console.error("Error fetching data:", response.statusText);
+          // console.error("Error fetching data:", response.statusText);
         }
       }
     } catch (error) {
-      console.error("Error fetching data:", error);
+      // console.error("Error fetching data:", error);
     }
   };
 
@@ -270,10 +269,11 @@ export default function Home() {
           </h4>
         </div>
       </div>
+
       <div className="flex flex-row p-5 w-full">
         <h1 className="font-bold text-3xl float-left">
-          <div>
-            <FormControl sx={{ m: 1, minWidth: 90 }}>
+          <div className="flex justify-between w-full ">
+            <FormControl sx={{ m: 1, minWidth: 200 }}>
               <NativeSelect
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
@@ -300,10 +300,14 @@ export default function Home() {
           aria-describedby="modal-modal-description"
         >
           <Box sx={style}>
-            <EditForm {...selectedData} />
+            <EditForm {...selectedData} handleClose= {handleClose} setData = {setData} />
           </Box>
         </Modal>
+            <Link href="/asset" className="flex justify-end items-center h-20  w-full">
+              <Button variant="contained" className="h-20">Add asset</Button>
+            </Link>
       </div>
+      <div className="border"></div>
       <div className="flex flex-row">
         <div className="px-5">
           <FormControl sx={{ m: 1, minWidth: 90 }}>

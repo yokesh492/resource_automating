@@ -5,16 +5,17 @@ import CategoryComponent from './categoryComponent';
 import TagHandler from './tagComponent';
 import { useRouter } from 'next/navigation';
 import deleteHandler from './utils/deleteHandler';
+import axios from 'axios';
 
 const EditForm = (props) => {
   const router = useRouter();
-
+console.log({props})
   const [asset, setAsset] = useState(props.asset_name);
   const [description, setDescription] = useState(props.description);
   const [category, setCategory] = useState(props.category);
-  const [teams, setTeams] = useState(props.teams);
+  const [teams, setTeams] = useState(props.team);
   const [tags, setTags] = useState(props.tags);
-  const [types, setTypes] = useState(props.types);
+  const [types, setTypes] = useState(props.type);
   const [loading, setLoading] = useState(false);
   const [isDelete,setIsDelete] = useState(false);
   const [error,setError] = useState('')
@@ -24,7 +25,9 @@ const EditForm = (props) => {
     const {response,error}=await deleteHandler(props.id);
     setLoading(false);
     if(response === 'Success'){
-      router.push('/');
+      props.handleClose()
+      router.refresh()
+      props.setData([])
     }
     else{
       console.log(error);
@@ -35,6 +38,15 @@ const EditForm = (props) => {
   const submitHandler = async (e) => {
     e.preventDefault();
     setLoading(true);
+    console.log({
+      id:props.id,
+      asset_name: asset,
+      description: description,
+      category: category,
+      tags: tags,
+      teams: teams,
+      types: types,
+    })
     try {
       const res = await axios.put(`http://91.108.104.64:8001/resources`, {
         id:props.id,
@@ -45,9 +57,10 @@ const EditForm = (props) => {
         teams: teams,
         types: types,
       });
+
       if (res.status === 200) {
         setLoading(false);
-        router.push("/");
+        location.reload()
       }
     } catch (error) {
       console.error("Axios error:", error);

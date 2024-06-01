@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const deleteHandler = async (id) => {
-    const res = await axios.delete(`http://localhost:8000/resources/?id=${id}`);
+    const res = await axios.delete(`${process.env.NEXT_PUBLIC_PRODUCTION}/resources/?id=${id}`);
     if (res.status === 200) {
         console.log('Asset deleted successfully');
         return {response:'Success',error:null}
