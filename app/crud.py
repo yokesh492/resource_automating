@@ -67,18 +67,18 @@ def read_resource_by_filter(db: Session, tags: list, categories: str, types: str
         try:
             resource = db.query(Resource).filter(Resource.tags.any(tags), Resource.category == categories, Resource.type == types).all()
             if not resource:
-                return "No resource"
+                return []
             return resource
         except Exception as e:
-            return "No resource"
+            return []
     else:
         try:
             resource = db.query(Resource).filter(Resource.tags.any(tags), Resource.category == categories, Resource.type == types, Resource.team == team).all()
             if not resource:
-                return "No resource"
+                return []
             return resource
         except Exception as e:
-            return "No resource"
+            return []
         
 def delete_resource(db: Session, resource_id: int):
     db_resource = db.query(Resource).filter(Resource.id == resource_id).one_or_none()
