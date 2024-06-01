@@ -34,7 +34,6 @@ const style = {
   p: 4,
 };
 
-getSession();
 
 export default function Home() {
   const router = useRouter();
@@ -48,27 +47,32 @@ export default function Home() {
   const [category, setCategory] = useState("");
   const [selectedData, setSelectedData] = useState({});
   const [sort, setSort] = useState("");
-
+  
   const handleOpen = (props) => {
     setSelectedData(props);
     setOpen(true);
   };
   const handleClose = () => setOpen(false);
-
+  
   useEffect(() => {
-    dataFetcher()
+    getSession();
+    const getData = () => {
+      
+      dataFetcher()
       .then((res) => {
         const { data, error, userInfo } = res;
         if (error === undefined || error !== null) {
-          // console.log("User not logged in");
-          console.log({ dataFetcherError: error });
-        } else {
-          setData(data);
-          setName(userInfo?.username);
-          setUserId(userInfo?.userid);
-        }
-      })
-      .catch((error) => console.log(error));
+            // console.log("User not logged in");
+            console.log({ dataFetcherError: error });
+          } else {
+            setData(data);
+            setName(userInfo?.username);
+            setUserId(userInfo?.userid);
+          }
+        })
+        .catch((error) => console.log(error));
+      }
+    getData()
   }, []);
 
   const filterTeamFetcher = async (event) => {
