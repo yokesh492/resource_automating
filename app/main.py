@@ -41,17 +41,17 @@ def scrape_metadata(url: str):
     return name, description
 
 
-@app.post("/users/", response_model=schemas.User)
+@app.post("/signup/", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(dependencies.get_db)):
     db_user = crud.get_user_by_username(db, username=user.username)
     if db_user:
-        raise HTTPException(status_code=400, detail="Username already registered")
+        return {"error" : "Username already registered"}
     hashed_password = auth.get_password_hash(user.password)
     db_user = models.User(username=user.username, hashed_password=hashed_password, email=user.email)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
-    return db_user
+    return {"message": "User created successfully"}
 
 @app.post("/login")
 def login(user: schemas.UserIn, db: Session = Depends(dependencies.get_db)):
