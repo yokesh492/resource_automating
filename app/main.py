@@ -41,7 +41,7 @@ def scrape_metadata(url: str):
     return name, description
 
 
-@app.post("/signup/", response_model=schemas.User)
+@app.post("/signup/")
 def create_user(user: schemas.UserCreate, db: Session = Depends(dependencies.get_db)):
     db_user = crud.get_user_by_username(db, username=user.username)
     if db_user:
