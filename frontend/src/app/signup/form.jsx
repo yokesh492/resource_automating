@@ -25,7 +25,6 @@ const Form = () => {
 
     setLoading(true);
     const { response, error } = await Signup(formData);
-    setLoading(false);
 
     if (error) {
       setError(error);
@@ -49,7 +48,7 @@ const Form = () => {
         {error && (
           <p className="text-red-500 text-center font-bold p-1 pb-2">{error}</p>
         )}
-        <form action={formHandler} className="text-center">
+        <form action={formHandler} onSubmit={() => setLoading(true)} className="text-center">
           <TextField
             label="Enter your name"
             variant="outlined"
