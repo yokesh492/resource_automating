@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { CircularProgress } from "@mui/material";
 import postFormData from "./utills/postFormData";
+import getHomeDomain from "./utills/formatLink";
 
 function LinkForm(props) {
   const router = useRouter();
@@ -13,7 +14,17 @@ function LinkForm(props) {
     e.preventDefault();
     setLoading(true);
 
-    const link = e.target.link.value;
+    let link = e.target.link.value;
+    console.log(link);
+
+
+    link = getHomeDomain(link);   
+
+    if (!link) {
+      setError("Invalid URL");
+      setLoading(false);
+      return;
+    }
     console.log(link);
 
     const { response, error } = await postFormData(link);
@@ -31,6 +42,7 @@ function LinkForm(props) {
     }
   };
 
+
   return (
     <div className="m-auto text-center bg-white p-8 rounded shadow-lg w-96">
       <form
@@ -45,7 +57,7 @@ function LinkForm(props) {
           Enter the Link here
         </label>
         <input
-          type="text"
+          type="url"
           id="link"
           className="border border-gray-400 rounded px-2 py-1 mt-2"
         />

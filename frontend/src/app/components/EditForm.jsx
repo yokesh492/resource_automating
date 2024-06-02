@@ -48,7 +48,7 @@ console.log({props})
       types: types,
     })
     try {
-      const res = await axios.put(`http://91.108.104.64:8001/resources`, {
+      const res = await axios.put(`${process.env.NEXT_PUBLIC_PRODUCTION}/resources`, {
         id:props.id,
         asset_name: asset,
         description: description,
