@@ -75,7 +75,7 @@ const Form = () => {
         </form>
         <div className="text-center pt-4">
           <p>
-            Don't Have an account?{" "}
+            Do not have an account?
             <a href="/signup" className="text-blue-500 hover:underline">
               Signup
             </a>
