@@ -28,7 +28,9 @@ return (
         </div>
         <div className='px-3 py-1.5' onCl>
             <h5 className={style}>LINK</h5>
+            <div onClick={(e)=>e.stopPropagation()}>
             <a href={props.link} target='_blank' className='hover:text-blue-500 hover:underline'>{props.link}</a>
+            </div>
         </div>
         <div className='px-3 py-1.5'>
             <h5 className={style}>TAGS</h5>

@@ -21,6 +21,7 @@ import { useRouter } from "next/navigation";
 import EditForm from "./components/EditForm";
 import { getSession } from "./utils/getSession";
 import Link from "next/link";
+import logout from "./components/utils/signup";
 
 const style = {
   position: "absolute",
@@ -41,7 +42,7 @@ export default function Home() {
   // const [data, setData] = useState(allData);
   const [name, setName] = useState("");
   const [types, setTypes] = useState("");
-  const [teams, setTeams] = useState("");
+  const [teams, setTeams] = useState("All");
   const [tags, setTags] = useState([]);
   const [category, setCategory] = useState("");
   const [selectedData, setSelectedData] = useState({});
@@ -129,7 +130,7 @@ export default function Home() {
     // console.log(queryString);
 
     try {
-      const url = `http://91.108.104.64:8001/resources/filter/?${queryString}`;
+      const url = `${process.env.NEXT_PUBLIC_PRODUCTION}/resources/filter/?${queryString}`;
       // console.log("Fetching data from:", url);
       const response = await axios.get(url);
       if (response.status === 200) {
@@ -161,7 +162,7 @@ export default function Home() {
     // console.log(queryString);
 
     try {
-      const url = `http://91.108.104.64:8001/resources/filter/?${queryString}`;
+      const url = `${process.env.NEXT_PUBLIC_PRODUCTION}/resources/filter/?${queryString}`;
       // console.log("Fetching data from:", url);
 
       const response = await axios.get(url);
@@ -201,7 +202,7 @@ export default function Home() {
     // console.log(queryString);
 
     try {
-      const url = `http://91.108.104.64:8001/resources/filter/?${queryString}`;
+      const url = `${process.env.NEXT_PUBLIC_PRODUCTION}/resources/filter/?${queryString}`;
       // console.log("Fetching data from:", url);
       const response = await axios.get(url);
       if (response.status === 200) {
@@ -231,7 +232,7 @@ export default function Home() {
 
     try {
       if (queryString === null) {
-        const url = `http://91.108.104.64:8001/resources/`;
+        const url = `${process.env.NEXT_PUBLIC_PRODUCTION}/resources/`;
         // console.log("Fetching data from:", url);
         const response = await axios.get(url);
         if (response.status === 200) {
@@ -242,7 +243,7 @@ export default function Home() {
           // console.error("Error fetching data:", response.statusText);
         }
       } else {
-        const url = `http://91.108.104.64:8001/resources/sort/?${queryString}`;
+        const url = `${process.env.NEXT_PUBLIC_PRODUCTION}/resources/sort/?${queryString}`;
         // console.log("Fetching data from:", url);
         const response = await axios.get(url);
         // console.log(response)
@@ -265,10 +266,13 @@ export default function Home() {
         <h3 className="font-bold text-2xl  text-white bg-none">
           Vizdale Resources
         </h3>
-        <div className="ml-auto">
+        <div className="ml-auto flex flex-row">
           <h4 className="text-2xl text-white">
             <UserName name={name || "  "} />
           </h4>
+          <div>
+              <Button className="text-black bg-white hover:bg-black hover:text-white" onClick={() => logout()}>Logout</Button>
+          </div>
         </div>
       </div>
 
@@ -282,10 +286,9 @@ export default function Home() {
                 value={teams}
                 label="Team"
                 onChange={filterTeamFetcher}
-                defaultValue="All"
                 className="p-2"
               >
-                <option value="All" defaultValue={"resources"}>
+                <option value="All">
                   All Resources
                 </option>
                 <option value="Design">Design</option>
@@ -311,9 +314,9 @@ export default function Home() {
         </Modal>
         <Link
           href="/asset"
-          className="flex justify-end items-center h-20  w-full"
+          className="ml-auto"
         >
-          <Button variant="contained" className="h-20">
+          <Button variant="contained" className="m-3">
             Add asset
           </Button>
         </Link>

@@ -27,7 +27,7 @@ export const authenticate = async (formData) => {
         password:formData.get('password'),
       };
     try {
-        const response = await axios.post('http://91.108.104.64:8001/login', data);
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_PRODUCTION}/login`, data);
         const userInfo = response.data;
         const serializedUserInfo = JSON.stringify(userInfo)
         console.log({userInfo})
