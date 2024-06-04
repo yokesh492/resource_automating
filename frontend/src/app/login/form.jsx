@@ -16,7 +16,6 @@ const Form = () => {
   const formHandler = async (formData) => {
     setLoading(true);
     const { response, error } = await authenticate(formData);
-    setLoading(false);
 
     if (error) {
       setError(error);
@@ -40,7 +39,7 @@ const Form = () => {
         {error && (
           <p className="text-red-500 text-center font-bold p-1 pb-2">{error}</p>
         )}
-        <form action={formHandler} className="text-center">
+        <form action={formHandler} onSubmit = {() => setLoading(true)} className="text-center">
           <TextField
             label="Enter your username"
             variant="outlined"
@@ -75,7 +74,7 @@ const Form = () => {
         </form>
         <div className="text-center pt-4">
           <p>
-            Don't Have an account?{" "}
+            Do not have an account?
             <a href="/signup" className="text-blue-500 hover:underline">
               Signup
             </a>

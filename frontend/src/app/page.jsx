@@ -266,7 +266,7 @@ export default function Home() {
         <h3 className="font-bold text-2xl  text-white bg-none">
           Vizdale Resources
         </h3>
-        <div className="ml-auto flex flex-row">
+        <div className="ml-auto gap-5 flex flex-row">
           <h4 className="text-2xl text-white">
             <UserName name={name || "  "} />
           </h4>
