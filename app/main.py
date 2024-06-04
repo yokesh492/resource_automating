@@ -34,11 +34,19 @@ def scrape_metadata(url: str):
         return None, None
 
     soup = BeautifulSoup(response.content, 'html.parser')
-    name = soup.title.string if soup.title else 'No title found'
-    description_tag = soup.find('meta', attrs={'name': 'description'})
-    description = description_tag['content'] if description_tag else 'No description found'
+    title = soup.title.string if soup.title else None
+    if not title:  
+        og_title_tag = soup.find('meta', attrs={'property': 'og:title'})
+        title = og_title_tag['content'] if og_title_tag else 'No title found'
 
-    return name, description
+    
+    description_tag = soup.find('meta', attrs={'name': 'description'})
+    description = description_tag['content'] if description_tag else None
+    if not description:  
+        og_description_tag = soup.find('meta', attrs={'property': 'og:description'})
+        description = og_description_tag['content'] if og_description_tag else 'No description found'
+
+    return title, description
 
 
 @app.post("/signup/")
@@ -140,7 +148,7 @@ def scrape(url_data: schemas.UrlBase, db: Session = Depends(dependencies.get_db)
     url = url_data.link
     name, description = scrape_metadata(url)
     if not name and not description:
-        raise HTTPException(status_code=404, detail="Failed to retrieve data from the URL.")
+        return {"error": "please check the URL"}
     return schemas.ResourceBase(asset_name=name, description=description, link=url)
 
 @app.get("/resources/sort/", response_model=List[schemas.Resource])
