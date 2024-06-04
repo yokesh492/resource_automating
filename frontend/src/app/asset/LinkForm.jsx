@@ -36,10 +36,7 @@ function LinkForm(props) {
     }
     if (response) {
       props.setData(response);
-    } else {
-      console.log(error);
-      setError("Server Error");
-    }
+    } 
   };
 
 
