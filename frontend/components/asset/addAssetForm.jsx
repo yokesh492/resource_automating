@@ -2,7 +2,7 @@
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-import fetchUserId from "../../utils/serverActions/userloginValidator";
+import fetchUser from "../../utils/serverActions/userloginValidator";
 import postAssetData from "../../utils/serverActions/postAssetData";
 import AssetForm from "../shared/assetForm";
 
@@ -22,13 +22,13 @@ function AddAssetForm(props) {
   
   const dataFetcher = async (props) => {
     try {
-      const {error,id}= await fetchUserId();
+      const {error,userInfo}= await fetchUser();
 
       if(error === undefined || error !== null){
         console.log('User not logged in');
       }
       else{
-        setUserId(id);
+        setUserId(userInfo.userid);
         setAsset(props.data.asset_name);
         setDescription(props.data.description);
         setLink(props.data.link);
@@ -55,7 +55,6 @@ function AddAssetForm(props) {
       setError(error);
     }
     if (response) {
-      props.setData(response);
       router.push("/");
     }
   }

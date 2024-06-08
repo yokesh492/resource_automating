@@ -56,7 +56,7 @@ const AssetForm = (props) => {
         <TeamComponent teams={teams} setTeams={setTeams} />
 
         <p className="py-2"></p>
-        <TypeComponent types={types} setTypes={setTypes} />
+        <TypeComponent types={types} handleTypeChange={setTypes} />
         <p className="py-2"></p>
 
         <CategoryComponent category={category} setCategory={setCategory} />

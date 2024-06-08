@@ -1,17 +1,14 @@
-"use client";
-import React, { useEffect } from "react";
-
+import React from "react";
 import Home from "../../components/home/home";
-import fetchUserId from "../../utils/serverActions/userloginValidator";
+import { getCookies } from "../../utils/cookies/getCookies";
+import { redirect } from "next/navigation";
 
-const page = () => {
-  
-  useEffect(() => {
-    fetchUserId().then((res) => {
-      console.log(res);
-    });
-  }, []);
-
+const page = async() => {
+    const res = await getCookies('userinfo');
+    if(!res){
+      redirect("/login")
+    }
+ 
   return <Home />;
 };
 

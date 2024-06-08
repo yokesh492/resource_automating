@@ -2,14 +2,14 @@ import { redirect } from "next/navigation";
 import { getCookies } from "../cookies/getCookies";
 
 
-const fetchUserId = async () => {
-  const userInfo = getCookies('userinfo');
+const fetchUser = async () => {
+  const userInfo = await getCookies('userinfo');
   console.log(userInfo,'userinfio');
-  if(userInfo){
+  if(!userInfo){
       console.log('User not logged in');
       return redirect('/login');
   }
-  return {error:null,id: userInfo.userid};
+  return {error:null,userInfo:userInfo};
    
 }
-export default fetchUserId;
+export default fetchUser;

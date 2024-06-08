@@ -3,7 +3,7 @@ import React from 'react'
 
 const TypeComponent = (props) => {
   return (
-    <FormControl sx={{ m: 1, minWidth: 90 }}>
+    <FormControl style={props.style} className='py-2'>
     <InputLabel id="demo-simple-select-label">Type</InputLabel>
     <Select
       labelId="demo-simple-select-label"

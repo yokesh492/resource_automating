@@ -9,7 +9,18 @@ const postAssetData = async (props) => {
     const teams = props.teams;
     const types = props.types;
     const url = props.url;
-    console.log(asset,description,link,category,tags,teams,types,url)
+
+    console.log('Consoleing things',{
+        asset_name: asset,
+        description: description,
+        link: link,
+        category: category,
+        tags: tags,
+        team:teams,
+        type:types,
+        date:null
+      },url)
+
     try{
         const response = await axios.post(url, {
           asset_name: asset,
@@ -21,9 +32,13 @@ const postAssetData = async (props) => {
           type:types,
           date:null
         });
+
         return {response:response.data,error:null}; 
     }
-    catch(error){
+    catch(error)
+ 
+    {
+        console.log({error})
         return {response:null,error:error.message};
     }
 }

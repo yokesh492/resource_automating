@@ -1,20 +1,12 @@
-'use server';
-import { cookies } from "next/headers";
 import axios from 'axios';
-import { redirect } from "next/navigation";
-
-
+import fetchUser from './userloginValidator';
 const dataFetcher = async () => {
-  const userInfo = JSON.parse(cookies().get('userinfo')?.value);
-  if(userInfo === undefined ){
+  const res = await fetchUser();
+  const userInfo = res.userInfo;
+  if(userInfo === undefined || userInfo === null){
       console.log('User not logged in');
       return redirect('/login');
   }
-    console.log(userInfo)
-    if(userInfo === undefined ){
-      console.log('User not loggin');
-      return {data:null,error:'User not logged in',userInfo:null}
-    }
     try {
       const response = await axios.get(`${process.env.NEXT_PUBLIC_PRODUCTION}/resources`); //${userInfo.userid}
       const data = response.data;

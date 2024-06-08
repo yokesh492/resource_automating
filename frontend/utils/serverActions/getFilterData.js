@@ -1,3 +1,4 @@
+import axios from "axios";
 
 const getfilterData = async (props) => {
     const { tags, types, team, category } = props;
@@ -25,14 +26,14 @@ const getfilterData = async (props) => {
         const data = await response.data;
         console.log("Received data:", data);
 
-        return {data:data,error:null};
+        return data
       } else {
         console.error("Error fetching data:", response.statusText);
-        return {data:null,error:response.data.error};
+        return null;
       }
     } catch (error) {
       console.error("Error fetching data:", error.message);
-        return {data:null,error:error.message};
+        return null;
     }
   };
 

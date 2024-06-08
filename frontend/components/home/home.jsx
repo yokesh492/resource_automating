@@ -1,47 +1,29 @@
 "use client";
-import {
-  Box,
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Modal,
-  NativeSelect,
-  Select,
-} from "@mui/material";
+import {  Button} from "@mui/material";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import TagHandler from "../../components/shared/tagComponent";
 import CategoryComponent from "../../components/shared/categoryComponent";
 import UserName from "../../components/shared/username";
-import { allData } from "../../data/data";
-import dataFetcher from "./components/utils/dataFetcher";
-import { useRouter } from "next/navigation";
+// import { allData } from "../../data/data";
 import Link from "next/link";
-import logout from "../../utils/serverActions/logout";
-import EditAssetForm from "../../components/editAsset/EditAssetForm";
 import getfilterData from "../../utils/serverActions/getFilterData";
 import DisplayData from "./displayData";
 import SortData from "./SortData";
 import TypeComponent from "../shared/typeComponent";
+import dataFetcher from "../../utils/serverActions/getAllData";
+import Logout from "./Logout";
+import HomeTeamHandler from "./HomeTeamHandler";
+import EditModal from "../editAsset/EditModal";
+import { useData } from "../../store/store";
 
-
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
+// import filterCategoryFetcher from "../../utils/helper/filterCategory";
+// import filterTagsFetcher from "../../utils/helper/filterTags";
+// import filterTeamFetcher from "../../utils/helper/filterTeams";
+// import handleTypeChange from "../../utils/helper/filterType";
 
 export default function Home() {
-  const router = useRouter();
   const [open, setOpen] = useState(false);
-  const [data, setData] = useState([]);
   // const [data, setData] = useState(allData);
   const [name, setName] = useState("");
   const [types, setTypes] = useState("");
@@ -51,10 +33,13 @@ export default function Home() {
   const [selectedData, setSelectedData] = useState({});
   const [sort, setSort] = useState("");
 
+  const {data,setData} = useData();
+
   const handleOpen = (props) => {
     setSelectedData(props);
     setOpen(true);
   };
+
   const handleClose = () => setOpen(false);
 
   useEffect(() => {
@@ -77,55 +62,55 @@ export default function Home() {
   }, []);
 
   const filterTeamFetcher = async (event) => {
-    console.log("Workssss");
-    setTeams((prevValue) =>
-      prevValue === event.target.value ? "" : event.target.value
-    );
-    const {data,error} = getfilterData({tags,types,team:event.target.value,category});
-    if(error === undefined || error !== null){
+    const val = event.target.value ;
+    setTeams(val);
+    const  data = await getfilterData({ tags, types, team: val, category });
+    if (data) {
+      console.log(data, "data in team change")
       setData(data);
+    } else {
+      console.log('Error in team change');
     }
-    else{
-      console.log(error);
-    }
-
   };
 
   const filterCategoryFetcher = async (val) => {
     setCategory((prevValue) => (prevValue === val ? "" : val));
-    const {data,error} = getfilterData({tags,types,team:teams,category:val});
-    if(error === undefined || error !== null){
+    const  data = await getfilterData({
+      tags,
+      types,
+      team: teams,
+      category: val,
+    });
+    if (data) {
       setData(data);
-    }
-    else{
-      console.log(error);
+    } else {
+      console.log('Error in category change');
     }
   };
 
   const filterTagsFetcher = async (val) => {
     setTags(val);
-    const {data,error} = getfilterData({tags:val,types,team:teams,category});
-    if(error === undefined || error !== null){
+    const data = await getfilterData({
+      tags: val,
+      types,
+      team: teams,
+      category,
+    });
+    if (data) {
       setData(data);
+    } else {
+      console.log('Error in tag change');
     }
-    else{
-      console.log(error);
-    }
-
   };
 
-  const handleTypeChange = async (event) => {
-    setTypes((prevValue) =>
-      prevValue == event.target.value ? "" : event.target.value
-    );
-    const {data,error} = getfilterData({tags,types:event.target.value,team:teams,category});
-    if(error === undefined || error !== null){
+  const handleTypeChange = async (val) => {
+    setTypes(val);
+    const data = await getfilterData({ tags, types: val, team: teams, category });
+    if (data) {
       setData(data);
+    } else {
+      console.log('Error in type change');
     }
-    else{
-      console.log(error);
-    }
-
   };
 
   const handleSortChange = async (event) => {
@@ -170,7 +155,6 @@ export default function Home() {
       // console.error("Error fetching data:", error);
     }
   };
-
   return (
     <main className="min-h-screen">
       <div className="flex flex-row bg-purple-700 p-3">
@@ -182,51 +166,17 @@ export default function Home() {
             <UserName name={name || "  "} />
           </h4>
           <div>
-              <Button className="text-black bg-white hover:bg-black hover:text-white" onClick={() => logout()}>Logout</Button>
+            <Logout />
           </div>
         </div>
       </div>
 
       <div className="flex flex-row p-5 w-full">
         <h1 className="font-bold text-3xl float-left">
-          <div className="flex justify-between w-full ">
-            <FormControl sx={{ m: 1, minWidth: 200 }}>
-              <NativeSelect
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={teams}
-                label="Team"
-                onChange={filterTeamFetcher}
-                className="p-2"
-              >
-                <option value="All">
-                  All Resources
-                </option>
-                <option value="Design">Design</option>
-                <option value="Development">Development</option>
-                <option value="Business">Business</option>
-              </NativeSelect>
-            </FormControl>
-          </div>
+          <HomeTeamHandler filterTeamFetcher={filterTeamFetcher} teams={teams} />
         </h1>
-        <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={style}>
-            <EditAssetForm
-              {...selectedData}
-              handleClose={handleClose}
-              setData={setData}
-            />
-          </Box>
-        </Modal>
-        <Link
-          href="/asset"
-          className="ml-auto"
-        >
+        <EditModal open={open} handleClose={handleClose} selectedData={selectedData} setData={setData} />
+        <Link href="/asset" className="ml-auto">
           <Button variant="contained" className="m-3">
             Add asset
           </Button>
@@ -235,7 +185,11 @@ export default function Home() {
       <div className="border"></div>
       <div className="flex flex-row">
         <div className="px-5">
-        <TypeComponent types={types} handleTypeChange={handleTypeChange} />
+          <TypeComponent
+            types={types}
+            handleTypeChange={handleTypeChange}
+            style={{ m: 1, minWidth: 90 }}
+          />
 
           <CategoryComponent
             category={category}

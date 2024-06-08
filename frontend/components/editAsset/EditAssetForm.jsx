@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import CategoryComponent from '../shared/categoryComponent';
 import TagHandler from '../shared/tagComponent';
 import { useRouter } from 'next/navigation';
-import deleteHandler from '../../src/app/components/utils/deleteHandler';
+import deleteHandler from '../../utils/serverActions/deleteHandler';
 import axios from 'axios';
 import TeamComponent from '../shared/teamComponent';
 import TypeComponent from '../shared/typeComponent';
@@ -28,8 +28,7 @@ const EditAssetForm = (props) => {
     setLoading(false);
     if(response === 'Success'){
       props.handleClose()
-      router.refresh()
-      props.setData([])
+      location.reload()
     }
     else{
       console.log(error);
