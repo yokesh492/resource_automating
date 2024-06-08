@@ -164,3 +164,75 @@ def sort_resources(
 @app.on_event("startup")
 async def startup():
     Base.metadata.create_all(bind=engine)
+
+
+# refactoring code
+
+# from fastapi import FastAPI, Depends, HTTPException, status, Query
+# from fastapi import APIRouter
+# from sqlalchemy.orm import Session
+# import os
+# from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+# from fastapi.middleware.cors import CORSMiddleware
+# from datetime import timedelta
+# from typing import List, Optional
+
+# from . import dependencies, crud
+# from .database import engine
+# from .models import Base
+# from .schemas import schemas
+
+# app = FastAPI(title='Resource Management API')
+
+# # CORS configuration
+# origins = os.getenv("CORS_ORIGINS", "*").split(",")
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=origins,
+#     allow_methods=["*"],
+#     allow_credentials=True,
+#     allow_headers=["*"]
+# )
+
+# # Dependency Injection
+# def get_db():
+#     db = dependencies.SessionLocal()
+#     try:
+#         yield db
+#     finally:
+#         db.close()
+
+# # Router definition
+# router = APIRouter()
+
+# @router.post("/signup/", response_model=schemas.UserOut)
+# def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+#     db_user = crud.create_user(db, user)
+#     if db_user is None:
+#         raise HTTPException(status_code=400, detail="Username already registered")
+#     return db_user
+
+# @router.post("/login", response_model=schemas.Token)
+# def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+#     user = crud.authenticate_user(db, form_data.username, form_data.password)
+#     if not user:
+#         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect username or password")
+#     access_token = crud.create_access_token(data={"sub": user.username}, expires_delta=timedelta(days=3))
+#     return {"access_token": access_token, "token_type": "bearer"}
+
+# # Resource CRUD operations
+# @router.get("/resources/", response_model=List[schemas.Resource])
+# def read_resources(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+#     return crud.get_resources(db, skip=skip, limit=limit)
+
+# @router.post("/resources/", response_model=schemas.Resource)
+# def create_resource(resource_data: schemas.ResourceCreate, db: Session = Depends(get_db)):
+#     return crud.create_resource(db, resource_data)
+
+# # Additional Routes and Operations...
+
+# app.include_router(router)
+
+# @app.on_event("startup")
+# async def startup():
+#     Base.metadata.create_all(bind=engine)

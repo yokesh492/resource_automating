@@ -21,8 +21,10 @@ def verify_password(plain_password, hashed_password):
 def authenticate_user(db: Session, username: str, password: str):
     user = db.query(User).filter(User.username == username).first()
     if not user:
+        # raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
         return {'error': 'User not found'}
     if not verify_password(password, user.hashed_password):
+        #raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect password")
         return {'error': 'Incorrect password'}
     return {'username': user.username, 'userid': user.id}
 
