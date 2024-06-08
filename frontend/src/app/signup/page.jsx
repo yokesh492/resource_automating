@@ -1,10 +1,10 @@
-import Form from "./form";
+import SignUpForm from "../../../components/signup/SignupForm";
 
 export default function SignUp() {
 
   return (
-    <div className="flex bg-slate-100 w-full justify-center items-center min-h-screen">
-      <Form />
+    <div className="bg-slate-100 w-full min-h-screen">
+      <SignUpForm />
     </div>
   );
 }

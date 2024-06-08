@@ -1,4 +1,3 @@
-"use server";
 import axios from "axios";
 
 export const Signup = async (formData) => {
@@ -9,7 +8,6 @@ export const Signup = async (formData) => {
       };
     try {
         const response = await axios.post(`${process.env.NEXT_PUBLIC_PRODUCTION}/signup`, data);
-        const userInfo = response.data;
 
       if (response.status === 200 && !response.data.error) {
             return {response:'success',error:null}

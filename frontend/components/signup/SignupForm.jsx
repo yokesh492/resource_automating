@@ -2,9 +2,9 @@
 import { TextField, Button, CircularProgress } from "@mui/material";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Signup } from "./Signup";
+import { Signup } from "../../utils/serverActions/Signup";
 
-const Form = () => {
+const SignUpForm = () => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -22,9 +22,10 @@ const Form = () => {
       setError("Passwords do not match");
       return;
     }
-
+    
     setLoading(true);
     const { response, error } = await Signup(formData);
+    setLoading(false);
 
     if (error) {
       setError(error);
@@ -36,7 +37,7 @@ const Form = () => {
   };
 
   return (
-    <div className="bg-white rounded p-2 shadow-lg w-96">
+    <div className="bg-white mx-auto rounded p-2 shadow-lg w-96">
       <h2 className="text-blue-600 text-3xl font-bold pt-2 text-center">
         {" "}
         Vizdale
@@ -115,4 +116,4 @@ const Form = () => {
   );
 };
 
-export default Form;
+export default SignUpForm;

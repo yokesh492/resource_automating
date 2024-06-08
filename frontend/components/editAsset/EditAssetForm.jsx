@@ -1,15 +1,17 @@
 'use client';
 import { Button, CircularProgress, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import React, { useState } from 'react'
-import CategoryComponent from './categoryComponent';
-import TagHandler from './tagComponent';
+import CategoryComponent from '../shared/categoryComponent';
+import TagHandler from '../shared/tagComponent';
 import { useRouter } from 'next/navigation';
-import deleteHandler from './utils/deleteHandler';
+import deleteHandler from '../../src/app/components/utils/deleteHandler';
 import axios from 'axios';
+import TeamComponent from '../shared/teamComponent';
+import TypeComponent from '../shared/typeComponent';
 
-const EditForm = (props) => {
+const EditAssetForm = (props) => {
   const router = useRouter();
-console.log({props})
+
   const [asset, setAsset] = useState(props.asset_name);
   const [description, setDescription] = useState(props.description);
   const [category, setCategory] = useState(props.category);
@@ -58,7 +60,7 @@ console.log({props})
         types: types,
       });
 
-      if (res.status === 200) {
+      if (res.status === 200 ) {
         setLoading(false);
         location.reload()
       }
@@ -125,43 +127,15 @@ console.log({props})
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
-        <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Teams</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={teams}
-                label="Type"
-                onChange={(e) => setTeams(e.target.value)}
-              >
-                <MenuItem value="Design">Design</MenuItem>
-                <MenuItem value="Technology">Technology</MenuItem>
-                <MenuItem value="Business">Business</MenuItem>
-              </Select>
-            </FormControl>
-        <p className="py-2"></p>
-        <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Type</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={types}
-                label="Type"
-                onChange={(e) => setTypes(e.target.value)}
-              >
-                <MenuItem value="Tools">Tools</MenuItem>
-                <MenuItem value="Inspiration">Inspiration</MenuItem>
-                <MenuItem value="Games">Games</MenuItem>
-                <MenuItem value="Tutorial">Tutorial</MenuItem>
-                <MenuItem value="Blog">Blog</MenuItem>
-              </Select>
-            </FormControl>
-        <p className="py-2"></p>
-            
 
+       <TeamComponent teams={teams} setTeams={setTeams}/>
+        <p className="py-2"></p>
+        <TypeComponent types={types} setTypes={setTypes}/>
+        <p className="py-2"></p>
         <CategoryComponent category={category} setCategory={setCategory}/>
         <p className="py-2"></p>
         <TagHandler tags={tags} setTags={setTags} />
+
         <a className='px-3 py-2 bg-gray-200 hover:bg-gray-400 ' href={props.link} target="_blank" rel="noopener noreferrer">Click here to Visit the Link</a>
         <p className="py-2"></p>
       <div className='flex flex-row  gap-2'>
@@ -193,4 +167,4 @@ console.log({props})
   )
 }
 
-export default EditForm
+export default EditAssetForm;

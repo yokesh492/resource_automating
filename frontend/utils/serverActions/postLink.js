@@ -1,9 +1,7 @@
-"use server";
 import axios from "axios";
 
-export default async function postFormData(props) {
+export default async function postLink(props) {
   try {
-    console.log(props);
     const response = await axios.post(`${process.env.NEXT_PUBLIC_PRODUCTION}/scrape`, {
       link: props,
     });

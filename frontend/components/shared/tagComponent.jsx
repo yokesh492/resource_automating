@@ -1,7 +1,7 @@
 import { useTheme } from "@mui/material/styles";
 import { Box, Chip, FormControl, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
 import React from 'react'
-import {allTags} from '../data/tags'
+import {allTags} from '../../data/tags'
 
 
 const ITEM_HEIGHT = 48;

@@ -2,8 +2,8 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { CircularProgress } from "@mui/material";
-import postFormData from "./utills/postFormData";
-import getHomeDomain from "./utills/formatLink";
+import postLink from "../../utils/serverActions/postLink";
+import formatLink from "../../utils/helper/formatLink";
 
 function LinkForm(props) {
   const router = useRouter();
@@ -18,18 +18,18 @@ function LinkForm(props) {
     console.log(link);
 
 
-    link = getHomeDomain(link);   
+    link = formatLink(link);   
 
     if (!link) {
       setError("Invalid URL");
       setLoading(false);
       return;
     }
-    console.log(link);
 
-    const { response, error } = await postFormData(link);
+    const { response, error } = await postLink(link);
     console.log(response)
     setLoading(false);
+    
     if (error) {
       console.log(error);
       setError(error);
@@ -41,7 +41,7 @@ function LinkForm(props) {
 
 
   return (
-    <div className="m-auto text-center bg-white p-8 rounded shadow-lg w-96">
+    <div className="mx-auto text-center bg-white p-8 rounded shadow-lg w-96">
       <form
         className="flex flex-col items-center justify-center"
         onSubmit={sendLinkData}

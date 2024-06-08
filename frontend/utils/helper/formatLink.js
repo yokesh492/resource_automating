@@ -1,4 +1,4 @@
-export default function getHomeDomain(url) {
+export default function formatLink(url) {
     try {
       const parsedUrl = new URL(url);
       return `${parsedUrl.protocol}//${parsedUrl.hostname}`;

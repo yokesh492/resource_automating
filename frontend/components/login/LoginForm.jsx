@@ -2,9 +2,9 @@
 import { TextField, Button, CircularProgress } from "@mui/material";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { authenticate } from "./authentication";
+import  authenticate  from "../../utils/serverActions/login";
 
-const Form = () => {
+const LoginForm = () => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -14,9 +14,10 @@ const Form = () => {
   const isValid = name && password;
 
   const formHandler = async (formData) => {
+    
     setLoading(true);
     const { response, error } = await authenticate(formData);
-
+    setLoading(false);
     if (error) {
       setError(error);
     }
@@ -27,7 +28,7 @@ const Form = () => {
   };
 
   return (
-    <div className="bg-white rounded p-2 shadow-lg w-96">
+    <div className="bg-white mx-auto rounded p-2 shadow-lg w-96">
       <h2 className="text-blue-600 text-3xl font-bold pt-2 text-center">
         {" "}
         Vizdale
@@ -85,4 +86,4 @@ const Form = () => {
   );
 };
 
-export default Form;
+export default LoginForm;
