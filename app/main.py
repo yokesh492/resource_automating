@@ -98,7 +98,8 @@ def create_resource(resource_data: schemas.ResourceCreate, userid: int, db: Sess
         print(resource_data)
         resource = crud.create_resource(db, resource_data, user_id=userid)
     except Exception as e:
-        raise HTTPException(status_code=400, detail=f"An error occurred while creating the resource: {str(e)}")
+        #raise HTTPException(status_code=400, detail=f"An error occurred while creating the resource: {str(e)}")
+        return {"error": "resource already exists"}
     return resource
 
 
