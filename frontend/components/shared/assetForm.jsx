@@ -13,6 +13,7 @@ import TypeComponent from "./typeComponent";
 import TeamComponent from "./teamComponent";
 
 const AssetForm = (props) => {
+  console.log(props);
   const {
     asset,
     setAsset,

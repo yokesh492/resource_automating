@@ -8,9 +8,13 @@ const style = {
   left: '50%',
   transform: 'translate(-50%, -50%)',
   bgcolor: 'background.paper',
-  border: '2px solid #000',
+  border:'#03a9f4',
+  borderRadius: 16,
   boxShadow: 24,
   p: 4,
+  maxWidth: 500,
+  maxHeight: 600,
+  overflowY: 'auto',
 };
 
 const ModalComponent = (props) => {
@@ -21,7 +25,7 @@ const ModalComponent = (props) => {
   aria-describedby="modal-modal-description"
 >
     <div style={style} className='bg-white p-3'>
-        <p className='float-right' onClick={()=>props.handleClose()}><CloseIcon /></p>
+        <p className='float-right hover:cursor-pointer' onClick={()=>props.handleClose()}><CloseIcon /></p>
       <div className='flex flex-row flex-grow'>
         {props.children}
       </div>

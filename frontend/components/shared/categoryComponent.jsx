@@ -7,7 +7,6 @@ const CategoryComponent = (props) => {
       <InputLabel htmlFor="grouped-native-select">Category</InputLabel>
       <Select
         native
-        defaultValue=""
         id="grouped-native-select"
         label="Grouping"
         value={props.category}
