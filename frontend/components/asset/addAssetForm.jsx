@@ -5,9 +5,14 @@ import React, { useEffect, useState } from "react";
 import fetchUser from "../../utils/serverActions/userloginValidator";
 import postAssetData from "../../utils/serverActions/postAssetData";
 import AssetForm from "../shared/assetForm";
+import ModalComponent from "../shared/ModalComponent";
+import { useAssetModal, useExtractedData } from "../../store/store";
 
-function AddAssetForm(props) {
+function AddAssetForm() {
   const router = useRouter();
+  const {open,handleClose} = useAssetModal();
+  const {extractedData,setextractedData} = useExtractedData();
+
 
   const [asset, setAsset] = useState("");
   const [description, setDescription] = useState("");
@@ -20,7 +25,8 @@ function AddAssetForm(props) {
   const [userId,setUserId ]= useState('');
   const [error,setError] = useState('');
   
-  const dataFetcher = async (props) => {
+  const dataFetcher = async () => {
+
     try {
       const {error,userInfo}= await fetchUser();
 
@@ -29,19 +35,16 @@ function AddAssetForm(props) {
       }
       else{
         setUserId(userInfo.userid);
-        setAsset(props.data.asset_name);
-        setDescription(props.data.description);
-        setLink(props.data.link);
       }
 
     } catch (error) {
       console.error('Axios error:', error);
-      setError(error);
+      setError(error.message);
     }
   };
 
   useEffect(()=>{
-    dataFetcher(props);
+    dataFetcher();
   },[])
 
   const submitHandler = async (e) => {
@@ -60,14 +63,13 @@ function AddAssetForm(props) {
   }
 
   return (
-    <div className="mx-auto text-center bg-white p-8 rounded shadow-lg w-96">
-      <h3 className="text-bold text-xl font-bold p-3">Add Asset</h3>
-      <p className="text-start pb-3 text-xs">
-        The information you put here will be added to the table
-      </p>
+    <ModalComponent open={open} handleClose={handleClose}>
+      <div className="p-5">
+      <h3 className="text-xl font-bold p-3 text-center">Adding a Resource</h3>
       {error && <p className="text-red-500 text-center font-bold p-1 pb-2">{error}</p>}
      <AssetForm asset={asset} setAsset={setAsset} description={description} setDescription={setDescription} category={category} setCategory={setCategory} teams={teams} setTeams={setTeams} tags={tags} setTags={setTags} types={types} setTypes={setTypes} loading={loading} submitHandler={submitHandler} />
-    </div>
+      </div>
+    </ModalComponent>
   );
 }
 

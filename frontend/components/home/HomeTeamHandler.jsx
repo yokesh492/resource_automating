@@ -1,25 +1,29 @@
-import { FormControl, NativeSelect } from '@mui/material'
-import React from 'react'
+import { FormControl, MenuItem, Select } from "@mui/material";
+import React from "react";
+import CollectionsIcon from "@mui/icons-material/Collections";
+
+const style = 'bg-gray-100 p-2 rounded-md';
 
 const HomeTeamHandler = (props) => {
   return (
-    <div className="flex justify-between w-full ">
-            <FormControl sx={{ m: 1, minWidth: 200 }}>
-              <NativeSelect
-                id="demo-simple-select"
-                value={props.teams}
-                label="Team"
-                onChange={props.filterTeamFetcher}
-                className="p-2"
-              >
-                <option value="All">All Resources</option>
-                <option value="Design">Design</option>
-                <option value="Development">Development</option>
-                <option value="Business">Business</option>
-              </NativeSelect>
-            </FormControl>
-          </div>
-  )
-}
+      <FormControl variant="filled" sx={{ m: 1, minWidth: 200 }}>
+        <Select
+          labelId="demo-simple-select-filled-label"
+          id="demo-simple-select-filled"
+          value={'All'}
+          onChange={props.FilterTeamFetcher}
+          className="text-lg rounded-lg"
+        >
+          <MenuItem  className={style} value="All">
+            <CollectionsIcon className="mr-4" color="disabled" />
+            All
+          </MenuItem>
+          <MenuItem className={style} value={"Design"}>Design</MenuItem>
+          <MenuItem className={style} value={"Development"}>Development</MenuItem>
+          <MenuItem className={style} value={"Business"}>Business</MenuItem>
+        </Select>
+      </FormControl>
+  );
+};
 
-export default HomeTeamHandler
+export default HomeTeamHandler;

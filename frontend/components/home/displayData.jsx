@@ -11,10 +11,10 @@ const DisplayData = (props) => {
         );
       }
   return (
-    <div className="m-4 grid lg:grid-cols-5 lg:gap-4 md:grid-cols-4 md:gap-4 grid-cols-3 gap-3">
+    <div className="m-8 grid lg:grid-cols-4 lg:gap-6 md:grid-cols-3 md:gap-4 sm:grid-cols-2 sm:gap-3 grid-rows-1 gap-3">
         {props.data?.map((item) => {
           return (
-            <Card key={item.id} onClick={(e) => props.handleOpen(item)} {...item} />
+            <Card key={item.id} {...item} />
           );
         })}
       </div>

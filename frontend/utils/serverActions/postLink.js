@@ -5,13 +5,13 @@ export default async function postLink(props) {
     const response = await axios.post(`${process.env.NEXT_PUBLIC_PRODUCTION}/scrape`, {
       link: props,
     });
-    console.log(response,'this is resp');
+    // console.log(response,'this is resp');
 
     if (response.status === 200 && !response.data.error) {
       return { response: response.data, error: null };
     }
     else{
-        return {response: null, error: response.error || 'Invalid link'};
+        return {response: null, error: response.data.error || 'Invalid link'};
     }
   } catch (error) {
     console.error("Axios error:", error.message);

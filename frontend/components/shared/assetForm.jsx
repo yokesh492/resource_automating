@@ -1,3 +1,4 @@
+'use client';
 import React from "react";
 import {
   Button,
@@ -27,15 +28,26 @@ const AssetForm = (props) => {
     setTypes,
     loading,
     submitHandler,
+    link,
+    setLink
   } = props;
+
   const isValid =
     asset && description && teams && types && category && tags.length > 0;
   return (
-    <form onSubmit={submitHandler}>
-      
+    <form onSubmit={submitHandler} >
       <FormControl fullWidth>
         <TextField
-          label="Asset Name"
+          label="URL"
+          variant="outlined"
+          fullWidth
+          type="text"
+          className="mb-4"
+          value={link}
+          onChange={(e) => setLink(e.target.value)}
+        />
+        <TextField
+          label="Title"
           variant="outlined"
           fullWidth
           type="text"

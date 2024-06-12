@@ -1,12 +1,19 @@
 "use client";
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import { CircularProgress } from "@mui/material";
+import AddIcons from '@mui/icons-material/Add';
+import { Button, CircularProgress, TextField } from "@mui/material";
+
 import postLink from "../../utils/serverActions/postLink";
 import formatLink from "../../utils/helper/formatLink";
+import ModalComponent from "../shared/ModalComponent";
+import { useAssetModal, useExtractedData, useLinkModal } from "../../store/store";
 
-function LinkForm(props) {
-  const router = useRouter();
+function LinkForm() {
+  const {open,handleClose} = useLinkModal();
+  const {setExtractedData} = useExtractedData();
+  const {handleOpen:handleAssetOpen} = useAssetModal();
+
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState();
 
@@ -35,45 +42,51 @@ function LinkForm(props) {
       setError(error);
     }
     if (response) {
-      props.setData(response);
+      
+      setExtractedData(response);
+      handleClose();
+      handleAssetOpen();
     } 
   };
 
-
-  return (
-    <div className="mx-auto text-center bg-white p-8 rounded shadow-lg w-96">
-      <form
-        className="flex flex-col items-center justify-center"
+return(
+  <ModalComponent open={open} handleClose={handleClose}>
+    <div className="p-6">
+    <h3 className="font-bold text-xl text-center">Adding a Resource</h3>
+    {error && (
+      <p className="text-red-500 text-center font-bold p-1 pb-2">{error}</p>
+      )}
+     <form
+        className="flex flex-row mt-10 flex-grow space-x-4 items-center justify-center"
         onSubmit={sendLinkData}
-      >
-        {error && (
-          <p className="text-red-500 text-center font-bold p-1 pb-2">{error}</p>
-        )}
-
-        <label htmlFor="link" className="font-bold text-xl">
-          Enter the Link here
-        </label>
-        <input
+        >
+        <TextField
           type="url"
           id="link"
-          className="border border-gray-400 rounded px-2 py-1 mt-2"
+          variant="outlined"
+          label="URL"
+          placeholder="Enter the URL here"
+      
         />
         {!loading && (
-          <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
-          >
-            Submit
-          </button>
+          <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          className="px-10 py-2"
+            >
+            <AddIcons /> ADD
+          </Button>
         )}
         {loading && (
-          <button className="bg-gray-300 py-2 px-4 rounded mt-4" disabled>
+          <Button className="px-10 py-2" disabled>
             <CircularProgress />
-          </button>
+          </Button>
         )}
       </form>
-    </div>
-  );
+      </div>
+  </ModalComponent>
+);
 }
 
 export default LinkForm;
