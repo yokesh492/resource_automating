@@ -1,5 +1,4 @@
 "use client";
-import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import {
   Button,
@@ -18,7 +17,6 @@ import CategoryComponent from "../shared/categoryComponent";
 import TagHandler from "../shared/tagComponent";
 
 function AddAssetForm() {
-  const router = useRouter();
   const { open, handleClose } = useAssetModal();
   const { extractedData } = useExtractedData();
   const [asset, setAsset] = useState("");
@@ -41,7 +39,6 @@ function AddAssetForm() {
 
       if (error === undefined || error !== null) {
         console.log("User not logged in");
-        
       } else {
         setUserId(userInfo.userid);
         setAsset(extractedData.asset_name);
@@ -78,7 +75,7 @@ function AddAssetForm() {
       setError(error);
     }
     if (response) {
-      router.push("/");
+      handleClose();
     }
   };
 
@@ -93,21 +90,21 @@ function AddAssetForm() {
           <FormControl fullWidth>
             <TextField
               label="URL"
-            variant="outlined"
-          fullWidth
-        type="text"
-      className="mb-4"
-    value={link}
-  onChange={(e) => setLink(e.target.value)}
+              variant="outlined"
+              fullWidth
+              type="text"
+              className="mb-4"
+              value={link}
+              onChange={(e) => setLink(e.target.value)}
             />
             <TextField
               label="Title"
-            variant="outlined"
+              variant="outlined"
               fullWidth
-            type="text"
+              type="text"
               className="mb-4"
               value={asset}
-            onChange={(e) => setAsset(e.target.value)}
+              onChange={(e) => setAsset(e.target.value)}
             />
             <TextField
               label="Description"
@@ -115,9 +112,9 @@ function AddAssetForm() {
               fullWidth
               type="text"
               className="mb-4"
-            multiline
-          value={description}
-        onChange={(e) => setDescription(e.target.value)}
+              multiline
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
             />
             <TeamComponent teams={teams} setTeams={setTeams} />
 
@@ -130,16 +127,15 @@ function AddAssetForm() {
             <TagHandler tags={tags} setTags={setTags} />
             <Button
               variant="contained"
-            fullWidth
-          type="submit"
-        disabled={loading || !isValid}
+              fullWidth
+              type="submit"
+              disabled={loading || !isValid}
             >
               {loading ? <CircularProgress /> : "Submit"}
             </Button>
           </FormControl>
         </form>{" "}
       </div>
-     
     </ModalComponent>
   );
 }
