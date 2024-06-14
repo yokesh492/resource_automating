@@ -26,7 +26,7 @@ def create_resource(db: Session, resource: ResourceCreate, user_id: int):
 def get_resources(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Resource).offset(skip).limit(limit).all()
 
-def get_my_resources(db: Session, userid : int, skip: int = 0, limit: int = 100):
+def get_myresources(db: Session, userid : int, skip: int = 0, limit: int = 100):
     userresource = db.query(Resource).filter(Resource.user_id == userid).offset(skip).limit(limit).all()
     return userresource
 
