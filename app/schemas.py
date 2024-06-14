@@ -21,14 +21,14 @@ class UserOut(UserBase):
 
 # Resource Schemas
 class ResourceBase(BaseModel):
-    asset_name: Optional[str] 
-    team: Optional[str] 
-    type: Optional[str] 
-    category: Optional[str] 
-    description: Optional[str] 
-    link: str 
-    tags: Optional[List[str]] 
-    date: Optional[date] 
+    asset_name: Optional[str] = None
+    team: Optional[str] = None
+    type: Optional[str] = None
+    category: Optional[str] = None
+    description: Optional[str] = None
+    link: str = None
+    tags: Optional[List[str]] = None
+    date: Optional[date] = None
 
 class ResourceCreate(ResourceBase):
     pass  # Inherits all from ResourceBase for resource creation
