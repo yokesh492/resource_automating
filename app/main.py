@@ -85,11 +85,11 @@ def login(user: schemas.UserIn, db: Session = Depends(dependencies.get_db)):
 
 
 
-@app.get("/resources/", response_model=List[schemas.Resource])
+@app.get("/resources/", response_model=List[schemas.ResourceOut])
 def read_resources(skip: int = 0, limit: int = 100, db: Session = Depends(dependencies.get_db)):
     return crud.get_resources(db,skip=skip, limit=limit)
 
-@app.get("/resources/myresource/", response_model=List[schemas.Resource])
+@app.get("/resources/myresource/", response_model=List[schemas.ResourceOut])
 def read_myresource(userid: int, skip: int = 0, limit: int = 100,  db: Session = Depends(dependencies.get_db)):
     try :
         resource = crud.get_myresources(db, userid, skip=skip, limit=limit)
@@ -97,7 +97,7 @@ def read_myresource(userid: int, skip: int = 0, limit: int = 100,  db: Session =
     except:
         return []
 
-@app.post("/create_resources/", response_model=schemas.Resource)
+@app.post("/create_resources/", response_model=schemas.ResourceOut)
 def create_resource(resource_data: schemas.ResourceCreate, userid: int, db: Session = Depends(dependencies.get_db)):
     try:
         resource_data = resource_data.dict()
@@ -126,12 +126,12 @@ def create_resource(resource_data: schemas.ResourceCreate, userid: int, db: Sess
 #     resources = crud.get_resources_by_tags(db, tags=tags)
 #     return resources
 
-@app.get("/resources/teams/", response_model=List[schemas.Resource])
+@app.get("/resources/teams/", response_model=List[schemas.ResourceOut])
 def read_resources_by_teams(teams: str = Query(None), db: Session = Depends(dependencies.get_db)):
     resources = crud.get_resources_by_team(db, team_name=teams)
     return resources
 
-@app.get("/resources/filter/", response_model = List[schemas.Resource])
+@app.get("/resources/filter/", response_model = List[schemas.ResourceOut])
 def read_resource_by_filter(
     category: Optional[str] = Query(None),
     types: Optional[str] = Query(None),
