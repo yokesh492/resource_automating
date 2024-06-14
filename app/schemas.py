@@ -26,12 +26,12 @@ class ResourceBase(BaseModel):
     type: Optional[str] = None
     category: Optional[str] = None
     description: Optional[str] = None
-    link: str = None
+    link: Optional[str] = None 
     tags: Optional[List[str]] = None
-    date: Optional[date] = None
+    #date: Optional[date] = None
 
 class ResourceCreate(ResourceBase):
-    pass  # Inherits all from ResourceBase for resource creation
+    pass
 
 class ResourceUpdate(BaseModel):
     id: int 
@@ -46,6 +46,7 @@ class ResourceOut(ResourceBase):
     id: int 
     user_id: int 
     addedBy: str
+    date: date
     class Config:
         orm_mode = True
 
