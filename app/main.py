@@ -67,20 +67,20 @@ def login(user: schemas.UserIn, db: Session = Depends(dependencies.get_db)):
     return user
 
 
-@app.post("/token", response_model=schemas.Token)
-def login_for_access_token(db: Session = Depends(dependencies.get_db), form_data: OAuth2PasswordRequestForm = Depends()):
-    user = auth.authenticate_user(db, form_data.username, form_data.password)
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    access_token_expires = timedelta(days=auth.ACCESS_TOKEN_EXPIRE_DAYS)
-    access_token = auth.create_access_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
-    )
-    return {"access_token": access_token, "token_type": "bearer"}
+# @app.post("/token", response_model=schemas.Token)
+# def login_for_access_token(db: Session = Depends(dependencies.get_db), form_data: OAuth2PasswordRequestForm = Depends()):
+#     user = auth.authenticate_user(db, form_data.username, form_data.password)
+#     if not user:
+#         raise HTTPException(
+#             status_code=status.HTTP_401_UNAUTHORIZED,
+#             detail="Incorrect username or password",
+#             headers={"WWW-Authenticate": "Bearer"},
+#         )
+#     access_token_expires = timedelta(days=auth.ACCESS_TOKEN_EXPIRE_DAYS)
+#     access_token = auth.create_access_token(
+#         data={"sub": user.username}, expires_delta=access_token_expires
+#     )
+#     return {"access_token": access_token, "token_type": "bearer"}
 
 
 
@@ -88,6 +88,14 @@ def login_for_access_token(db: Session = Depends(dependencies.get_db), form_data
 @app.get("/resources/", response_model=List[schemas.Resource])
 def read_resources(skip: int = 0, limit: int = 100, db: Session = Depends(dependencies.get_db)):
     return crud.get_resources(db,skip=skip, limit=limit)
+
+@app.get("/resources/myresource/", response_model=List[schemas.Resource])
+def read_myresource(userid: int, skip: int = 0, limit: int = 100,  db: Session = Depends(dependencies.get_db)):
+    try :
+        resource = crud.get_myresources(db, userid, skip=skip, limit=limit)
+        return resource
+    except:
+        return []
 
 @app.post("/create_resources/", response_model=schemas.Resource)
 def create_resource(resource_data: schemas.ResourceCreate, userid: int, db: Session = Depends(dependencies.get_db)):
@@ -103,21 +111,25 @@ def create_resource(resource_data: schemas.ResourceCreate, userid: int, db: Sess
     return resource
 
 
-@app.get("/resources/category/", response_model=List[schemas.Resource])
-def read_resources_by_categories(categories: List[str] = Query(None), db: Session = Depends(dependencies.get_db)):
-    resources = crud.get_resources_by_categories(db, categories=categories)
-    return resources
+# @app.get("/resources/category/", response_model=List[schemas.Resource])
+# def read_resources_by_categories(categories: List[str] = Query(None), db: Session = Depends(dependencies.get_db)):
+#     resources = crud.get_resources_by_categories(db, categories=categories)
+#     return resources
 
-@app.get("/resources/types/", response_model=List[schemas.Resource])
-def read_resources_by_types(types: List[str] = Query(None), db: Session = Depends(dependencies.get_db)):
-    resources = crud.get_resources_by_types(db, types=types)
-    return resources
+# @app.get("/resources/types/", response_model=List[schemas.Resource])
+# def read_resources_by_types(types: List[str] = Query(None), db: Session = Depends(dependencies.get_db)):
+#     resources = crud.get_resources_by_types(db, types=types)
+#     return resources
 
-@app.get("/resources/tags/", response_model=List[schemas.Resource])
-def read_resources_by_tags(tags: List[str] = Query(None), db: Session = Depends(dependencies.get_db)):
-    resources = crud.get_resources_by_tags(db, tags=tags)
-    return resources
+# @app.get("/resources/tags/", response_model=List[schemas.Resource])
+# def read_resources_by_tags(tags: List[str] = Query(None), db: Session = Depends(dependencies.get_db)):
+#     resources = crud.get_resources_by_tags(db, tags=tags)
+#     return resources
 
+@app.get("/resources/teams/", response_model=List[schemas.Resource])
+def read_resources_by_teams(teams: str = Query(None), db: Session = Depends(dependencies.get_db)):
+    resources = crud.get_resources_by_team(db, team_name=teams)
+    return resources
 
 @app.get("/resources/filter/", response_model = List[schemas.Resource])
 def read_resource_by_filter(
@@ -152,14 +164,14 @@ def scrape(url_data: schemas.UrlBase, db: Session = Depends(dependencies.get_db)
         return {"error": "please check the URL"}
     return schemas.ResourceBase(asset_name=name, description=description, link=url)
 
-@app.get("/resources/sort/", response_model=List[schemas.Resource])
-def sort_resources(
-    sort: Optional[str] = Query("asc", description="Sort order: 'asc' or 'desc'"),
-    db: Session = Depends(dependencies.get_db)
-):
-    resources = crud.get_resources(db,skip=0, limit=100)
-    resources.sort(key=lambda r: r.asset_name, reverse=(sort.lower() == "desc"))
-    return resources
+# @app.get("/resources/sort/", response_model=List[schemas.Resource])
+# def sort_resources(
+#     sort: Optional[str] = Query("asc", description="Sort order: 'asc' or 'desc'"),
+#     db: Session = Depends(dependencies.get_db)
+# ):
+#     resources = crud.get_resources(db,skip=0, limit=100)
+#     resources.sort(key=lambda r: r.asset_name, reverse=(sort.lower() == "desc"))
+#     return resources
 
 
 @app.on_event("startup")
