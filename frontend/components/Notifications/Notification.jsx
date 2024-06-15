@@ -31,8 +31,8 @@ const NotificationModal = () => {
           </p>
           <h2 className="text-2xl mt-1 pl-3 font-bold"> Notifications</h2>
         </div>
-        {notiData.map((data) => (
-          <div>
+        {notiData.map((data,ind) => (
+          <div key={ind}>
             <hr className="mt-2" />
             <div className="flex flex-row justify-between mt-4">
               <div>

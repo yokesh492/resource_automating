@@ -5,10 +5,6 @@ const dataFetcher = async (url) => {
   const res = await fetchUser();
   const userInfo = res.userInfo;
 
-  if (userInfo === undefined || userInfo === null) {
-    console.log("User not logged in");
-    return redirect("/login");
-  }
   try {
     const response = await axios.get(url); //${userInfo.userid}
     const data = response.data;

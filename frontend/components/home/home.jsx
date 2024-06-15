@@ -23,6 +23,7 @@ import dataFetcher from "../../utils/serverActions/getAllData";
 import postHomeTeamHandler from "../../utils/serverActions/postHomeTeamHandler";
 import UserDropdown from "./userDropdown";
 import NotificationModal from "../Notifications/Notification";
+import { useSession, signOut } from "next-auth/react";
 
 const Home = () => {
   const { data, setData } = useData();
@@ -36,9 +37,11 @@ const Home = () => {
 
   const router = useRouter();
   const searchParams = useSearchParams();
+  const {data:session} = useSession();
   
   const myData = searchParams.get("data");
-  console.log(myData);
+  
+  // console.log(myData);
   const getData = (url) => {
     console.log(url, "url");
     dataFetcher(url)
@@ -75,6 +78,17 @@ const Home = () => {
       console.log("Error in teamHandler");
     }
   };
+
+  const logoutHandler = async () => {
+    if(session && session.user){
+      console.log('user is already logged in', session.user.name)
+      console.log(session.user)
+      await signOut({redirect:false});
+    }
+    await logout();
+    return router.push("/login");
+
+  }
 
   return (
     <main className="pb-6 min-h-screen" style={{ background: "#F9F9F9" }}>
@@ -114,7 +128,7 @@ const Home = () => {
             <UserDropdown
               name={name}
               handleResource={() => router.push("/?data=myresource")}
-              logout={() => logout()}
+              logout={logoutHandler}
               width={"230px"}
             />
           </div>

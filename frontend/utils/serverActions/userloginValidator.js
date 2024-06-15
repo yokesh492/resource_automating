@@ -6,7 +6,6 @@ const fetchUser = async () => {
   const userInfo = await getCookies('userinfo');
   if(!userInfo){
       console.log('User not logged in');
-      return redirect('/login');
   }
   return {error:null,userInfo:userInfo};
    

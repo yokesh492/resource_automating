@@ -12,6 +12,7 @@ function Card(props) {
     <div
       className="rounded-xl bg-white p-4 shadow-md hover:cursor-pointer"
       onClick={() => handleOpen(props)}
+      key={props.asset_name}
     >
       <h2 className="font-bold sm:text-2xl mb-1 p-2">{props.asset_name.length > 100
             ? `${props.asset_name.slice(0, 100)}...`
@@ -46,8 +47,9 @@ function Card(props) {
           {props.tags.map((tag, index) => {
             return (
               <Chip
+              key={index}
                 label={
-                  <p key={index} className="text-sm text-black">
+                  <p  className="text-sm text-black">
                     {tag}
                   </p>
                 }

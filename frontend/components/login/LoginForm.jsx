@@ -12,6 +12,8 @@ import Image from "next/image";
 import authenticate from "../../utils/serverActions/login";
 import VizdaleLogo from "../shared/vizdaleLogo";
 import DraftsIcon from "@mui/icons-material/Drafts";
+import { useSession, signIn } from 'next-auth/react';
+
 
 const LoginForm = () => {
   const [name, setName] = useState("");
@@ -19,6 +21,7 @@ const LoginForm = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
+  const {data: session} = useSession();
 
   const isValid = name && password;
 
@@ -33,6 +36,20 @@ const LoginForm = () => {
     if (response) {
       console.log("check this", response);
       router.push("/");
+    }
+  };
+
+  const signupHandler = async() => {
+    try{
+      if(session && session.user){
+        console.log('user is already logged in', session)
+        console.log(session.user)
+        return router.push('/')
+      }      
+       await signIn("google",{callbackUrl: "http://localhost:3000/"});
+    }
+    catch(err){
+      console.log(err);
     }
   };
   return (
@@ -85,7 +102,7 @@ const LoginForm = () => {
           <Button
             variant="outlined"
             className="w-2/3 font-semibold text-xs md:text-base py-3"
-            type="submit"
+            onClick={signupHandler}
           >
             SIGN UP WITH GOOGLE{" "}
             <span className="pl-1">
