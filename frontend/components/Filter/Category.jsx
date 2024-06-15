@@ -4,11 +4,11 @@ import { usecategoryStateHandler } from '../../store/store'
 const Category = () => {
     const { state: category, setCategory } = usecategoryStateHandler();
   return (
-    <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
+    <FormControl component="fieldset" variant="standard">
             {Object.keys(category).map((type) => (
               <Box key={type}>
                 <h4 className="font-bold text-base py-2">{type.replace("_", " ")}</h4>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-3">
                   {Object.keys(category[type]).map((item, ind) => (
                     <FormControlLabel
                       key={ind}
@@ -17,10 +17,10 @@ const Category = () => {
                           checked={category[type][item]}
                           onChange={() => setCategory(type, item)}
                           name={item}
-                          size="small"
+                          size="medium"
                         />
                       }
-                      label={<p className='text-sm'>{item.replace("_", " ")}</p>}
+                      label={<p className='text-base'>{item.replace("_", " ")}</p>}
                     />
                   ))}
                 </div>

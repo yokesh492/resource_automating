@@ -5,9 +5,8 @@ import { usetagsStateHandler } from '../../store/store'
 
 const Tags = () => {
     const { tagsData:tags, setTags } = usetagsStateHandler();
-    console.log(tags, 'tags')
   return (
-    <div className="flex flex-row flex-wrap gap-3">
+    <div className="flex flex-row flex-wrap gap-3 pt-5">
     {Object.keys(tags).map((tag, ind) => (
           <Chip
             key={ind}

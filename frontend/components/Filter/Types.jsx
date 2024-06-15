@@ -5,8 +5,8 @@ import { usetypeStateHandler } from "../../store/store";
 const Types = () => {
   const { typeData: types, setType } = usetypeStateHandler();
   return (
-    <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
-      <div className="grid grid-cols-3 gap-2">
+    <FormControl component="fieldset" variant="standard">
+      <div className="grid grid-cols-3">
         {Object.keys(types).map((type, ind) => (
           <FormControlLabel
             key={ind}
@@ -17,7 +17,7 @@ const Types = () => {
                 name={type}
               />
             }
-            label={<p className="text-sm">{type.replace("_", " ")}</p>}
+            label={<p className="text-base">{type.replace("_", " ")}</p>}
           />
         ))}
       </div>

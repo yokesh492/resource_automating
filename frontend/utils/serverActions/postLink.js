@@ -2,11 +2,12 @@ import axios from "axios";
 
 export default async function postLink(props) {
   try {
+    console.log(props,'this is props')
     const response = await axios.post(`${process.env.NEXT_PUBLIC_PRODUCTION}/scrape`, {
       link: props,
     });
-    // console.log(response,'this is resp');
-
+    console.log(response,'this is resp');
+    
     if (response.status === 200 && !response.data.error) {
       return { response: response.data, error: null };
     }

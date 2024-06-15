@@ -12,9 +12,9 @@ const DisplayData = (props) => {
       }
   return (
     <div className="m-8 grid lg:grid-cols-4 lg:gap-6 md:grid-cols-3 md:gap-4 sm:grid-cols-2 sm:gap-3 grid-rows-1 gap-3">
-        {props.data?.map((item) => {
+        {props.data?.map((item,ind) => {
           return (
-            <Card key={item.id} {...item} />
+            <Card key={ind} {...item} />
           );
         })}
       </div>

@@ -9,6 +9,7 @@ const CategoryComponent = (props) => {
         native
         id="grouped-native-select"
         label="Grouping"
+        placeholder={props.placeholder}
         value={props.category}
         onChange={(e) => props.setCategory(e.target.value)}
       >

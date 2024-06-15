@@ -6,6 +6,8 @@ import {
   FormControl,
   TextField,
 } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import { useRouter } from "next/navigation";
 
 import fetchUser from "../../utils/serverActions/userloginValidator";
 import postAssetData from "../../utils/serverActions/postAssetData";
@@ -15,6 +17,22 @@ import TeamComponent from "../shared/teamComponent";
 import TypeComponent from "../shared/typeComponent";
 import CategoryComponent from "../shared/categoryComponent";
 import TagHandler from "../shared/tagComponent";
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  bgcolor: '#F9F9F9',
+  borderColor:'#F9F9F9',
+  boxShadow: 24,
+  maxHeight: 770,
+  borderRadius:16,
+  width: '35%',
+  overflowY: 'auto',
+  padding: '24px',
+};
+
 
 function AddAssetForm() {
   const { open, handleClose } = useAssetModal();
@@ -29,6 +47,8 @@ function AddAssetForm() {
   const [loading, setLoading] = useState(false);
   const [userId, setUserId] = useState("");
   const [error, setError] = useState("");
+
+  const router = useRouter();
 
   const isValid =
     asset && description && teams && types && category && tags.length > 0;
@@ -46,6 +66,7 @@ function AddAssetForm() {
         setLink(extractedData.link);
       }
     } catch (error) {
+      setLoading(false);
       console.error("Axios error:", error);
       setError(error.message);
     }
@@ -76,12 +97,13 @@ function AddAssetForm() {
     }
     if (response) {
       handleClose();
+      router.refresh();      
     }
   };
 
   return (
-    <ModalComponent open={open} handleClose={handleClose}>
-      <div className="p-5 mx-6">
+    <ModalComponent open={open} handleClose={handleClose} style={style}>
+      <div className="w-full">
         <h3 className="text-xl font-bold p-3 text-center">Adding a Resource</h3>
         {error && (
           <p className="text-red-500 text-center font-bold p-1 pb-2">{error}</p>
@@ -116,23 +138,24 @@ function AddAssetForm() {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
-            <TeamComponent teams={teams} setTeams={setTeams} />
+            <TeamComponent placeholder={  'Choose a Team'} teams={teams} setTeams={setTeams} />
 
             <p className="py-2"></p>
-            <TypeComponent types={types} handleTypeChange={setTypes} />
+            <TypeComponent placeholder={'Choose a type'} types={types} handleTypeChange={setTypes} />
             <p className="py-2"></p>
 
-            <CategoryComponent category={category} setCategory={setCategory} />
+            <CategoryComponent placeholder={'Choose a category'} category={category} setCategory={setCategory} />
             <p className="py-2"></p>
-            <TagHandler tags={tags} setTags={setTags} />
+            <TagHandler placeholder={'Choose a tag'} tags={tags} setTags={setTags} />
             <Button
-              variant="contained"
-              fullWidth
-              type="submit"
-              disabled={loading || !isValid}
-            >
-              {loading ? <CircularProgress /> : "Submit"}
-            </Button>
+            variant="contained"
+            fullWidth
+            disabled={loading || !isValid}
+            className="py-4 font-bold bg-buttonBlue hover:bg-buttonHover"
+            type="submit"
+          >
+            <AddIcon className="mr-3" /> Add a Resource
+          </Button>
           </FormControl>
         </form>{" "}
       </div>

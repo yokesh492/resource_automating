@@ -3,13 +3,14 @@ import React from 'react'
 
 const TypeComponent = (props) => {
   return (
-    <FormControl style={props.style} className='py-2'>
+    <FormControl style={props.style}>
     <InputLabel id="demo-simple-select-label">Type</InputLabel>
     <Select
       labelId="demo-simple-select-label"
       id="demo-simple-select"
       value={props.types}
       label="Type"
+      placeholder={props.placeholder}
       onChange={(e)=>props.handleTypeChange(e.target.value)}
     >
       <MenuItem value="">

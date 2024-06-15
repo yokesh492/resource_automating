@@ -10,6 +10,7 @@ const TeamComponent = (props) => {
       id="demo-simple-select"
       value={props.teams}
       label="Type"
+      placeholder={props.placeholder}
       onChange={(e) => props.setTeams(e.target.value)}
     >
       <MenuItem value="Design">Design</MenuItem>

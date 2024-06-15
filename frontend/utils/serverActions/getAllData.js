@@ -1,29 +1,29 @@
-import axios from 'axios';
-import fetchUser from './userloginValidator';
-const dataFetcher = async () => {
+import axios from "axios";
+import fetchUser from "./userloginValidator";
+
+const dataFetcher = async (url) => {
   const res = await fetchUser();
   const userInfo = res.userInfo;
-  if(userInfo === undefined || userInfo === null){
-      console.log('User not logged in');
-      return redirect('/login');
+
+  if (userInfo === undefined || userInfo === null) {
+    console.log("User not logged in");
+    return redirect("/login");
   }
-    try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_PRODUCTION}/resources`); //${userInfo.userid}
-      const data = response.data;
-      
-      if(data){
-        console.log(data);
-        return {data:data,error: null,userInfo:userInfo}
-      }
-      //made a change here to check for error
-      else{
-        return {data:null,error:response.error,userInfo:null}
-      }
+  try {
+    const response = await axios.get(url); //${userInfo.userid}
+    const data = response.data;
 
-    } catch (error) {
-      console.error('Axios error:', error);
-      return {data:null,error:error,userInfo:null}
+    if (data) {
+      console.log(data);
+      return { data: data, error: null, userInfo: userInfo };
     }
-  };
+    else {
+      return { data: null, error: response.error, userInfo: null };
+    }
+  } catch (error) {
+    console.error("Axios error:", error);
+    return { data: null, error: error, userInfo: null };
+  }
+};
 
-  export default dataFetcher;
+export default dataFetcher;

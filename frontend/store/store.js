@@ -37,6 +37,12 @@ export const useAssetModal = create((set) => ({
   handleClose: () => set({ open: false }),
 }));
 
+export const useNotificationModal = create((set) => ({
+  open: false,
+  handleOpen: () => set({ open: true }),
+  handleClose: () => set({ open: false }),
+}));
+
 export const useCardModal = create((set) => ({
   open: false,
   data: {
@@ -118,4 +124,9 @@ export const usetagsStateHandler = create((set) => ({
       [tag]: !state.tagsData[tag]
     }
   })),
+}));
+
+export const useTeamSatate = create((set) => ({
+  teamData:'All',
+  setTeam: (team) => set({ teamData: team}),
 }));

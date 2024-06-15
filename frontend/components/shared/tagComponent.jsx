@@ -47,6 +47,7 @@ const TagHandler = (props) => {
         labelId="demo-multiple-chip-label"
         id="demo-multiple-chip"
         multiple
+        placeholder={props.placeholder}
         value={props.tags}
         onChange={(event) => handleTagChange(event, props.setTags)}
         input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
