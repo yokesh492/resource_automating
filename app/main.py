@@ -30,10 +30,10 @@ router = APIRouter()
 
 def scrape_metadata(url: str):
     response = requests.get(url)
-    if response.status_code != 200:
+    if response.status_code == 404:
+        print(response.status_code)
         return None, None
-
-    soup = BeautifulSoup(response.content, 'html.parser')
+    soup = BeautifulSoup(response.text, 'html.parser')
     title = soup.title.string if soup.title else None
     if not title:  
         og_title_tag = soup.find('meta', attrs={'property': 'og:title'})
@@ -44,7 +44,10 @@ def scrape_metadata(url: str):
     description = description_tag['content'] if description_tag else None
     if not description:  
         og_description_tag = soup.find('meta', attrs={'property': 'og:description'})
-        description = og_description_tag['content'] if og_description_tag else 'No description found'
+        description = og_description_tag['content'] if og_description_tag else None
+    if not description:
+        meta_desc = soup.find('meta', attrs={'name': 'twitter:description'})
+        description = meta_desc['content'] if meta_desc else 'No description found'
 
     return title, description
 
@@ -249,3 +252,33 @@ async def startup():
 # @app.on_event("startup")
 # async def startup():
 #     Base.metadata.create_all(bind=engine)
+
+
+
+if __name__ == "__main__":
+
+    from selenium import webdriver
+    from selenium.webdriver.chrome.service import Service
+    from webdriver_manager.chrome import ChromeDriverManager
+    from bs4 import BeautifulSoup
+    import time
+
+    def get_dynamic_page_content(url):
+        service = Service(ChromeDriverManager().install())
+        options = webdriver.ChromeOptions()
+        driver = webdriver.Chrome(service=service, options=options)
+        driver.get(url)
+        time.sleep(3) 
+        html = driver.page_source
+        soup = BeautifulSoup(html, 'html.parser')
+        driver.quit()
+        title = soup.title.string if soup.title else None
+        description = None
+        meta_desc = soup.find('meta', attrs={'name': 'description'}) or soup.find('meta', property='og:description')
+        if meta_desc:
+            description = meta_desc['content']
+
+        return {"title": title, "description": description}
+    url = "https://www.canva.com"
+    content = get_dynamic_page_content(url)
+    print(content)
