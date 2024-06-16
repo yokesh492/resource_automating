@@ -64,6 +64,20 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(dependencies.get
     db.refresh(db_user)
     return {"message": "User created successfully"}
 
+@app.post("/signup_with_google/")
+def create_google_user(user: schemas.UserCreate, db: Session = Depends(dependencies.get_db)):
+    db_user = crud.get_user_by_username(db, username = user.username)
+    if db_user:
+        return {'username': db_user.username, 'userid': db_user.id}
+    else:
+        db_user = models.User(username=user.username, email=user.email)
+        db.add(db_user)
+        db.commit()
+        db.refresh(db_user)
+        return {"message": "User created successfully",'username': db_user.username, 'userid': db_user.id}
+                       
+
+
 @app.post("/login")
 def login(user: schemas.UserIn, db: Session = Depends(dependencies.get_db)):
     user = auth.authenticate_user(db, user.username, user.password)
