@@ -1,4 +1,5 @@
-import Avatar from "@mui/material/Avatar";
+import PermIdentityIcon from '@mui/icons-material/PermIdentity';
+
 function stringToColor(string) {
   let hash = 0;
   let i;
@@ -36,9 +37,9 @@ function stringAvatar(name) {
 export default function UserName({ name }) {
   return (
     <div className="flex items-center">
-        <Avatar {...stringAvatar(name || "")} />
+        <PermIdentityIcon />
         <p
-          className="text-center pl-4"
+          className="text-center"
           style={{ alignSelf: "center" }}
         >
           {name}

@@ -6,7 +6,11 @@ module.exports = {
   ],
   theme: {
     extend: {
-     
+      colors: {
+     buttonBlue:'#005CE6',
+     buttonHover:'#2196f3',
+     dropDown: '#EDEDED',
+      }
     },
   },
   plugins: [],

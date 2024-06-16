@@ -3,7 +3,7 @@ import { setJWTCookies, setUserCookies } from "../cookies/setCookies";
 
 const authenticate = async (formData) => {
     const data = {
-        username: formData.get('name'),
+        username: formData.get('name').toLowerCase(),
         password:formData.get('password'),
       };
     try {

@@ -1,51 +1,88 @@
-import React from 'react'
+import React from "react";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { useCardModal } from "../../store/store";
+import { Chip } from "@mui/material";
 
-const style = 'text-gray-400 font-bold text-sm';
+const style = "text-gray-600 text-base mb-2";
+const style2 = "text-sm text-black";
 
 function Card(props) {
-return (
-    <div className='rounded-xl p-4 shadow-md hover:shadow-xl hover:scale-105 transition duration-300' onClick={props.onClick}>
-        <h2 className='font-bold sm:text-lg mb-1 p-2'>{props.asset_name}</h2>
-        <div className='px-3 py-1.5'>
-            <h5 className={style}>ASSET NAME</h5>
-            <p className='text-sm'>{props.asset_name}</p>
+  const { handleOpen } = useCardModal();
+  return (
+    <div
+      className="rounded-xl bg-white p-4 shadow-md hover:cursor-pointer"
+      onClick={() => handleOpen(props)}
+      key={props.asset_name}
+    >
+      <h2 className="font-bold sm:text-2xl mb-1 p-2">{props.asset_name.length > 100
+            ? `${props.asset_name.slice(0, 100)}...`
+            : props.asset_name}</h2>
+
+      <div className="px-3 py-1.5">
+        <p className={style}>
+          {props.description.length > 100
+            ? `${props.description.slice(0, 100)}...`
+            : props.description}
+        </p>
+      </div>
+      <div className="px-3 py-1.5">
+        <h5 className={style}>Type</h5>
+        <Chip
+          label={<p className={style2}>{props.type}</p>}
+          color="default"
+          size="large"
+        />
+      </div>
+      <div className="px-3 py-1.5">
+        <h5 className={style}>Category</h5>
+        <Chip
+          label={<p className={style2}>{props.category}</p>}
+          color="default"
+          size="large"
+        />
+      </div>
+      <div className="px-3 pt-1.5">
+        <h5 className={style}>Tags</h5>
+        <div className="flex flex-row gap-1 flex-wrap items-center my-2">
+          {props.tags.map((tag, index) => {
+            return (
+              <Chip
+              key={index}
+                label={
+                  <p  className="text-sm text-black">
+                    {tag}
+                  </p>
+                }
+                color="default"
+                size="large"
+              />
+            );
+          })}
         </div>
-        <div className='px-3 py-1.5'>
-            <h5 className={style}>OWNER</h5>
-            <p className='inline text-sm  bg-pink-300 px-2 py-1 rounded-2xl'>{props.addedBy}</p>
+      </div>
+      <div className="px-3">
+        <h5 className={style}>Link</h5>
+        <div onClick={(e) => e.stopPropagation()}>
+          <a
+            href={props.link}
+            target="_blank"
+            className="text-base my-2 hover:text-blue-500 hover:underline"
+          >
+            {props.link}
+          </a>
         </div>
-        <div className='px-3 py-1.5'>
-            <h5 className={style}>CATEGORY</h5>
-            <p className='inline text-sm  bg-pink-300 px-2 py-1 rounded-2xl'>{props.category}</p>
-        </div>
-        <div className='px-3 py-1.5'>
-            <h5 className={style}>TYPE</h5>
-            <p className='inline text-sm  bg-pink-300 px-2 py-1 rounded-2xl'>{props.type}</p>
-        </div>
-        <div className='px-3 py-1.5'>
-            <h5 className={style}>DESCRIPTION</h5>
-            <p>{props.description}</p>
-        </div>
-        <div className='px-3 py-1.5' onCl>
-            <h5 className={style}>LINK</h5>
-            <div onClick={(e)=>e.stopPropagation()}>
-            <a href={props.link} target='_blank' className='hover:text-blue-500 hover:underline'>{props.link}</a>
-            </div>
-        </div>
-        <div className='px-3 py-1.5'>
-            <h5 className={style}>TAGS</h5>
-            <div className='flex flex-row gap-1 flex-wrap items-center'>
-                {props.tags.map((tag, index) => {
-                    return <p key={index} className='inline px-2 py-1  text-xs  rounded-2xl bg-green-200'>{tag}</p>
-                })}
-            </div>
-        </div>
-        <div className='px-3 py-1.5'>
-            <h5 className={style}>DATE</h5>
-            <p>{props.date}</p>
-        </div>
+      </div>
+      <div className="px-3 py-1.5">
+        <h5 className={style}>Author</h5>
+        <p className="text-base my-2">
+          <span className="pr-2">
+            <AccountCircleIcon color="disabled" />
+          </span>
+          {props.addedBy}
+        </p>
+      </div>
     </div>
-)
+  );
 }
 
-export default Card
+export default Card;

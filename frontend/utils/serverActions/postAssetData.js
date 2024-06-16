@@ -30,7 +30,7 @@ const postAssetData = async (props) => {
           tags: tags,
           team:teams,
           type:types,
-          date:null
+          // date:null
         });
 
         return {response:response.data,error:null}; 

@@ -1,4 +1,4 @@
-export const allTags = [
+export const Tags = [
     "Design Basics",
     "Hierarchy",
     "Typography",

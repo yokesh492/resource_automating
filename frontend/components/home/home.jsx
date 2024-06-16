@@ -1,211 +1,169 @@
 "use client";
-import {  Button} from "@mui/material";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import axios from "axios";
-import TagHandler from "../../components/shared/tagComponent";
-import CategoryComponent from "../../components/shared/categoryComponent";
-import UserName from "../../components/shared/username";
-// import { allData } from "../../data/data";
-import Link from "next/link";
-import getfilterData from "../../utils/serverActions/getFilterData";
+import { Button, Chip, TextField } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
+import TuneIcon from "@mui/icons-material/Tune";
+import PermIdentityIcon from "@mui/icons-material/PermIdentity";
+import SearchIcon from '@mui/icons-material/Search';
+
 import DisplayData from "./displayData";
-import SortData from "./SortData";
-import TypeComponent from "../shared/typeComponent";
-import dataFetcher from "../../utils/serverActions/getAllData";
-import Logout from "./Logout";
 import HomeTeamHandler from "./HomeTeamHandler";
-import EditModal from "../editAsset/EditModal";
-import { useData } from "../../store/store";
+import VizdaleLogo from "../shared/vizdaleLogo";
+import Filter from "../Filter/Filter";
+import LinkForm from "../link/LinkForm";
+import AddAssetForm from "../asset/addAssetForm";
+import CardHandler from "./CardHandler";
+import logout from "../../utils/serverActions/logout";
 
-// import filterCategoryFetcher from "../../utils/helper/filterCategory";
-// import filterTagsFetcher from "../../utils/helper/filterTags";
-// import filterTeamFetcher from "../../utils/helper/filterTeams";
-// import handleTypeChange from "../../utils/helper/filterType";
+import { useData, useFilterModal, useLinkModal, useNotificationModal } from "../../store/store";
 
-export default function Home() {
-  const [open, setOpen] = useState(false);
-  // const [data, setData] = useState(allData);
-  const [name, setName] = useState("");
-  const [types, setTypes] = useState("");
+import dataFetcher from "../../utils/serverActions/getAllData";
+import postHomeTeamHandler from "../../utils/serverActions/postHomeTeamHandler";
+import UserDropdown from "./userDropdown";
+import NotificationModal from "../Notifications/Notification";
+import { useSession, signOut } from "next-auth/react";
+
+const Home = () => {
+  const { data, setData } = useData();
+  const { handleOpen: handleFilterOpen } = useFilterModal();
+  const { handleOpen: handleLinkOpen } = useLinkModal();
+  const {handleOpen:handleNotificationOpen} = useNotificationModal();
+
   const [teams, setTeams] = useState("All");
-  const [tags, setTags] = useState([]);
-  const [category, setCategory] = useState("");
-  const [selectedData, setSelectedData] = useState({});
-  const [sort, setSort] = useState("");
+  const [name, setName] = useState("");
+  const [userid, setUserId] = useState("");
 
-  const {data,setData} = useData();
-
-  const handleOpen = (props) => {
-    setSelectedData(props);
-    setOpen(true);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const {data:session} = useSession();
+  
+  const myData = searchParams.get("data");
+  
+  // console.log(myData);
+  const getData = (url) => {
+    console.log(url, "url");
+    dataFetcher(url)
+      .then((res) => {
+        const { data, error, userInfo } = res;
+        if (error === undefined || error !== null) {
+          console.log({ dataFetcherError: error });
+        } else {
+          setData(data);
+          setName(userInfo?.username);
+          setUserId(userInfo?.userid);
+        }
+      })
+      .catch((error) => console.log(error));
   };
-
-  const handleClose = () => setOpen(false);
 
   useEffect(() => {
-    const getData = () => {
-      dataFetcher()
-        .then((res) => {
-          const { data, error, userInfo } = res;
-          if (error === undefined || error !== null) {
-            // console.log("User not logged in");
-            console.log({ dataFetcherError: error });
-          } else {
-            setData(data);
-            setName(userInfo?.username);
-            // setUserId(userInfo?.userid);
-          }
-        })
-        .catch((error) => console.log(error));
-    };
-    getData();
-  }, []);
-
-  const filterTeamFetcher = async (event) => {
-    const val = event.target.value ;
-    setTeams(val);
-    const  data = await getfilterData({ tags, types, team: val, category });
-    if (data) {
-      console.log(data, "data in team change")
-      setData(data);
+    if (myData === "myresource") {
+      getData(
+        `${process.env.NEXT_PUBLIC_PRODUCTION}/resources/myresource/?userid=${userid}`
+      );
     } else {
-      console.log('Error in team change');
+      getData(`${process.env.NEXT_PUBLIC_PRODUCTION}/resources`);
     }
-  };
+  }, [myData]);
 
-  const filterCategoryFetcher = async (val) => {
-    setCategory((prevValue) => (prevValue === val ? "" : val));
-    const  data = await getfilterData({
-      tags,
-      types,
-      team: teams,
-      category: val,
-    });
-    if (data) {
-      setData(data);
+  const teamHandler = async (team) => {
+    setTeams(team);
+    const res = await postHomeTeamHandler(team);
+    console.log(res)
+    if (res) {
+      setData(res);
     } else {
-      console.log('Error in category change');
+      console.log("Error in teamHandler");
     }
   };
 
-  const filterTagsFetcher = async (val) => {
-    setTags(val);
-    const data = await getfilterData({
-      tags: val,
-      types,
-      team: teams,
-      category,
-    });
-    if (data) {
-      setData(data);
-    } else {
-      console.log('Error in tag change');
+  const logoutHandler = async () => {
+    if(session && session.user){
+      console.log('user is already logged in', session.user.name)
+      console.log(session.user)
+      await signOut({redirect:false});
     }
-  };
+    await logout();
+    return router.push("/login");
 
-  const handleTypeChange = async (val) => {
-    setTypes(val);
-    const data = await getfilterData({ tags, types: val, team: teams, category });
-    if (data) {
-      setData(data);
-    } else {
-      console.log('Error in type change');
-    }
-  };
+  }
 
-  const handleSortChange = async (event) => {
-    // console.log(event.target.value, "in sort");
-
-    setSort((prevValue) =>
-      prevValue == event.target.value ? "" : event.target.value
-    );
-
-    const queryString = event.target.value
-      ? `sort=${encodeURIComponent(event.target.value)}`
-      : null;
-
-    // console.log(queryString);
-
-    try {
-      if (queryString === null) {
-        const url = `${process.env.NEXT_PUBLIC_PRODUCTION}/resources/`;
-        // console.log("Fetching data from:", url);
-        const response = await axios.get(url);
-        if (response.status === 200) {
-          const data = await response.data;
-          // console.log("Received data:", data);
-          setData(data);
-        } else {
-          // console.error("Error fetching data:", response.statusText);
-        }
-      } else {
-        const url = `${process.env.NEXT_PUBLIC_PRODUCTION}/resources/sort/?${queryString}`;
-        // console.log("Fetching data from:", url);
-        const response = await axios.get(url);
-        // console.log(response)
-        if (response.status === 200) {
-          const data = await response.data;
-          // console.log("Received data:", data);
-          setData(data);
-        } else {
-          // console.error("Error fetching data:", response.statusText);
-        }
-      }
-    } catch (error) {
-      // console.error("Error fetching data:", error);
-    }
-  };
   return (
-    <main className="min-h-screen">
-      <div className="flex flex-row bg-purple-700 p-3">
-        <h3 className="font-bold text-2xl  text-white bg-none">
-          Vizdale Resources
-        </h3>
-        <div className="ml-auto gap-5 flex flex-row">
-          <h4 className="text-2xl text-white">
-            <UserName name={name || "  "} />
-          </h4>
-          <div>
-            <Logout />
+    <main className="pb-6 min-h-screen" style={{ background: "#F9F9F9" }}>
+      <Filter />
+      <LinkForm />
+      <AddAssetForm />
+      <CardHandler />
+      <NotificationModal />
+
+      <div className="flex flex-row p-4 px-16">
+        <div className="cursor-pointer" onClick={() => router.push("/")}>
+          <VizdaleLogo />
+        </div>
+        <div className="ml-auto ">
+          <div className="flex flex-row w-full">
+            <div className="bg-dropDown rounded-lg flex flex-row items-center" style={{width:'400px'}} >
+                  <input type="text" className="bg-dropDown border-none flex-grow border-dropDown pl-2 rounded-lg h-full focus:outline-none"  placeholder={'Search'}/>
+                  <SearchIcon className="float-right mr-2" />
+              
+            </div>
+            {/* <Chip
+              variant="contained"
+              label={<NotificationsNoneIcon />}
+              size="medium"
+              style={{padding:"0rem -2rem"}}
+              className="m-3 rounded-md"
+            ></Chip> */}
+            <p className="bg-dropDown hover:cursor-pointer rounded-md px-2 my-3 mr-1 ml-4" onClick={handleNotificationOpen}><NotificationsNoneIcon/></p>
+            {/* <Chip variant="contained" label={<UserName name={name}/>} className="m-3 rounded-md text-base "></Chip> */}
+            {/* <Chip
+              variant="contained"
+              icon={<PermIdentityIcon />}
+              label={name}
+              size="medium"
+              className="m-3 rounded-md text-base "
+            ></Chip> */}
+            <UserDropdown
+              name={name}
+              handleResource={() => router.push("/?data=myresource")}
+              logout={logoutHandler}
+              width={"230px"}
+            />
           </div>
         </div>
       </div>
-
-      <div className="flex flex-row p-5 w-full">
-        <h1 className="font-bold text-3xl float-left">
-          <HomeTeamHandler filterTeamFetcher={filterTeamFetcher} teams={teams} />
-        </h1>
-        <EditModal open={open} handleClose={handleClose} selectedData={selectedData} setData={setData} />
-        <Link href="/asset" className="ml-auto">
-          <Button variant="contained" className="m-3">
-            Add asset
-          </Button>
-        </Link>
-      </div>
-      <div className="border"></div>
-      <div className="flex flex-row">
-        <div className="px-5">
-          <TypeComponent
-            types={types}
-            handleTypeChange={handleTypeChange}
-            style={{ m: 1, minWidth: 90 }}
-          />
-
-          <CategoryComponent
-            category={category}
-            setCategory={filterCategoryFetcher}
-            style={{ m: 1, minWidth: 90 }}
-          />
-          <TagHandler
-            tags={tags}
-            setTags={filterTagsFetcher}
-            style={{ m: 1, minWidth: 90 }}
+      <div className="flex flex-row mx-16 my-0">
+        <div>
+          <HomeTeamHandler
+            team={teams}
+            teamHandler={teamHandler}
+            width={"230px"}
           />
         </div>
-        <SortData sort={sort} handleSortChange={handleSortChange} />
+        <div className="ml-auto justify-around">
+          <Chip
+            variant="contained"
+            label={"Filter"}
+            onClick={() => handleFilterOpen()}
+            icon={<TuneIcon color="black" />}
+            className="px-3 py-7 mr-4 text-base text-black rounded-md flex-row-reverse"
+          ></Chip>
+          <Button
+            variant="contained"
+            className="m-3 py-4 font-bold bg-buttonBlue hover:bg-buttonHover"
+            onClick={() => handleLinkOpen()}
+          >
+            <AddIcon className="mr-3" /> Add a Resource
+          </Button>
+        </div>
       </div>
-      <hr />
-      <DisplayData data={data} handleOpen={handleOpen} />
+      <div className="mx-8">
+        <DisplayData data={data} />
+      </div>
     </main>
   );
-}
+};
+
+export default Home;
