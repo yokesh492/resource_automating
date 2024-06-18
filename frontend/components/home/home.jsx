@@ -1,6 +1,6 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Button, Chip, TextField } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
@@ -39,7 +39,7 @@ const Home = () => {
   const searchParams = useSearchParams();
   const {data:session} = useSession();
   
-  const myData = searchParams.get("data");
+  const myData = searchParams.get("data") || null;
   
   // console.log(myData);
   const getData = (url) => {
@@ -91,6 +91,7 @@ const Home = () => {
   }
 
   return (
+    
     <main className="pb-6 min-h-screen" style={{ background: "#F9F9F9" }}>
       <Filter />
       <LinkForm />
