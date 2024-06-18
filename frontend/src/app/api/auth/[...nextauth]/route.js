@@ -17,10 +17,9 @@ const authOptions = {
             const resp = await axios.post(`${process.env.NEXT_PUBLIC_PRODUCTION}/signup_with_google`, {
                 email: user.email,
                 username: user.name,
-                image:user.image,
             });
             
-            console.log(resp.data);
+            console.log(resp.data,'response from backend');
     
             // const resp = {data:{userid:1, username:'test', error:null,image:'https://unsplash.com/photos/woman-with-dslr-camera-e616t35Vbeg'}, status:200};
     
@@ -28,8 +27,10 @@ const authOptions = {
                 console.log('error in signin');
                 return false;
             }
+            console.log('Setting cookies')
             await setUserCookies('userinfo', {userid:resp.data.userid, username:resp.data.username});
             await setJWTCookies('session', {userid:resp.data.userid, username:resp.data.username});
+            console.log('Cookies set')
             return true;
         }catch(e){
             console.log(e);
