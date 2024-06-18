@@ -46,7 +46,7 @@ const LoginForm = () => {
         console.log(session.user)
         return router.push('/')
       }      
-       await signIn("google",{callbackUrl: "http://localhost:3000/"});
+       await signIn("google",{callbackUrl: `${process.env.NEXT_PUBLIC_PRODUCTION}/`});
     }
     catch(err){
       console.log(err);
