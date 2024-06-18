@@ -66,7 +66,7 @@ const Home = () => {
     } else {
       getData(`${process.env.NEXT_PUBLIC_PRODUCTION}/resources`);
     }
-  }, [myData]);
+  }, [myData,userid]);
 
   const teamHandler = async (team) => {
     setTeams(team);

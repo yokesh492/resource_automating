@@ -56,8 +56,9 @@ const CardHandler = () => {
             {data.tags.map((tag, index) => {
               return (
                 <Chip
+                key={index}
                 label={
-                  <p key={index} className="text-sm text-black">
+                  <p  className="text-sm text-black">
                     {tag}
                   </p>
                 }
