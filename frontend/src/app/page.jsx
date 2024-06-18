@@ -5,10 +5,10 @@ import { redirect } from "next/navigation";
 import Provider from "../../components/Providers/provider";
 
 const page = async () => {
-  // const res = await getCookies('userinfo');
-  // if(!res){
-  //   redirect("/login")
-  // }
+  const res = await getCookies('userinfo');
+  if(!res){
+    redirect("/login")
+  }
 
   return (
     <Provider>
