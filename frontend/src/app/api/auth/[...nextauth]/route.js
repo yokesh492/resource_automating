@@ -11,12 +11,13 @@ const authOptions = {
   }),
  ],
  callbacks:{
-    async signIn(user, account, profile) {
+    async signIn(user) {
         console.log('Querying signin')
-        console.log(user, account, profile);
+        console.log(user,'user');
+        console.log(user.user,'account, profile');
         const data = {
-            email: user.email,
-            username: user.name,
+            email: user.user.email,
+            username: user.user.name,
         }
         console.log(data);
         try{

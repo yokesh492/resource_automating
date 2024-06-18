@@ -78,15 +78,17 @@ const Home = () => {
       console.log("Error in teamHandler");
     }
   };
-
   const logoutHandler = async () => {
+    console.log('logging out')
     if(session && session.user){
-      console.log('user is already logged in', session.user.name)
-      console.log(session.user)
+      console.log('user is loggedin', session.user.name)
       await signOut({redirect:false});
+      console.log('logged out 1')
     }
+    console.log('logged out 2')
     await logout();
-    return router.push("/login");
+    console.log('logged out 3')
+    router.push("/login");
 
   }
 
