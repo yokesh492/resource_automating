@@ -13,11 +13,14 @@ const authOptions = {
  callbacks:{
     async signIn(user, account, profile) {
         console.log('Querying signin')
+
+        const data = {
+            email: user.email,
+            username: user.name,
+        }
+        console.log(data);
         try{
-            const resp = await axios.post(`${process.env.NEXT_PUBLIC_PRODUCTION}/signup_with_google`, {
-                email: user.email,
-                username: user.name,
-            });
+            const resp = await axios.post(`${process.env.NEXT_PUBLIC_PRODUCTION}/signup_with_google`,data);
             
             console.log(resp.data,'response from backend');
     
