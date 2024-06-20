@@ -1,7 +1,7 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Button, Chip, TextField } from "@mui/material";
+import { Badge, Button, Chip, TextField } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import TuneIcon from "@mui/icons-material/Tune";
@@ -116,7 +116,9 @@ const Home = () => {
               style={{padding:"0rem -2rem"}}
               className="m-3 rounded-md"
             ></Chip> */}
-            <p className="bg-dropDown hover:cursor-pointer rounded-md px-2 my-3 mr-1 ml-4" onClick={handleNotificationOpen}><NotificationsNoneIcon/></p>
+            <Badge badgeContent={2} color="primary" className="my-3 mr-1 ml-4">
+            <p className="bg-dropDown hover:cursor-pointer rounded-md px-2" onClick={handleNotificationOpen}><NotificationsNoneIcon/></p>
+            </Badge>
             {/* <Chip variant="contained" label={<UserName name={name}/>} className="m-3 rounded-md text-base "></Chip> */}
             {/* <Chip
               variant="contained"

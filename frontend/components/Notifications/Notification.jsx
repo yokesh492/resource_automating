@@ -2,14 +2,14 @@ import React from "react";
 import ModalComponent from "../shared/ModalComponent";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import { useNotificationModal } from "../../store/store";
-import { notiData } from "../../data/Notification";
+import { useCardModal, useData, useNotification, useNotificationModal } from "../../store/store";
+import { filterNotiData } from "../../utils/helper/FilterNotificationData";
 
 const style = {
   position: "relative",
   flexGrow: 1,
   top: "10%",
-  left: "47%",
+  left: "40%",
   bgcolor: "#F9F9F9",
   borderColor: "#F9F9F9",
   boxShadow: 24,
@@ -22,6 +22,16 @@ const style = {
 
 const NotificationModal = () => {
   const { open, handleClose } = useNotificationModal();
+  const {notificationData} = useNotification();
+  const {data} = useData();
+  const {handleOpen:cardHandleOpen} = useCardModal();
+
+  const notiClickHandler = (link) => {
+    handleClose();
+    const cardData = filterNotiData(data,link);
+    cardHandleOpen(cardData[0]);
+  }
+
   return (
     <ModalComponent open={open} handleClose={handleClose} style={style}>
       <div className="mb-5">
@@ -31,7 +41,7 @@ const NotificationModal = () => {
           </p>
           <h2 className="text-2xl mt-1 pl-3 font-bold"> Notifications</h2>
         </div>
-        {notiData.map((data,ind) => (
+        {notificationData.map((data,ind) => (
           <div key={ind}>
             <hr className="mt-2" />
             <div className="flex flex-row justify-between mt-4">
@@ -41,7 +51,7 @@ const NotificationModal = () => {
                 </p>
                 <p className="text-lg">{data.asset_name}</p>
               </div>
-              <button className="bg-buttonBlue px-1 py-0 hover:bg-buttonHover rounded-md ">
+              <button className="bg-buttonBlue px-1 py-0 hover:bg-buttonHover rounded-md " onClick={()=>notiClickHandler(data.id)}>
                 <ChevronRightIcon className="text-white" fontSize="large" />
               </button>
             </div>
