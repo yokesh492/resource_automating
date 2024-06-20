@@ -2,12 +2,15 @@ import { create } from "zustand";
 import { types } from "../data/types";
 import { category } from "../data/category";
 import { Tags } from "../data/tags";
+import { notiData } from "../data/Notification";
 
+//Sets the data to display
 export const useData = create((set) => ({
   data: [],
   setData: (data) => set({ data }),
 }));
 
+//Data used for filtering
 export const useFilters = create((set) => ({
   type: "",
   setType: (type) => set({ type }),
@@ -19,6 +22,7 @@ export const useFilters = create((set) => ({
   setTags: (tags) => set({ tags }),
 }));
 
+//Booleans for opening and closing modals
 export const useFilterModal = create((set) => ({
   open: false,
   handleOpen: () => set({ open: true }),
@@ -43,6 +47,7 @@ export const useNotificationModal = create((set) => ({
   handleClose: () => set({ open: false }),
 }));
 
+//Data for card modal and opening and closing it
 export const useCardModal = create((set) => ({
   open: false,
   data: {
@@ -66,6 +71,17 @@ export const useCardModal = create((set) => ({
   } }),
 }));
 
+//Storing the notification data
+export const useNotification = create((set) => ({
+  notificationData : notiData,
+  setNotification: (data) => set((state) => (
+    {
+      notificationData: [state.notificationData[1],state.notificationData[2], data]
+    }
+  )),
+}));
+
+//Extracted data from the link
 export const useExtractedData = create((set) => ({
   extractedData: {
     asset_name: "",
@@ -79,6 +95,7 @@ export const useExtractedData = create((set) => ({
   setExtractedData: (extractedData) => set({ extractedData }),
 }));
 
+//Handles filter states
 export const usetypeStateHandler = create((set) => ({
   typeData: types.reduce((acc, type) => {
     acc[type] = false;

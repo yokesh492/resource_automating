@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import fetchUser from "../../utils/serverActions/userloginValidator";
 import postAssetData from "../../utils/serverActions/postAssetData";
 import ModalComponent from "../shared/ModalComponent";
-import { useAssetModal, useExtractedData } from "../../store/store";
+import { useAssetModal, useExtractedData, useNotification } from "../../store/store";
 import TeamComponent from "../shared/teamComponent";
 import TypeComponent from "../shared/typeComponent";
 import CategoryComponent from "../shared/categoryComponent";
@@ -37,6 +37,8 @@ const style = {
 function AddAssetForm() {
   const { open, handleClose } = useAssetModal();
   const { extractedData } = useExtractedData();
+  const {setNotification} = useNotification();
+
   const [asset, setAsset] = useState("");
   const [description, setDescription] = useState("");
   const [link, setLink] = useState("");
@@ -46,6 +48,7 @@ function AddAssetForm() {
   const [types, setTypes] = useState("");
   const [loading, setLoading] = useState(false);
   const [userId, setUserId] = useState("");
+  const [userName,setUserName] = useState("");
   const [error, setError] = useState("");
 
   const router = useRouter();
@@ -61,6 +64,7 @@ function AddAssetForm() {
         console.log("User not logged in");
       } else {
         setUserId(userInfo.userid);
+        setUserName(userInfo.username);
         setAsset(extractedData.asset_name);
         setDescription(extractedData.description);
         setLink(extractedData.link);
@@ -96,6 +100,7 @@ function AddAssetForm() {
       setError(error);
     }
     if (response) {
+      setNotification({id:link,addedBy:userName,asset_name:asset})
       handleClose();
       router.refresh();      
     }

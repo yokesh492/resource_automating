@@ -14,5 +14,5 @@ export const notiData = [
         id:3,
         addedBy: 'John Doe',
         asset_name: 'Learn art: Illustration of basics',
-    }
+    },
 ];

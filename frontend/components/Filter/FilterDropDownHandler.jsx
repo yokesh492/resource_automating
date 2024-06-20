@@ -64,9 +64,9 @@ const FilterTeamHandler = (props) => {
             },
           }}
         >
-          <MenuItem className={style} value={"Design"}><CollectionsIcon className="mr-2" color="disabled"/> Design</MenuItem>
-          <MenuItem className={style} value={"Development"}> <CollectionsIcon className="mr-2" color="disabled"/> Development</MenuItem>
-          <MenuItem className={style} value={"Business"}><CollectionsIcon className="mr-2" color="disabled"/> Business</MenuItem>
+          <MenuItem className={style} value={"Design"}><CollectionsIcon className="mr-2" color="action"/> Design</MenuItem>
+          <MenuItem className={style} value={"Development"}> <CollectionsIcon className="mr-2" color="action"/> Development</MenuItem>
+          <MenuItem className={style} value={"Business"}><CollectionsIcon className="mr-2" color="action"/> Business</MenuItem>
         </Select>
       </FormControl>
     </Box>

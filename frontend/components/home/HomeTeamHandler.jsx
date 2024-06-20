@@ -49,7 +49,17 @@ const HomeTeamHandler = (props) => {
           value={props.team}
           onChange={(e)=>props.teamHandler(e.target.value)}
           input={<BootstrapInput />}
-
+          MenuProps={{
+            slotProps:{
+              paper: {
+                style: {
+                  backgroundColor: 'transparent',
+                  boxShadow: 'none',
+                  borderRadius: '8px',
+                },
+              }
+            }
+          }}
         >
           <MenuItem className={style} value="All"><CollectionsIcon className="mr-4" color="disabled" />All</MenuItem>
           <MenuItem className={style} value={"Design"}>Design</MenuItem>
