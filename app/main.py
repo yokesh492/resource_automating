@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException, status, Query
+from fastapi import FastAPI, Depends, HTTPException, status, Query, Request
 from sqlalchemy.orm import Session
 from . import models, schemas, crud, auth, database, dependencies
 from fastapi import APIRouter, Depends, HTTPException
@@ -11,6 +11,8 @@ from .database import engine
 from .models import Base
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
+import asyncio
 
 origins =['*']
 
@@ -50,6 +52,27 @@ def scrape_metadata(url: str):
         description = meta_desc['content'] if meta_desc else 'No description found'
 
     return title, description
+
+
+
+notifications = []
+
+def event_stream():
+    while True:
+        if notifications:
+            print(notifications)
+            data = notifications.pop(0)
+            yield f"data: {data}\n\n"
+        else:
+            yield "data: ping\n\n"
+        asyncio.sleep(1)
+
+
+@app.get("/notifications/", response_class=StreamingResponse)
+def notifications(request: Request):
+    return StreamingResponse(event_stream(), media_type="text/event-stream")
+
+
 
 
 @app.post("/signup/")
@@ -122,10 +145,12 @@ def create_resource(resource_data: schemas.ResourceCreate, userid: int, db: Sess
         resource_data.pop('date', None)
         print(resource_data)
         resource = crud.create_resource(db, resource_data, user_id=userid)
+        notifications.append({'asset_name': resource.asset_name,'addedBy': resource.addedBy, 'id': resource.id})
+        return resource
     except Exception as e:
         #raise HTTPException(status_code=400, detail=f"An error occurred while creating the resource: {str(e)}")
         return {"error": "resource already exists"}
-    return resource
+    
 
 
 # @app.get("/resources/category/", response_model=List[schemas.Resource])
