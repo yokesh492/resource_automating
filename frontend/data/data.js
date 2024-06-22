@@ -24,9 +24,10 @@ export const allData = [
       asset_name: "UI & UX Design Tips by Jim Raptis.",
       category: "Visuals",
       description:
-        "Learn UI & UX Design with practical byte-sized tips and in-depth articles from Jim Raptis.",
+        "Learn UI & UX Design with practicalpract icalpracticalpracticalpracticalpractical byte-sized tips and in-depth articles from Jim Raptis.",
       link: "https://www.uidesign.tips/",
       tags: ["UI", "UX", "Design"],
+      addedBy: 'Siva'
     },
     {
       id:4,

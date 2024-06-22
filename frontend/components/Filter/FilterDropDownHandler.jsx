@@ -1,10 +1,10 @@
 import { Box, FormControl, MenuItem, Select } from "@mui/material";
 import React from "react";
 import CollectionsIcon from "@mui/icons-material/Collections";
-
-const style='text-lg bg-dropDown px-4 py-4';
 import { styled } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
+
+const style='text-lg bg-dropDown px-4 py-4'
 
 
 const BootstrapInput = styled(InputBase)(({ theme }) => ({
@@ -39,13 +39,12 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
 }));
 
 
-const HomeTeamHandler = (props) => {
+const FilterTeamHandler = (props) => {
   return (
     <Box>
-      <FormControl>
+      <FormControl >
         <Select
-          style={{backgroundColor:'#EDEDED',width:props.width,borderRadius:'8px',padding:'1px 8px',outline:'none',border:'none',boxShadow:'none'}}
-          className="custom-select" 
+          style={{backgroundColor:'#EDEDED',width:props.width,borderRadius:'8px',padding:'1px 8px'}}
           value={props.team}
           onChange={(e)=>props.teamHandler(e.target.value)}
           input={<BootstrapInput />}
@@ -56,19 +55,22 @@ const HomeTeamHandler = (props) => {
                   backgroundColor: 'transparent',
                   boxShadow: 'none',
                   borderRadius: '8px',
+                  
                 },
               }
-            }
+            },
+            MenuListProps: {
+              className: 'bg-white rounded-lg px-0 my-0 w-52',
+            },
           }}
         >
-          <MenuItem className={style} value="All"><CollectionsIcon className="mr-4" color="disabled" />All</MenuItem>
-          <MenuItem className={style} value={"Design"}>Design</MenuItem>
-          <MenuItem className={style} value={"Development"}>Development</MenuItem>
-          <MenuItem className={style} value={"Business"}>Business</MenuItem>
+          <MenuItem className={style} value={"Design"}><CollectionsIcon className="mr-2" color="action"/> Design</MenuItem>
+          <MenuItem className={style} value={"Development"}> <CollectionsIcon className="mr-2" color="action"/> Development</MenuItem>
+          <MenuItem className={style} value={"Business"}><CollectionsIcon className="mr-2" color="action"/> Business</MenuItem>
         </Select>
       </FormControl>
     </Box>
   );
 };
 
-export default HomeTeamHandler;
+export default FilterTeamHandler;

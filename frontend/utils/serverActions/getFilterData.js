@@ -1,17 +1,28 @@
+'use client';
 import axios from "axios";
+import filterSelectedValues from "../helper/formatFilter";
 
-const getfilterData = async (props) => {
-    const { tags, types, team, category } = props;
+
+const getfilterData = async (tagsData, typeData, state, team) => {
+   
+  console.log(tagsData,typeData,state,team,'from getfilterdaga');
+
+    const { tags, types, category } = filterSelectedValues(tagsData, typeData, state);
+  console.log(tags,types,category,team,'afteter getfilterdaga');
 
     const queryString = [
       tags.length
         ? tags.map((tag) => `tags=${encodeURIComponent(tag)}`).join("&")
         : null,
-      types ? `types=${encodeURIComponent(types)}` : null,
+        types.length
+        ? types.map((type) => `types=${encodeURIComponent(type)}`).join("&")
+        : null,
       team
         ? `teams=${encodeURIComponent(team)}`
         : null,
-      category ? `category=${encodeURIComponent(category)}` : null,
+        category.length
+        ? category.map((cat) => `category=${encodeURIComponent(cat)}`).join("&")
+        : null,
     ].filter(Boolean)
       .join("&");
 
@@ -37,4 +48,4 @@ const getfilterData = async (props) => {
     }
   };
 
-  export default getfilterData
+  export default getfilterData;

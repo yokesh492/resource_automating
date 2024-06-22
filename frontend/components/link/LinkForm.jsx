@@ -1,14 +1,41 @@
 "use client";
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import { CircularProgress } from "@mui/material";
+import AddIcons from "@mui/icons-material/Add";
+import { Button, CircularProgress, TextField } from "@mui/material";
+
 import postLink from "../../utils/serverActions/postLink";
 import formatLink from "../../utils/helper/formatLink";
+import ModalComponent from "../shared/ModalComponent";
+import {
+  useAssetModal,
+  useExtractedData,
+  useLinkModal,
+} from "../../store/store";
 
-function LinkForm(props) {
-  const router = useRouter();
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  bgcolor: "#F9F9F9",
+  borderColor: "#F9F9F9",
+  boxShadow: 24,
+  maxHeight: 770,
+  borderRadius: 16,
+  width: "35%",
+  overflowY: "auto",
+  padding: "24px",
+};
+
+function LinkForm() {
+  const { open, handleClose } = useLinkModal();
+  const { setExtractedData } = useExtractedData();
+  const { handleOpen: handleAssetOpen } = useAssetModal();
+  const [url, setUrl] = useState("");
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState();
+  const isValid = url;
 
   const sendLinkData = async (e) => {
     e.preventDefault();
@@ -17,9 +44,8 @@ function LinkForm(props) {
     let link = e.target.link.value;
     console.log(link);
 
-
-    link = formatLink(link);   
-
+    link = formatLink(link);
+    console.log(link);
     if (!link) {
       setError("Invalid URL");
       setLoading(false);
@@ -27,52 +53,60 @@ function LinkForm(props) {
     }
 
     const { response, error } = await postLink(link);
-    console.log(response)
+    console.log(response,error);
     setLoading(false);
-    
+
     if (error) {
       console.log(error);
       setError(error);
     }
     if (response) {
-      props.setData(response);
-    } 
+      setExtractedData(response);
+      handleClose();
+      handleAssetOpen();
+    }
   };
 
-
   return (
-    <div className="mx-auto text-center bg-white p-8 rounded shadow-lg w-96">
-      <form
-        className="flex flex-col items-center justify-center"
-        onSubmit={sendLinkData}
-      >
+    <ModalComponent open={open} handleClose={handleClose} style={style}>
+      <div>
+        <h3 className="font-bold text-xl pl-16 text-center">
+          Adding a Resource
+        </h3>
         {error && (
-          <p className="text-red-500 text-center font-bold p-1 pb-2">{error}</p>
+          <p className="text-red-500 text-lg text-center font-bold items-center">
+            {error}
+          </p>
         )}
-
-        <label htmlFor="link" className="font-bold text-xl">
-          Enter the Link here
-        </label>
-        <input
-          type="url"
-          id="link"
-          className="border border-gray-400 rounded px-2 py-1 mt-2"
-        />
-        {!loading && (
-          <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
-          >
-            Submit
-          </button>
-        )}
-        {loading && (
-          <button className="bg-gray-300 py-2 px-4 rounded mt-4" disabled>
-            <CircularProgress />
-          </button>
-        )}
-      </form>
-    </div>
+        <form className="flex flex-row mt-10 mx-5" onSubmit={sendLinkData}>
+          <TextField
+            type="url"
+            id="link"
+            variant="outlined"
+            label="URL"
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            placeholder="Enter the URL here"
+            className="w-3/4 mr-5"
+          />
+          {!loading && (
+            <Button
+              type="submit"
+              variant="contained"
+              className="w-1/4 px-16 my-2 text-white font-bold bg-buttonBlue hover:bg-buttonHover"
+              disabled={!isValid}
+            >
+               <AddIcons className="mr-3" /> Add 
+            </Button>
+          )}
+          {loading && (
+            <Button className="w-1/4 px-16 my-2 ml-5" disabled>
+              <CircularProgress />
+            </Button>
+          )}
+        </form>
+      </div>
+    </ModalComponent>
   );
 }
 

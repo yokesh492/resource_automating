@@ -9,7 +9,7 @@ import {
   Select,
 } from "@mui/material";
 import React from "react";
-import { allTags } from "../../data/tags";
+import { Tags } from "../../data/tags";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -47,6 +47,7 @@ const TagHandler = (props) => {
         labelId="demo-multiple-chip-label"
         id="demo-multiple-chip"
         multiple
+        placeholder={props.placeholder}
         value={props.tags}
         onChange={(event) => handleTagChange(event, props.setTags)}
         input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
@@ -59,11 +60,11 @@ const TagHandler = (props) => {
         )}
         MenuProps={MenuProps}
       >
-        {allTags.map((name) => (
+        {Tags.map((name) => (
           <MenuItem
             key={name}
             value={name}
-            style={getStyles(props.tags, allTags, theme)}
+            style={getStyles(props.tags, Tags, theme)}
           >
             {name}
           </MenuItem>

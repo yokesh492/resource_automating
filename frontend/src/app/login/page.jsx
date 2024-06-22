@@ -1,10 +1,15 @@
+
+import Provider from "../../../components/Providers/provider";
 import LoginForm from "../../../components/login/LoginForm";
 
 export default function Login() {
 
   return (
-    <div className="bg-slate-100 w-full min-h-screen">
+    <Provider>
+
+    <div className="bg-white w-full min-h-screen">
       <LoginForm />
     </div>
+    </Provider>
   );
 }
