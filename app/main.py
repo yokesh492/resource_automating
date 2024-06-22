@@ -55,13 +55,13 @@ def scrape_metadata(url: str):
 
 
 
-notifications = []
+notifications_list = []
 
 def event_stream():
     while True:
-        if notifications:
-            print(notifications)
-            data = notifications.pop(0)
+        if notifications_list:
+            print(notifications_list)
+            data = notifications_list.pop(0)
             yield f"data: {data}\n\n"
         else:
             yield "data: ping\n\n"
