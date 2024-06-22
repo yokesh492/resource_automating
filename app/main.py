@@ -145,7 +145,7 @@ def create_resource(resource_data: schemas.ResourceCreate, userid: int, db: Sess
         resource_data.pop('date', None)
         print(resource_data)
         resource = crud.create_resource(db, resource_data, user_id=userid)
-        notifications.append({'asset_name': resource.asset_name,'addedBy': resource.addedBy, 'id': resource.id})
+        notifications_list.append({'asset_name': resource.asset_name,'addedBy': resource.addedBy, 'id': resource.id})
         return resource
     except Exception as e:
         #raise HTTPException(status_code=400, detail=f"An error occurred while creating the resource: {str(e)}")
