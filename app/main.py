@@ -57,7 +57,7 @@ def scrape_metadata(url: str):
 
 notifications_list = []
 
-def event_stream():
+async def event_stream():
     while True:
         if notifications_list:
             print(notifications_list)
@@ -65,11 +65,11 @@ def event_stream():
             yield f"data: {data}\n\n"
         else:
             yield "data: ping\n\n"
-        asyncio.sleep(1)
+        await asyncio.sleep(1)
 
 
 @app.get("/notifications/", response_class=StreamingResponse)
-def notifications(request: Request):
+async def notifications(request: Request):
     return StreamingResponse(event_stream(), media_type="text/event-stream")
 
 
