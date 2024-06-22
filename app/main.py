@@ -62,7 +62,7 @@ async def event_stream():
         if notifications_list:
             print(notifications_list)
             data = notifications_list.pop(0)
-            yield f"data: {data}\n\n"
+            yield {"data": data}
         else:
             yield "data: ping\n\n"
         await asyncio.sleep(1)
