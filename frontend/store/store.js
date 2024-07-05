@@ -73,12 +73,15 @@ export const useCardModal = create((set) => ({
 
 //Storing the notification data
 export const useNotification = create((set) => ({
-  notificationData : notiData,
-  setNotification: (data) => set((state) => (
-    {
-      notificationData: [state.notificationData[1],state.notificationData[2], data]
-    }
-  )),
+  notificationData : [],
+  notiCount: 0,
+  
+  setNotification: (data) => set((state) => ({
+    notiCount: state.notiCount + 1,
+    notificationData: [...state.notificationData, data],
+  })),
+
+  clearNotiCount: () => set({ notiCount: 0 }),
 }));
 
 //Extracted data from the link

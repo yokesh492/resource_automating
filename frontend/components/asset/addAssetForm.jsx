@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import {
   Button,
-  CircularProgress,
   FormControl,
   TextField,
 } from "@mui/material";
@@ -68,6 +67,11 @@ function AddAssetForm() {
         setAsset(extractedData.asset_name);
         setDescription(extractedData.description);
         setLink(extractedData.link);
+        setError("");
+        setTeams('');
+        setTags([]);
+        setCategory('');
+        setTypes('');
       }
     } catch (error) {
       setLoading(false);
@@ -100,9 +104,10 @@ function AddAssetForm() {
       setError(error);
     }
     if (response) {
-      setNotification({id:link,addedBy:userName,asset_name:asset})
+      console.log(response);
+      // setNotification({id:link,addedBy:userName,asset_name:asset})
+      router.push('/');      
       handleClose();
-      router.refresh();      
     }
   };
 

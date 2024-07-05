@@ -41,6 +41,7 @@ const NotificationModal = () => {
           </p>
           <h2 className="text-2xl mt-1 pl-3 font-bold"> Notifications</h2>
         </div>
+        {console.log(notificationData )}
         {notificationData.map((data,ind) => (
           <div key={ind}>
             <hr className="mt-2" />
@@ -57,6 +58,8 @@ const NotificationModal = () => {
             </div>
           </div>
         ))}
+
+
       </div>
     </ModalComponent>
   );

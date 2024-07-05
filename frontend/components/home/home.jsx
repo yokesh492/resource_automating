@@ -5,8 +5,7 @@ import { Badge, Button, Chip, TextField } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import TuneIcon from "@mui/icons-material/Tune";
-import PermIdentityIcon from "@mui/icons-material/PermIdentity";
-import SearchIcon from '@mui/icons-material/Search';
+import SearchIcon from "@mui/icons-material/Search";
 
 import DisplayData from "./displayData";
 import HomeTeamHandler from "./HomeTeamHandler";
@@ -17,19 +16,27 @@ import AddAssetForm from "../asset/addAssetForm";
 import CardHandler from "./CardHandler";
 import logout from "../../utils/serverActions/logout";
 
-import { useData, useFilterModal, useLinkModal, useNotificationModal } from "../../store/store";
+import {
+  useData,
+  useFilterModal,
+  useLinkModal,
+  useNotification,
+  useNotificationModal,
+} from "../../store/store";
 
 import dataFetcher from "../../utils/serverActions/getAllData";
 import postHomeTeamHandler from "../../utils/serverActions/postHomeTeamHandler";
 import UserDropdown from "./userDropdown";
 import NotificationModal from "../Notifications/Notification";
 import { useSession, signOut } from "next-auth/react";
+import fetchNotifications from "../../utils/serverActions/fetchNotification";
 
 const Home = () => {
   const { data, setData } = useData();
   const { handleOpen: handleFilterOpen } = useFilterModal();
   const { handleOpen: handleLinkOpen } = useLinkModal();
-  const {handleOpen:handleNotificationOpen} = useNotificationModal();
+  const { handleOpen: handleNotificationOpen } = useNotificationModal();
+  const { notiCount, clearNotiCount, setNotification } = useNotification();
 
   const [teams, setTeams] = useState("All");
   const [name, setName] = useState("");
@@ -37,10 +44,10 @@ const Home = () => {
 
   const router = useRouter();
   const searchParams = useSearchParams();
-  const {data:session} = useSession();
-  
+  const { data: session } = useSession();
+
   const myData = searchParams.get("data") || null;
-  
+
   // console.log(myData);
   const getData = (url) => {
     console.log(url, "url");
@@ -59,41 +66,75 @@ const Home = () => {
   };
 
   useEffect(() => {
-    if (myData === "myresource") {
+    try{
+      const eventSource = new EventSource(
+        `${process.env.NEXT_PUBLIC_PRODUCTION}/notifications`
+      );
+      eventSource.onmessage = function (event) {
+        const data = event.data;
+        console.log(data)
+          if(data !== 'ping'){
+            typeof(data);
+          setNotification(data);
+        }
+      };
+      eventSource.onerror = function (err) {
+        console.error("EventSource failed:", err);
+        eventSource.close();
+      };
+      return () => {
+        eventSource.close();
+      };
+    }
+    catch(e){
+      console.log(e);
+    }
+  }, []);
+
+  useEffect(() => {
+  if (myData === "myresource") {
       getData(
         `${process.env.NEXT_PUBLIC_PRODUCTION}/resources/myresource/?userid=${userid}`
       );
     } else {
       getData(`${process.env.NEXT_PUBLIC_PRODUCTION}/resources`);
     }
-  }, [myData,userid]);
+  }, [myData, userid]);
 
   const teamHandler = async (team) => {
     setTeams(team);
     const res = await postHomeTeamHandler(team);
-    console.log(res)
+    console.log(res);
     if (res) {
       setData(res);
     } else {
       console.log("Error in teamHandler");
     }
   };
-  const logoutHandler = async () => {
-    console.log('logging out')
-    if(session && session.user){
-      console.log('user is loggedin', session.user.name)
-      await signOut({redirect:false});
-      console.log('logged out 1')
-    }
-    console.log('logged out 2')
-    await logout();
-    console.log('logged out 3')
-    router.push("/login");
 
-  }
+  const notificationHandler = () => {
+    //   const data = fetchNotifications();
+    //   if(data){
+    //     setNotification(data);
+    //   }
+    handleNotificationOpen();
+    clearNotiCount();
+  };
+
+  const logoutHandler = async () => {
+    console.log("logging out");
+    if (session && session.user) {
+      console.log("user is loggedin", session.user.name);
+      await signOut({ redirect: false });
+      console.log("logged out 1");
+    }
+    console.log("logged out 2");
+    await logout();
+    console.log("logged out 3");
+    router.push("/login");
+  };
 
   return (
-    
     <main className="pb-6 min-h-screen" style={{ background: "#F9F9F9" }}>
       <Filter />
       <LinkForm />
@@ -107,10 +148,16 @@ const Home = () => {
         </div>
         <div className="ml-auto ">
           <div className="flex flex-row w-full">
-            <div className="bg-dropDown rounded-lg flex flex-row items-center" style={{width:'400px'}} >
-                  <input type="text" className="bg-dropDown border-none flex-grow border-dropDown pl-2 rounded-lg h-full focus:outline-none"  placeholder={'Search'}/>
-                  <SearchIcon className="float-right mr-2" />
-              
+            <div
+              className="bg-dropDown rounded-lg flex flex-row items-center"
+              style={{ width: "400px" }}
+            >
+              <input
+                type="text"
+                className="bg-dropDown border-none flex-grow border-dropDown pl-2 rounded-lg h-full focus:outline-none"
+                placeholder={"Search"}
+              />
+              <SearchIcon className="float-right mr-2" />
             </div>
             {/* <Chip
               variant="contained"
@@ -119,8 +166,17 @@ const Home = () => {
               style={{padding:"0rem -2rem"}}
               className="m-3 rounded-md"
             ></Chip> */}
-            <Badge badgeContent={2} color="primary" className="my-3 mr-1 ml-4">
-            <p className="bg-dropDown hover:cursor-pointer rounded-md px-2" onClick={handleNotificationOpen}><NotificationsNoneIcon/></p>
+            <Badge
+              badgeContent={notiCount}
+              color="primary"
+              className="my-3 mr-1 ml-4"
+            >
+              <p
+                className="bg-dropDown hover:cursor-pointer rounded-md px-2"
+                onClick={notificationHandler}
+              >
+                <NotificationsNoneIcon />
+              </p>
             </Badge>
             {/* <Chip variant="contained" label={<UserName name={name}/>} className="m-3 rounded-md text-base "></Chip> */}
             {/* <Chip

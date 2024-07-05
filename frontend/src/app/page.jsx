@@ -9,7 +9,6 @@ const page = async () => {
   if(!res){
     redirect("/login")
   }
-  console.log("home, rendered");
   return (
     <Provider>
       <Suspense fallback={<div>Loading...</div>}>

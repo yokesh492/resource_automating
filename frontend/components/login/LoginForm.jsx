@@ -3,8 +3,6 @@ import {
   TextField,
   Button,
   CircularProgress,
-  Box,
-  Typography,
 } from "@mui/material";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -13,6 +11,7 @@ import authenticate from "../../utils/serverActions/login";
 import VizdaleLogo from "../shared/vizdaleLogo";
 import DraftsIcon from "@mui/icons-material/Drafts";
 import { useSession, signIn } from 'next-auth/react';
+import LoginDescription from "./LoginDescription";
 
 
 const LoginForm = () => {
@@ -59,8 +58,8 @@ const LoginForm = () => {
           <VizdaleLogo />
         </div>
 
-        <div className="m-auto md:text-start w-full md:w-1/2 px-4">
-          <h2 className="font-bold text-3xl"> Login</h2>
+         <div className="m-auto flex justify-between flex-col md:text-start w-full md:w-1/2 px-4">
+         {/* <h2 className="font-bold text-3xl"> Login</h2>
           <hr className="mb-6 mt-4" />
           {error && 
           <p className="text-red-500 text-center font-bold p-1 pb-2">{error}</p>
@@ -96,9 +95,11 @@ const LoginForm = () => {
             >
               {loading ? <CircularProgress /> : "Login"}
             </Button>
-          </form>
+          </form> 
 
           <p className="w-full md:w-1/4 my-4 flex justify-center md:justify-end text-gray-300">OR</p>
+          */}
+          <LoginDescription />
           <Button
             variant="outlined"
             className="w-2/3 font-semibold text-xs md:text-base py-3"

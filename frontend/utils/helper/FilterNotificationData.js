@@ -1,7 +1,7 @@
 
-export const filterNotiData = (data, link) => {
+export const filterNotiData = (data, id) => {
     let filterData = data.filter((item)=>{
-        return item.link === link;
+        return item.id === id;
     })
     return filterData;
 }
