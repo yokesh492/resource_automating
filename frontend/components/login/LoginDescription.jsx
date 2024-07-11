@@ -11,7 +11,7 @@ const LoginDescription = () => {
             Discover and Curate the Web Like Never Before!
           </Typography>
           <Typography variant="body1">
-            Welcome to [App Name], your ultimate resource library. Effortlessly gather key details from your favorite websites, tag, categorize, and filter them to your heart's content. Dive in to organize the web your way and unlock a world of information. Ready to transform your browsing experience? Log in now and start your journey!
+            Welcome to Automata, your ultimate resource library. Effortlessly gather key details from your favorite websites, tag, categorize, and filter them to your hearts content. Dive in to organize the web your way and unlock a world of information. Ready to transform your browsing experience? Log in now and start your journey!
           </Typography>
         </Card>
     </div>

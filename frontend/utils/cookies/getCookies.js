@@ -2,8 +2,9 @@
 import { cookies } from 'next/headers';
 
 export async function getCookies(name) {
-    const resp = JSON.parse(cookies().get(name)?.value ?? 'null');
+    const val = (cookies().get(name)?.value);
+    if (val === '') return false;
+    const resp = JSON.parse(val ?? 'null');
     
-    if (resp === null) return false;
     return resp;
 }

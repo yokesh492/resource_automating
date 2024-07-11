@@ -99,7 +99,7 @@ const LoginForm = () => {
 
           <p className="w-full md:w-1/4 my-4 flex justify-center md:justify-end text-gray-300">OR</p>
           */}
-          <LoginDescription />
+          {/* <LoginDescription /> */}
           <Button
             variant="outlined"
             className="w-2/3 font-semibold text-xs md:text-base py-3"
